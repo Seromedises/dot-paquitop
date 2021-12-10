@@ -12,8 +12,8 @@ from paquitop.msg import Joint_position
 # Constant for translate input force in velocity output
 OUT_max = 0.4 # m/s
 OUT_lim = 0.1 # m/s
-IN_max_T3, IN_max_T4, IN_max_T6 = 2.5, 1.5, 0.7 # Nmmust be double than minimum value
-IN_min_T3, IN_min_T4, IN_min_T6= 1, 0.5, 0.3 # Nm
+IN_max_T3, IN_max_T4, IN_max_T6 = 2.0, 0.6, 0.8 # Nmmust be double than minimum value
+IN_min_T3, IN_min_T4, IN_min_T6= 0.5, 0.1, 0.2 # Nm
 filter_span = 50
 CONFIG_POS = 4
 
