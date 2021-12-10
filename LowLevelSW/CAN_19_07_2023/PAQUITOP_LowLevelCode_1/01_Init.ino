@@ -31,6 +31,10 @@ void commInit(){//communications ports initialization:
   Serial.begin(115200);
   delay(1);
 
+  //Prox sensor communication:
+  CANsensorBegin();
+  delay(1);
+
   //Joystick Serial1
   Serial1.begin(100000, 8E2); // Sbus
   delay(1);
@@ -51,6 +55,35 @@ void commInit(){//communications ports initialization:
   //Frequency 1MHz, MSBFIRST, MODE 1 
   delay(1);
 }
+
+
+void CANsensorBegin(){
+  // Initialization:
+  proxSensors.begin();
+
+  // Check the default thresholds:
+  threshold_t checkSoglie = proxSensors.getThreshold();
+//  Serial.print("Soglie impostate: giallo: ");
+//  Serial.print(checkSoglie.yellowThreshold);
+//  Serial.print(", rosso: ");
+//  Serial.print(checkSoglie.redThreshold);
+//  Serial.print(", laser: ");
+//  Serial.println(checkSoglie.laserThreshold);
+
+  // Thresholds set:
+  //proxSensors.setThreshold({.yellowThreshold = 1, .redThreshold = 2, .laserThreshold = 27, .alarmTimeout = 2000});
+
+  // Initial distances request:
+  dist_t distanza = proxSensors.requestDistance(sensor1);
+  if(distanza.error) {
+    // Serial.println("Non è stato possibile rilevare la distanza dal sensore 1.");
+  } else {
+//    Serial.print("Distanze attualmente rilevate dal sensore 1: laser: ");
+//    Serial.print(distanza.distLaser);
+//    Serial.print(", sonar: ");
+//    Serial.println(distanza.distSonar);
+  }
+}   
 
 void motorsInit(){ //motors initialization:
 

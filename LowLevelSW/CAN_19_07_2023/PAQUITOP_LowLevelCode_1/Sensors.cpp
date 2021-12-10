@@ -15,8 +15,6 @@ Sensors::Sensors(threshold_t threshold, callback_t c)
 void Sensors::begin() {  
   canBus.begin();
   canBus.setBaudRate(CAN_BAUDRATE);
-  canBus.setTX(DEF);
-  canBus.setRX(DEF);
   time = millis();
   sendThreshold();
 }

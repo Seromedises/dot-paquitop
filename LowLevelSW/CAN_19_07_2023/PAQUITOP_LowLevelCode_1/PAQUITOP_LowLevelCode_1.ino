@@ -7,12 +7,11 @@
 #include <math.h> 
 #include "SPI.h"
 #include "SBUS.h"
-
+#include "Sensors.h"
 #include <ros.h>
 #include <std_msgs/String.h>
 #include <std_msgs/Empty.h>
 #include <geometry_msgs/Twist.h>
-#include "Sensors.h"
 
 ros::NodeHandle  nh;
 
@@ -64,18 +63,17 @@ ros::NodeHandle  nh;
 ///////////////
 // VARIABLES //
 ///////////////
-
 void alarmCallback(uint8_t, uint8_t, uint16_t);
 
 Sensors proxSensors({.yellowThreshold = 110, .redThreshold = 50, .laserThreshold = 15, .alarmTimeout=2000}, alarmCallback);  //Sensors.h class element, thresholds and callback function definition
-
 
 SBUS joystick(Serial1);
 
 unsigned long t, t_old, t0, t01, t02, t03, dt, dt1, dt2, dt3;                             //time variables (us)
 unsigned long tHidle, tHidle_max = 1e6;                                                   //if zero inputs are sent for t = tHidle, the motors are temporarly disabled (us)
-
+unsigned long tSens;
 float vx, vy, gammad;                                                                     //linear velocities (m/s) and angular velocity (rad/s) of the platform in body rf {b}
+float scale_vx = 1.0, scale_vy = 1.0, scale_gammad = 1.0;
 float v_max = 1.0, w_max = pi/2;                                                          //maximum linear and angular velocity of the platform
 int   wConf = 1, wConf_old = 1;                                                           //1: omnidirectional motion, 2: differential drive, 3: bicycle 2 steering wheels
 float vxArm = 0.0, vyArm = 0.0, vzArm = 0.0, wxArm = 0.0, wyArm = 0.0, wzArm = 0.0;       //linear velocities (m/s) and angular velocity (rad/s) of the EE in rf {0}
@@ -151,7 +149,7 @@ void loop() {
   
   if (dt1 > 2e+4){  
     joystickRead(); 
-    ikineVel(wConf, vx, vy, gammad);
+    ikineVel(wConf, scale_vx*vx, scale_vy*vy, scale_gammad*gammad);
 
     t01 = micros(); 
   }
@@ -200,4 +198,6 @@ void loop() {
     t02 = micros(); 
   } 
   nh.spinOnce();
+
+  proxSensors.update();
 }

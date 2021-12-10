@@ -7,7 +7,7 @@ void alarmCallback(uint8_t sensorId, uint8_t thresh, uint16_t dist){
     //scale_vx = 0.5;
     //scale_vy = 0.5;
     //scale_gammad = 0.5;
-    //tSens = micros();
+    tSens = micros();
   }
   else if(thresh == ALARM_RED) {
 //    Serial.print("Ricevuto allarme rosso da sensore: ");
@@ -17,7 +17,7 @@ void alarmCallback(uint8_t sensorId, uint8_t thresh, uint16_t dist){
     //scale_vx = 0.01;
     //scale_vy = 0.01;
     //scale_gammad = 0.01;
-    //tSens = micros();
+    tSens = micros();
   } else if(thresh  == ALARM_LASER) {
 //    Serial.print("Ricevuto allarme laser da sensore: ");
 //    Serial.println(sensorId);
