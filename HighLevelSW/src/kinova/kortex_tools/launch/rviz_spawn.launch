@@ -1,0 +1,20 @@
+<!--
+<launch>
+
+	
+    <arg name="robot_name" default="my_gen3_lite"/>
+    <arg name="start_delay_seconds" default="0"/>
+
+  	<node name="constrain_path" pkg="kortex_planner" type="constrain_path.py" ns="$(arg robot_name)" output="screen" launch-prefix="bash -c 'sleep $(arg start_delay_seconds); $0 $@' ">
+  	</node>
+
+</launch>
+-->
+<launch>
+
+	<arg name="robot_name" default="my_gen3_lite"/>
+
+  <node name="rviz_spawn" pkg="kortex_tools" type="rviz_object_spawn.py" ns="$(arg robot_name)" respawn="false" output="screen">
+  </node>
+
+</launch>

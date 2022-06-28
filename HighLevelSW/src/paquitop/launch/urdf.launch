@@ -1,0 +1,7 @@
+<launch>
+  <arg name="model" />
+  <param name="robot_description" textfile="$(find ggg)/urdf/ggg.urdf" />
+
+  <node machine="server" name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+</launch>

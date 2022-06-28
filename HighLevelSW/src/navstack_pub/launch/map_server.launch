@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<launch>
+
+  <arg name="map_file" default="$(find navstack_pub)/maps/map_odom_best.yaml"/>
+  <arg name="machine"/>
+  <!-- Run the map server -->
+  <node machine="server" name="loc_map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
+
+</launch>

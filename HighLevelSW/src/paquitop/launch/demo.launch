@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<launch>
+	<arg name="arm" default="gen3_lite"/>
+	<arg name="robot_name" default="my_$(arg arm)"/>	
+
+	<include file="$(find paquitop)/launch/rosserial_paquitop.launch"/> 
+
+	<include file="$(find kortex_movement)/launch/kinova_teleop.launch"/> 
+
+	<include file="$(find kortex_movement)/launch/tablet_movement.launch"/> 
+	
+	<include file="$(find kortex_driver)/launch/kortex_driver.launch">
+		<arg name="start_rviz" value="false"/>
+		<arg name="start_moveit" value="false"/>
+	</include>
+
+	<node name="rest_position" pkg="kortex_movement" type="rest_position.py" ns="$(arg robot_name)" output="screen" respawn="true"> 
+        	<param name="robot_name" value="$(arg robot_name)"/>
+        </node>	
+
+</launch>	

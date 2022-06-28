@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<launch>
+	<arg name="arm" default="gen3_lite"/>
+	<arg name="robot_name" default="my_$(arg arm)"/>
+    <node name="validation_calibration" pkg="kortex_tools" type="validation_calibration.py" ns="$(arg robot_name)" output="screen"/>
+    <!-- launch-prefix="bash -c 'sleep $(arg start_delay_seconds); $0 $@' " />   
+    -->
+</launch>

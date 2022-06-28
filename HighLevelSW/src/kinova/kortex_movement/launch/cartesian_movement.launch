@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<launch>
+    
+     <!-- Example coordinates -->
+    <arg name="x" default="0.374"/>
+    <arg name="y" default="0.081"/>
+    <arg name="z" default="0.45"/>
+    <arg name="thetax" default="-57.6"/>
+    <arg name="thetay" default="91.1"/>
+    <arg name="thetaz" default="2.3"/>
+    
+    <!-- Arm configuration -->
+    <arg name="arm" default="gen3_lite"/>
+    
+    <arg name="start_delay_seconds" default="6.0"/>
+    
+    <!-- Namespace -->
+    <arg name="robot_name" default="my_$(arg arm)"/>
+    <arg name="prefix" default=""/>
+	
+	<!--
+	<node name="cartesian_server" pkg="kortex_movement" type="cartesian_server" output="screen"> -->
+	 <!--launch-prefix="gdb -ex run args"-->
+   <!--     <param name="robot_name" value="$(arg robot_name)"/>
+       
+    </node>
+    -->
+    
+    <node name="cartesian_client_launch" pkg="kortex_movement" type="cartesian_client_launch" output="screen"> <!-- launch-prefix="bash -c 'sleep $(arg start_delay_seconds); $0 $@' "-->
+    
+     <!--launch-prefix="gdb -ex run args"-->
+    
+        <param name="x" type="double" value="$(arg x)"/>
+        <param name="y" type="double" value="$(arg y)"/>
+        <param name="z" type="double" value="$(arg z)"/>
+        <param name="thetax" type="double" value="$(arg thetax)"/>
+        <param name="thetay" type="double" value="$(arg thetay)"/>
+        <param name="thetaz" type="double" value="$(arg thetaz)"/>
+                       
+    </node>
+    
+</launch>

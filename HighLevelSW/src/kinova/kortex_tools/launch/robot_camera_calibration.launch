@@ -1,0 +1,29 @@
+<launch>
+	
+	<!-- Example coordinates -->
+    <arg name="x" default="-0.29"/>
+    <arg name="y" default="0.087"/>
+    <arg name="z" default="0.28"/>
+    <arg name="sign_inversion" default="1"/>
+    <arg name="cone_step" default="6"/>
+    <arg name="rotation_step" default="3"/>
+	
+	<!-- Robot namespace -->
+    <arg name="robot_name" default="my_gen3_lite"/>
+    <arg name="start_delay_seconds" default="1.5"/>
+
+	<node name="camera_server" pkg="kortex_tools" type="camera_server.py" output="screen" >
+  	</node>
+
+  	<node name="robot_camera_interaction" pkg="kortex_tools" type="robot_camera_interaction.py" ns="$(arg robot_name)" output="screen" launch-prefix="bash -c 'sleep $(arg start_delay_seconds); $0 $@' ">
+  		
+  		<param name="x" type="double" value="$(arg x)"/>
+        <param name="y" type="double" value="$(arg y)"/>
+        <param name="z" type="double" value="$(arg z)"/>
+        <param name="sign_inversion" type="double" value="$(arg sign_inversion)"/>
+        <param name="cone_step" type="double" value="$(arg cone_step)"/>
+    	<param name="rotation_step" type="double" value="$(arg rotation_step)"/>
+  		
+  	</node>
+
+</launch>

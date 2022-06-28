@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<launch>
+
+	<!-- RVIZ launcher-->
+ <arg name="node_start_delay3" default="0.0" />
+ 
+	<node machine="server" type="rviz" name="rviz" pkg="rviz" args="-d $(find paquitop)/rviz/config.rviz" launch-prefix="bash -c 'sleep $(arg node_start_delay3); $0 $@' "/>
+
+</launch>

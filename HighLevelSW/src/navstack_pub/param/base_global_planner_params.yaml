@@ -1,0 +1,24 @@
+controller_frequency: 3.0
+GlobalPlanner:
+#NavfnROS:
+ allow_unknown: true
+ track_unknown_space: false
+
+ default_tolerance: 0.0
+ visualize_potential: false
+
+ use_dijkstra: false
+ use_quadratic: true
+ use_grid_path: true
+ old_navfn_behavior: false
+
+# Global path desiderable with these values:
+ lethal_cost: 253
+ neutral_cost: 66
+ cost_factor: 1 #0.55
+
+ publish_potential: false
+ orientation_mode: 0
+ orientation_window_size: 1
+ outline_map: false
+

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<launch>
+  <!--<param name="sim_time" value="true"/>-->  
+
+  <arg name="node_start_delay" default="0.0" /> 
+
+  <node machine="client" name="rplidarNode" pkg="rplidar_ros" type="rplidarNode" output="screen" launch-prefix="bash -c 'sleep $(arg node_start_delay); $0 $@' ">
+    
+    <param name="serial_port"         type="string" value="/dev/ttyUSB0"/>
+    <param name="serial_baudrate"     type="int"    value="115200"/><!--A1/A2 -->
+    <!--param name="serial_baudrate"     type="int"    value="256000"--><!--A3 -->
+    <param name="frame_id"            type="string" value="laser"/>
+    <param name="inverted"            type="bool"   value="false"/>
+    <param name="angle_compensate"    type="bool"   value="true"/>
+  </node>
+	
+	
+</launch>

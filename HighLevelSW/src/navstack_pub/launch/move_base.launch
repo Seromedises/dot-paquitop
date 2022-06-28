@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<launch>
+  <arg name="node_start_delay2" default="0.0" />
+
+  <node machine="server" pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen" launch-prefix="bash -c 'sleep $(arg node_start_delay2); $0 $@' ">
+    
+    <param name="base_global_planner" value="global_planner/GlobalPlanner" />
+    <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS" />
+
+    <rosparam file="$(find navstack_pub)/param/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find navstack_pub)/param/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find navstack_pub)/param/local_costmap_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find navstack_pub)/param/global_costmap_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find navstack_pub)/param/base_local_planner_params.yaml" command="load" />
+    <rosparam file="$(find navstack_pub)/param/base_global_planner_params.yaml" command="load" />
+  </node>
+
+</launch>
+
+
+  <!-- 
+  <arg name="model" default="burger" doc="model type [burger, waffle, waffle_pi]"/>
+
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS" />
+    <rosparam file="$(find turtlebot3_navigation)/param/costmap_common_params_$(arg model).yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find turtlebot3_navigation)/param/costmap_common_params_$(arg model).yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find turtlebot3_navigation)/param/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find turtlebot3_navigation)/param/global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find turtlebot3_navigation)/param/move_base_params.yaml" command="load" />
+    <rosparam file="$(find turtlebot3_navigation)/param/dwa_local_planner_params_$(arg model).yaml" command="load" />
+  </node>
+</launch>-->

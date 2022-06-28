@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<launch>
+
+  <!-- Base Controller Using Arduino -->  
+  <!-- Subscribe: /cmd_vel -->
+  <!-- Publish: /fb_q -->
+
+  <node pkg="rosserial_python" type="serial_node.py" name="serial_node" respawn="true">
+    <param name="port" value="/dev/ttyACM0"/>
+    <param name="baud" value="115200"/>
+  </node>
+
+</launch>

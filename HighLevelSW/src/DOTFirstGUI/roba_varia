@@ -1,0 +1,34 @@
+    MDLabel:
+        canvas:
+            Color: 
+                rgba: (0,0,0,.1)
+
+            Rectangle: 
+                size: self.size
+                pos: self.pos
+
+        text: "Salvaposto per mappa"
+        halign: "center"
+        size_hint: 1, 0.1
+        pos_hint: {"center_x": .5, "center_y":.8}
+
+    MDRaisedButton:
+        text: "Raised Button"
+        size_hint: .3, .05
+        pos_hint: {"center_x": .5, "center_y": .4}
+
+    MDLabel:
+        id: figure
+        canvas:
+            Color: 
+                rgba: (1,1,1,1)
+
+            Rectangle: 
+                source: 'C:\\Users\\gigit\\DocumentiLT\\LICENZE E SOFTWARE\\KIVYMD\\DOTFirstGUI\\images\\renderDOTPAQUITOP.png'
+                size: [240*0.97, 240]
+                pos: [60, 150]
+
+        text: ""
+        halign: "center"
+        size_hint: 0.4, 0.4
+        pos_hint: {"center_x": .25, "center_y":.45}

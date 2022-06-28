@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<launch>
+<arg name="machine"/>
+  <node machine="$(arg machine)" pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true">
+    <rosparam command="load" file="$(find navstack_pub)/param/ekf_template_use_camera_odom_amcl.yaml" />
+
+    <!--  Placeholder for output topic remapping
+    <remap from="odometry/filtered" to=""/>
+    <remap from="accel/filtered" to=""/>
+    -->
+
+  </node>
+</launch>

@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<launch>
+	<arg name="arm" default="gen3_lite"/>
+	<arg name="robot_name" default="my_$(arg arm)"/>
+    <node name="kinova_teleop" pkg="kortex_movement" type="kinova_teleop.py" ns="$(arg robot_name)" output="screen" respawn="true"/>
+    <!-- launch-prefix="bash -c 'sleep $(arg start_delay_seconds); $0 $@' " />   
+    -->
+</launch>

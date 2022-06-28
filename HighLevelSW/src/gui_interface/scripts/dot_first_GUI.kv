@@ -1,0 +1,113 @@
+FloatLayout:
+
+    orientation: "vertical"    
+    
+    MDToolbar:
+        id: menu
+        title: "D.O.T. PAQUITOP: Graphic User Interface"
+        icon: "git"
+        type: "top"
+        size_hint: 1, 0.1
+        pos_hint: {"center_x": .5, "center_y":.95}
+
+
+    Image:
+        id: figure
+        keep_ratio: True
+        size_hint: .2, .1
+        pos_hint: {"center_x": .95, "center_y":0.95}
+        source: '../images/renderDOTPAQUITOP.png'
+
+    Image:
+        id: figure
+        keep_ratio: True
+        size_hint: .4, .275
+        pos_hint: {"center_x": .25, "center_y":.5}
+        source: '../images/camera2View.webp'
+
+    Image:
+        id: figure
+        keep_ratio: True
+        size_hint: .4, .2
+        pos_hint: {"center_x": .25, "center_y":.225}
+        source: '../images/camera1View.webp'
+
+
+    MDRaisedButton:
+        id: start
+        text: "START"
+        md_bg_color: (20/255,180/255,10/255,.6)
+        size_hint: .15, .1
+        pos_hint: {"center_x": .15, "center_y": .75}
+        #on_release: app.startPAQUITOP(*args)
+        on_release: app.startPAQUITOP(*args)
+
+    MDRaisedButton:
+        id: stop
+        text: "STOP"
+        md_bg_color: (220/255,20/255,60/255,.6)
+        size_hint: .15, .1
+        pos_hint: {"center_x": .35, "center_y": .75}
+        on_release: app.stopPAQUITOP(*args)
+
+    MDDropDownItem:
+        id: drop_item
+        size_hint: .3, .1
+        pos_hint: {'center_x': .825, 'center_y': .65+0.035}
+        text: 'Seleziona il luogo dove andare'
+        on_release: app.drop_item.open()
+
+    MDRaisedButton:
+        text: "PLAN to"
+        size_hint: .1, .1
+        pos_hint: {"center_x": .6, "center_y": .65}
+        on_release: app.go2(root.ids.drop_item.current_item)
+
+    MDRaisedButton:
+        text: "CLEAR all position in"
+        size_hint: .2, .1
+        pos_hint: {"center_x": .645, "center_y": .8}
+        on_release: app.clear(root.ids.drop_item.current_item)
+
+    MDRaisedButton:
+        text: "SAVE position in"
+        size_hint: .2, .1
+        pos_hint: {"center_x": .87, "center_y": .8}
+        on_release: app.save(root.ids.drop_item.current_item)
+
+    MDRaisedButton:
+        text: "HOME"
+        size_hint: .175, .1
+        pos_hint: {"center_x": .65, "center_y": .45}
+        on_release: app.home(*args)
+
+    MDRaisedButton:
+        text: "Vital Sign Measure"
+        size_hint: .175, .1
+        pos_hint: {"center_x": .85, "center_y": .45}
+        on_release: app.VSMeasure(*args)
+
+    MDRaisedButton:
+        text: "Tablet Lift"
+        size_hint: .175, .1
+        pos_hint: {"center_x": .65, "center_y": .3}
+        on_release: app.TabletLift(*args)
+
+    MDRaisedButton:
+        text: "Tablet Store"
+        size_hint: .175, .1
+        pos_hint: {"center_x": .85, "center_y": .3}
+        on_release: app.TabletStore(*args)
+
+    MDRaisedButton:
+        text: "Reset path"
+        size_hint: .175, .1
+        pos_hint: {"center_x": .725, "center_y": .15}
+        on_release: app.ResetPath(*args)
+    
+    MDLabel:
+        id: statusFB
+        text: "Messaggi di feedback"
+        halign: "left"
+        size_hint: .9, .05
+        pos_hint: {"center_x": .5, "center_y":.025}

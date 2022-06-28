@@ -1,0 +1,13 @@
+<launch>
+
+	<!-- Robot namespace -->
+    <arg name="robot_name" default="my_gen3_lite"/>
+    <arg name="start_delay_seconds" default="1.5"/>
+
+  	<node name="robot_mover" pkg="camera_robot_interaction" type="robot_mover.py" ns="$(arg robot_name)" output="screen" >
+  	</node>
+  	
+  	<node name="camera_client" pkg="camera_robot_interaction" type="camera_client.py" output="screen" launch-prefix="bash -c 'sleep $(arg start_delay_seconds); $0 $@' ">
+  	</node>
+
+</launch>

@@ -1,0 +1,12 @@
+<launch>
+
+	<!-- Robot namespace -->
+    <arg name="robot_name" default="my_gen3_lite"/>
+    <arg name="start_delay_seconds" default="0"/>
+    
+    <node name="fake_speed_override_node" pkg="prbt_hardware_support" type="fake_speed_override_node"/>
+
+  	<node name="pliz_motion_planner" pkg="kortex_tools" type="pliz_motion_planner.py" ns="$(arg robot_name)" output="screen" launch-prefix="bash -c 'sleep $(arg start_delay_seconds); $0 $@' ">
+  	</node>
+
+</launch>

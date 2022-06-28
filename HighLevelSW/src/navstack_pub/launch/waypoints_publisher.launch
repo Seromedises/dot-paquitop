@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+
+  <node pkg="navstack_pub" type="PubTopicPoint.py" name="PubTopicPoint" output="screen" clear_params="true">
+    
+  </node>
+</launch>
