@@ -1,4 +1,4 @@
 # Low Level Software
-The folder [LowLevelSW/PAQUITOP_Ardu_tractionControl](https://github.com/Seromedises/dot-paquitop/tree/main/LowLevelSW/PAQUITOP_Ardu_tractionControl) collects all the file needed for the Low Level funtioning. 
+The folder [LowLevelSW/PAQUITOP_LowLevelCode](https://github.com/Seromedises/dot-paquitop/tree/main/LowLevelSW/PAQUITOP_LowLevelCode) collects all the file needed for the Low Level funtioning. 
 
 The core of the Low Level is a [Teensy 4.1](https://www.pjrc.com/store/teensy41.html) Micro-Controller. The code need to be uploaded through the [ArduinoIDE](https://www.arduino.cc/en/software) with the [Teensy Programm](https://www.pjrc.com/teensy/loader_linux.html) correctly installed and configured. On the Arduino IDE, select the correct Board under the Tool and Port dropdown menu. 
