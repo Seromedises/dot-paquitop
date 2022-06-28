@@ -1,8 +1,0 @@
-prefix=/home/paquitop/dot-paquitop/HighLevelSW/devel
-
-Name: gui_inerface
-Description: Description of gui_inerface
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib -lkivy -lkivymd
-Requires: 

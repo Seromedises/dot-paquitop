@@ -1,8 +1,0 @@
-prefix=/home/paquitop/dot-paquitop/HighLevelSW/install
-
-Name: ggg
-Description: Description of ggg
-Version: 1.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 

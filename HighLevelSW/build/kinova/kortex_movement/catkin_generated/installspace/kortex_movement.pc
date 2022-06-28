@@ -1,8 +1,0 @@
-prefix=/home/paquitop/dot-paquitop/HighLevelSW/install
-
-Name: kortex_movement
-Description: Description of kortex_movement
-Version: 1.0.0
-Cflags: -I${prefix}/include
-Libs: -L${prefix}/lib -lkortex_movement
-Requires: roscpp rospy moveit_core moveit_visual_tools moveit_ros_planning_interface interactive_markers tf2_geometry_msgs

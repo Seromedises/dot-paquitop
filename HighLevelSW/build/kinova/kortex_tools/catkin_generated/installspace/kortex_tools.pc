@@ -1,8 +1,0 @@
-prefix=/home/paquitop/dot-paquitop/HighLevelSW/install
-
-Name: kortex_tools
-Description: Description of kortex_tools
-Version: 0.1.0
-Cflags: -I${prefix}/include -I/usr/include/eigen3
-Libs: -L${prefix}/lib 
-Requires: message_runtime moveit_core moveit_visual_tools moveit_ros_planning_interface interactive_markers tf2_geometry_msgs

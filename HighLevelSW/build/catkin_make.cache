@@ -1,2 +1,0 @@
-gui_interface:kinova/camera_robot_interaction:kinova/kortex_movement:kinova/kortex_tools:navstack_pub:paquitop:urdf_corretto
--DCATKIN_DEVEL_PREFIX=/home/paquitop/dot-paquitop/HighLevelSW/devel -DCMAKE_INSTALL_PREFIX=/home/paquitop/dot-paquitop/HighLevelSW/install -G Unix Makefiles
