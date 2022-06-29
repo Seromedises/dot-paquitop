@@ -1,0 +1,49 @@
+<launch>
+
+   <!-- PILZ Plugin for MoveIt! -->
+   <arg name="planning_plugin" value="pilz_industrial_motion_planner::CommandPlanner" />
+   <arg name="prefix" default=""/>
+   
+   <arg name="planning_adapters" value="default_planner_request_adapters/AddIterativeSplineParameterization
+				       default_planner_request_adapters/FixWorkspaceBounds
+				       default_planner_request_adapters/FixStartStateBounds
+				       default_planner_request_adapters/FixStartStateCollision
+				       default_planner_request_adapters/FixStartStatePathConstraints" />
+
+   <arg name="start_state_max_bounds_error" value="0.20" /> 
+   
+ <!--  
+   <arg name="capabilities" default=""/>
+
+   inhibit capabilites (space seperated) 
+  <arg name="disable_capabilities" default=""/>
+  -->
+
+   <param name="planning_plugin" value="$(arg planning_plugin)" />
+    <param name="start_state_max_bounds_error" value="$(arg start_state_max_bounds_error)" />
+
+  <!-- <param name="collision_detector" value="FCL" />   before was Hybrid but generete an error -->
+    
+    
+    
+   <!-- MoveGroup capabilities to load, append sequence capability -->
+   <!--
+  <param name="capabilities" value="$(arg capabilities)
+                                    pilz_industrial_motion_planner/MoveGroupSequenceAction
+                                    pilz_industrial_motion_planner/MoveGroupSequenceService
+                                   " />
+                                   
+   
+  <param name="disable_capabilities" value="$(arg disable_capabilities)" />
+-->
+ 
+<rosparam command="load" file="$(find gen3_lite_gen3_lite_2f_move_it_config)/config/cartesian_limits.yaml" subst_value="true"/>  
+<!--
+forse questa aggiunta sopra non serve 
+
+<rosparam command="load" file="$(find gen3_lite_gen3_lite_2f_move_it_config)/config/hard_joint_limits_pilz.yaml" />  
+  -->
+  
+  <!-- <rosparam command="load" file="$(find gen3_lite_gen3_lite_2f_move_it_config)/config/pilz_planning.yaml" /> -->
+
+</launch>

@@ -1,0 +1,12 @@
+# before modifying
+maximum_linear_velocity: 0.3
+maximum_angular_velocity: 0.85
+maximum_linear_acceleration: 0.4
+maximum_angular_acceleration: 0.4
+#cartesian_limits:
+#  max_trans_vel: 0.3
+#  max_trans_acc: 0.4
+#  max_trans_dec: -0.5
+#  max_rot_vel: 0.85
+#  max_rot_acc: 0.4 planners assun same acceleration
+  
