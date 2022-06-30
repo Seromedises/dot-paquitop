@@ -31,7 +31,7 @@
 
     <!-- Automatically start other modules -->
     <arg name="start_rviz" default="false"/>
-    <arg name="start_moveit" default="true"/>
+    <arg name="start_moveit" default="false"/>
 
     <!-- Action server params -->
     <arg name="default_goal_time_tolerance" default="0.5"/> <!--seconds-->
