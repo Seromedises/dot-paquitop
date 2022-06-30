@@ -2,8 +2,8 @@
 
 <launch>
 
-	<machine name="client" address="172.21.15.99" env-loader="/home/paquitop/env-loader.sh" default = "true" user = "paquitop" timeout="20"/>
-	<machine name="server" address="172.21.15.100" env-loader="/home/lorenzo/cw_kinova/env-loader.sh" default = "true"/>
+	<machine name="client" address="172.21.15.99" env-loader="/home/paquitop/dot-paquitop/HighLevelSW/paquitop-loader.sh" default = "true" user = "paquitop" timeout="20"/>
+	<machine name="server" address="172.21.15.100" env-loader="/home/lorenzo/dot-paquitop/HighLevelSW/server-loader.sh" default = "true"/>
 
 	<!-- Transformation Relationship -->
 	<include file="$(find paquitop)/launch/tf.launch" >
