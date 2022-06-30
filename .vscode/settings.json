@@ -1,0 +1,4 @@
+{
+  "cmake.sourceDirectory": "${workspaceFolder}/HighLevelSW/src",
+  "cmake.buildDirectory": "${workspaceFolder}/HighLevelSW/build"
+}
