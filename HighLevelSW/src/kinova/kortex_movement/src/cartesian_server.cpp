@@ -9,6 +9,8 @@
  * Refer to the LICENSE file for details.
  *
  */
+
+
 #include <thread>
 #include <atomic>
 
@@ -17,7 +19,7 @@
 //#include <kortex_driver/PlayCartesianTrajectory.h>
 #include <kortex_driver/CartesianSpeed.h>
 // #include <kortex_driver/BaseCyclic_Feedback.h>
-#include <kortex_driver/ReadAction.h>
+// #include <kortex_driver/ReadAction.h>
 #include <kortex_driver/ExecuteAction.h>
 #include <kortex_driver/PlayJointTrajectory.h>
 #include <kortex_driver/SetCartesianReferenceFrame.h>
@@ -79,18 +81,7 @@ bool example_send_joint_angles(ros::NodeHandle n, const std::string &robot_name,
   kortex_driver::PlayJointTrajectory service_play_joint_trajectory;
 
   float angles_to_send[degrees_of_freedom];
-  /*
-  for (unsigned int i = 0; i < degrees_of_freedom; i++)
-  {
-    angles_to_send.push_back(0.0);
-  }
-  angles_to_send[0] = (-3.0);
-  angles_to_send[1] = (21.0);
-  angles_to_send[2] = (145.0);
-  angles_to_send[3] = (-88.0+180);
-  angles_to_send[4] = (-33.0);
-  angles_to_send[5] = (-87.0);
-  */
+
   angles_to_send[0] = (0.0);
   angles_to_send[1] = (105.0);
   angles_to_send[2] = (148.0);
@@ -151,13 +142,7 @@ bool example_home_the_robot(ros::NodeHandle n, const std::string &robot_name)
     std::string error_string = "Failed to call ExecuteAction";
     ROS_ERROR("%s", error_string.c_str());
     return false;
-  }
-
-  return wait_for_action_end_or_abort();
-}
-
-
-bool example_cartesian_action(ros::NodeHandle n, const std::string &robot_name)
+  }dle n, const std::string &robot_name)
 {
   kortex_driver::ConstrainedPose my_constrained_pose;
   kortex_driver::CartesianSpeed my_cartesian_speed;

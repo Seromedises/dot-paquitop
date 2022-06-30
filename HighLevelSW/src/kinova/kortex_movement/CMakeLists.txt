@@ -21,19 +21,19 @@ find_package(catkin REQUIRED
 	kortex_driver 
 	roslaunch
 	interactive_markers
-    moveit_core
-    moveit_visual_tools
-    moveit_ros_planning
-    moveit_ros_planning_interface
-    moveit_ros_perception
-    pluginlib
-    geometric_shapes
-    pcl_ros
-    pcl_conversions
-    rosbag
-    tf2_ros
-    tf2_eigen
-    tf2_geometry_msgs
+  moveit_core
+  moveit_visual_tools
+  moveit_ros_planning
+  moveit_ros_planning_interface
+  moveit_ros_perception
+  pluginlib
+  geometric_shapes
+  pcl_ros
+  pcl_conversions
+  rosbag
+  tf2_ros
+  tf2_eigen
+  tf2_geometry_msgs
 	)
 # roslaunch_add_file_check(launch)
 
@@ -151,6 +151,7 @@ include_directories(include ${PROJECT_SOURCE_DIR}/../kortex_api/include/client)
 include_directories(include ${PROJECT_SOURCE_DIR}/../kortex_api/include/client_stubs)
 include_directories(include ${PROJECT_SOURCE_DIR}/../kortex_api/include/messages)
 include_directories(include ${PROJECT_SOURCE_DIR}/../kortex_api/include/common)
+include_directories(include ${PROJECT_SOURCE_DIR}/../kortex_driver/include)
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
@@ -183,9 +184,9 @@ include_directories(include ${PROJECT_SOURCE_DIR}/../kortex_api/include/common)
 # )
 
 ## Adding executable for server
-add_executable(cartesian_server src/cartesian_server.cpp)
-target_link_libraries(cartesian_server ${catkin_LIBRARIES})
-add_dependencies(cartesian_server kortex_movement_gencpp)
+#add_executable(cartesian_server src/cartesian_server.cpp)
+#target_link_libraries(cartesian_server ${catkin_LIBRARIES})
+#add_dependencies(cartesian_server kortex_movement_gencpp)
 
 ## Adding executable for client
 add_executable(cartesian_client src/cartesian_client.cpp)
