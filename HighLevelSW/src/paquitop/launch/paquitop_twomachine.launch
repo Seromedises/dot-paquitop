@@ -89,8 +89,8 @@
         </node>
 
 	<include file="$(find paquitop)/launch/kortex_driver_2pc.launch"/> 
-		<arg name="start_rviz" value="false"/>
-		<arg name="start_moveit" value="false"/>
+		<param name="start_rviz" value="false"/>
+		<param name="start_moveit" value="false"/>
 	</include>
 
 	<node machine="client" name="dot_paquitop_GUI" pkg="gui_interface" type="dot_paquitop_GUI.py" output="screen" respawn="true">
