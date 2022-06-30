@@ -16,7 +16,7 @@
 //#include <kortex_driver/Base_ClearFaults.h>
 //#include <kortex_driver/PlayCartesianTrajectory.h>
 #include <kortex_driver/CartesianSpeed.h>
-#include <kortex_driver/BaseCyclic_Feedback.h>
+// #include <kortex_driver/BaseCyclic_Feedback.h>
 #include <kortex_driver/ReadAction.h>
 #include <kortex_driver/ExecuteAction.h>
 #include <kortex_driver/PlayJointTrajectory.h>
