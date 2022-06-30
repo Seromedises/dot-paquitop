@@ -7,7 +7,7 @@ add_definitions(-D_OS_UNIX)
 option(USE_CONAN "Use the Conan package manager to automatically fetch the Kortex API" ON)
 
 if(NOT CONAN_TARGET_PLATFORM)
-  set(CONAN_TARGET_PLATFORM "jetson")
+  set(CONAN_TARGET_PLATFORM "x86")
 endif()
 message("CONAN_TARGET_PLATFORM is ${CONAN_TARGET_PLATFORM}")
 
