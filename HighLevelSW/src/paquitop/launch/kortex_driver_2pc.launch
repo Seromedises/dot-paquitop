@@ -2,7 +2,7 @@
 <launch>
   <arg name="client" default="client"/>
   <arg name="server" default="server"/>
-	<arg name="start_delay_seconds" default="9.0"/>
+  <!-- <arg name="start_delay_seconds" default="9.0"/> -->
     
     <!-- Arm configuration -->
     <arg name="arm" default="gen3_lite"/>
