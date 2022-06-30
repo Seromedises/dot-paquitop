@@ -174,15 +174,4 @@
         
      </group>
     	
-    	<!--<node name="rest_position" pkg="kortex_movement" type="rest_position.py" ns="$(arg robot_name)" output="screen" launch-prefix="bash -c 'sleep $(arg start_delay_seconds); $0 $@' " /> 
-        -->	
-       
-   		
-    	
-       	<node name="cartesian_server" pkg="kortex_movement" type="cartesian_server" output="screen" launch-prefix="bash -c 'sleep $(arg start_delay_seconds); $0 $@' " > 
-        	<param name="robot_name" value="$(arg robot_name)"/>
-       
-   		</node>
-  		
-   	<!--launch-prefix="gdb -ex run args"-->
 </launch>

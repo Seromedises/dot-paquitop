@@ -2,8 +2,8 @@
 
 <launch>
 
-	<machine name="client" address="172.21.15.99" env-loader="/home/paquitop/dot-paquitop/HighLevelSW/paquitop-loader.sh" default = "true" user = "paquitop" timeout="20"/>
-	<machine name="server" address="172.21.15.100" env-loader="/home/lorenzo/dot-paquitop/HighLevelSW/server-loader.sh" default = "true"/>
+	<machine name="client" address="172.21.15.99" env-loader="~/dot-paquitop/HighLevelSW/paquitop-loader.sh" default = "true" user = "paquitop" timeout="20"/>
+	<machine name="server" address="172.21.15.100" env-loader="~/dot-paquitop/HighLevelSW/server-loader.sh" default = "true"/>
 
 	<!-- Transformation Relationship -->
 	<include file="$(find paquitop)/launch/tf.launch" >
@@ -76,11 +76,22 @@
   <!-- Publish: /amcl_pose and /map->/odom -->
 	<!--<include file="$(find navstack_pub)/launch/amcl.launch"/>-->
 
-	<!-- 
+	<arg name="arm" default="gen3_lite"/>
+	<arg name="robot_name" default="my_$(arg arm)"/>
+  <node machine="client" name="kinova_teleop" pkg="kortex_movement" type="kinova_teleop.py" ns="$(arg robot_name)" output="screen" respawn="true"/>
+
+	<arg name="arm" default="gen3_lite"/>
+	<arg name="robot_name" default="my_$(arg arm)"/>
+  <node machine="client" name="tablet_movement" pkg="kortex_movement" type="tablet_movement.py" ns="$(arg robot_name)" output="screen" />
+
+	<node machine="client" name="rest_position" pkg="kortex_movement" type="rest_position.py" ns="$(arg robot_name)" output="screen" respawn="true"> 
+        	<param name="robot_name" value="$(arg robot_name)"/>
+        </node>
+
 	<include file="$(find paquitop)/launch/kortex_driver_2pc.launch"/> 
-	-->
-	<!-- 
-	<include file="$(find kortex_movement)/launch/kinova_teleop.launch"/> 
-	-->
-	
+		<arg name="start_rviz" value="false"/>
+		<arg name="start_moveit" value="false"/>
+	</include>
+
+	<node machine="client" name="dot_paquitop_GUI" pkg="gui_interface" type="dot_paquitop_GUI.py" output="screen" respawn="true">
 </launch>
