@@ -37,6 +37,7 @@ Config.write()
 class DOT_PAQUITOP_GUI(MDApp):
 
     def __init__(self, **kwargs):
+        rospy.init_node('dot_paquitiop_GUI')
         super().__init__(**kwargs)
         self.layout = Builder.load_file('dot_paquitop_GUI.kv')
 
@@ -76,6 +77,13 @@ class DOT_PAQUITOP_GUI(MDApp):
             # flatten the ArUco IDs list
             ids = ids.flatten()
 
+            if not robotic_arm_up:
+                extract = rospy.Publisher("/extract_tablet", Bool, queue_size=1)
+                extract_msg = Bool()
+                extract_msg.data = True
+                extract.publish(extract_msg)
+                robotic_arm_up = True
+
             for (markerCorner, markerID) in zip(corners, ids):
                 # extract the marker corners (which are always returned in
                 # top-left, top-right, bottom-right, and bottom-left order)
@@ -99,12 +107,7 @@ class DOT_PAQUITOP_GUI(MDApp):
                 # draw the ArUco marker ID on the image
                 cv2.putText(images, str(markerID),(topLeft[0] - 15, topLeft[1] - 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
 
-        if not robotic_arm_up:
-                extract = rospy.Publisher("/extract_tablet", Bool, queue_size=1)
-                extract_msg = Bool()
-                extract_msg.data = True
-                extract.publish(extract_msg)
-                robotic_arm_up = True
+        
 
         frame = cv2.resize(images, None, fx=1.0, fy=1.0, interpolation=cv2.INTER_AREA)
 
