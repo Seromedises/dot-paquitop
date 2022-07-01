@@ -37,7 +37,7 @@ Config.write()
 class DOT_PAQUITOP_GUI(MDApp):
 
     def __init__(self, **kwargs):
-        rospy.init_node('dot_paquitiop_GUI')
+        rospy.init_node('patient_paquitiop_GUI')
         super().__init__(**kwargs)
         self.layout = Builder.load_file('dot_paquitop_GUI.kv')
 
