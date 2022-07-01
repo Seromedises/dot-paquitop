@@ -37,7 +37,7 @@ Config.write()
 class DOT_PAQUITOP_GUI(MDApp):
 
     def __init__(self, **kwargs):
-        rospy.init_node('patient_paquitiop_GUI')
+        
         super().__init__(**kwargs)
         self.layout = Builder.load_file('dot_paquitop_GUI.kv')
 
@@ -135,6 +135,7 @@ class DOT_PAQUITOP_GUI(MDApp):
         
 
 if __name__ == '__main__':
+    rospy.init_node('patient_paquitiop_GUI')
     global robotic_arm_up
     robotic_arm_up = False
     rospy.init_node('paquitop_gui')
