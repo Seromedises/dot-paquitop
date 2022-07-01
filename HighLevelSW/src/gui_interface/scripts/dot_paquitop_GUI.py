@@ -57,14 +57,52 @@ class DOT_PAQUITOP_GUI(MDApp):
         return self.layout
 
     def load_video(self, *args):
+        
+        # Load the aruco dict
+        default = cv2.aruco.DICT_5X5_100
+        arucoDict = cv2.aruco.Dictionary_get(default)
+        arucoParams = cv2.aruco.DetectorParameters_create()
+
+
+
         # Get frameset of color and depth
         frames = self.pipeline.wait_for_frames()
         aligned_frames = self.align.process(frames)
         color_frame = aligned_frames.get_color_frame()
         color_image = np.asanyarray(color_frame.get_data())
 
-        frame = color_image
-        frame = cv2.resize(frame, None, fx=1.0, fy=1.0, interpolation=cv2.INTER_AREA)
+        images = color_image
+
+        (corners, ids, rejected) = cv2.aruco.detectMarkers(images, arucoDict, parameters=arucoParams)
+
+        if len(corners) > 0:
+            # flatten the ArUco IDs list
+                ids = ids.flatten()
+
+                for (markerCorner, markerID) in zip(corners, ids):
+                    # extract the marker corners (which are always returned in
+                    # top-left, top-right, bottom-right, and bottom-left order)
+                    corners = markerCorner.reshape((4, 2))
+                    (topLeft, topRight, bottomRight, bottomLeft) = corners
+                    # convert each of the (x, y)-coordinate pairs to integers
+                    topRight = (int(topRight[0]), int(topRight[1]))
+                    bottomRight = (int(bottomRight[0]), int(bottomRight[1]))
+                    bottomLeft = (int(bottomLeft[0]), int(bottomLeft[1]))
+                    topLeft = (int(topLeft[0]), int(topLeft[1]))
+
+                    cv2.line(images, topLeft, topRight, (0, 255, 0), 2)
+                    cv2.line(images, topRight, bottomRight, (0, 255, 0), 2)
+                    cv2.line(images, bottomRight, bottomLeft, (0, 255, 0), 2)
+                    cv2.line(images, bottomLeft, topLeft, (0, 255, 0), 2)
+                    # compute and draw the center (x, y)-coordinates of the ArUco
+                    # marker
+                    cX = int((topLeft[0] + bottomRight[0]) / 2.0)
+                    cY = int((topLeft[1] + bottomRight[1]) / 2.0)
+                    cv2.circle(images, (cX, cY), 4, (0, 0, 255), -1)
+                    # draw the ArUco marker ID on the image
+                    cv2.putText(images, str(markerID),(topLeft[0], topLeft[1] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+
+        frame = cv2.resize(images, None, fx=1.0, fy=1.0, interpolation=cv2.INTER_AREA)
 
         buffer = cv2.flip(frame, 0).tobytes()
         texture = Texture.create(size=(frame.shape[1], frame.shape[0]), colorfmt='bgr')
