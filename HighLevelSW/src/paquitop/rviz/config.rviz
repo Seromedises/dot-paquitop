@@ -5,11 +5,7 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
-        - /Status1
-        - /TF1
         - /TF1/Frames1
-        - /LaserScan1
-        - /LaserScan1/Status1
       Splitter Ratio: 0.5
     Tree Height: 485
   - Class: rviz/Selection
@@ -67,6 +63,24 @@ Visualization Manager:
           Value: true
         base_link:
           Value: false
+        camera_accel_frame:
+          Value: false
+        camera_accel_optical_frame:
+          Value: false
+        camera_fisheye1_frame:
+          Value: false
+        camera_fisheye1_optical_frame:
+          Value: false
+        camera_fisheye2_frame:
+          Value: false
+        camera_fisheye2_optical_frame:
+          Value: false
+        camera_gyro_frame:
+          Value: false
+        camera_gyro_optical_frame:
+          Value: false
+        camera_link:
+          Value: true
         camera_odom_frame:
           Value: false
         camera_pose_frame:
@@ -80,7 +94,7 @@ Visualization Manager:
         gripper_base_link:
           Value: false
         laser:
-          Value: true
+          Value: false
         left_finger_dist_link:
           Value: false
         left_finger_prox_link:
@@ -129,10 +143,21 @@ Visualization Manager:
                                     {}
                               tool_frame:
                                 {}
-              camera_pose_frame:
-                {}
             camera_odom_frame:
-              {}
+              camera_pose_frame:
+                camera_link:
+                  camera_accel_frame:
+                    camera_accel_optical_frame:
+                      {}
+                  camera_fisheye1_frame:
+                    camera_fisheye1_optical_frame:
+                      {}
+                  camera_fisheye2_frame:
+                    camera_fisheye2_optical_frame:
+                      {}
+                  camera_gyro_frame:
+                    camera_gyro_optical_frame:
+                      {}
       Update Interval: 0
       Value: true
     - Alpha: 0.699999988079071
@@ -328,11 +353,11 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Scale: 1020.8141479492188
+      Scale: 123.91373443603516
       Target Frame: <Fixed Frame>
       Value: TopDownOrtho (rviz)
-      X: 0.3615590035915375
-      Y: 1.2491322755813599
+      X: 0.7288193702697754
+      Y: 0.17267853021621704
     Saved:
       - Class: rviz/Orbit
         Distance: 3.433607816696167
