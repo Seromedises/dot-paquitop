@@ -83,8 +83,8 @@
   <node machine="client" name="tablet_movement" pkg="kortex_movement" type="tablet_movement.py" ns="$(arg robot_name)" output="screen" />
 
 	<node machine="client" name="rest_position" pkg="kortex_movement" type="rest_position.py" ns="$(arg robot_name)" output="screen" respawn="true"> 
-        	<param name="robot_name" value="$(arg robot_name)"/>
-        </node>
+   	<param name="robot_name" value="$(arg robot_name)"/>
+  </node>
 
 	<include file="$(find paquitop)/launch/kortex_driver_2pc.launch"> 
 		<param name="start_rviz" value="false"/>
