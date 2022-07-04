@@ -32,7 +32,8 @@ Config.set('graphics', 'fullscreen', 1)
 Config.set('graphics', 'window_state', 'maximized')
 Config.write()
 
-
+global robotic_arm_up
+robotic_arm_up = False
 
 class DOT_PAQUITOP_GUI(MDApp):
 
@@ -48,9 +49,7 @@ class DOT_PAQUITOP_GUI(MDApp):
         align_to = rs.stream.color
         self.align = rs.align(align_to)
 
-        global robotic_arm_up
-        robotic_arm_up = False
-
+        
     def build(self):
     
         self.image = Image(pos_hint={"center_x": .775, "center_y":0.45},size_hint=(.4,.5),keep_ratio=True)
