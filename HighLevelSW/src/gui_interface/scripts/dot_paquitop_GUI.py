@@ -58,6 +58,7 @@ class DOT_PAQUITOP_GUI(MDApp):
 
     def load_video(self, *args):
         global robotic_arm_up
+        print(robotic_arm_up)
         # Load the aruco dict
         default = cv2.aruco.DICT_5X5_100
         arucoDict = cv2.aruco.Dictionary_get(default)
