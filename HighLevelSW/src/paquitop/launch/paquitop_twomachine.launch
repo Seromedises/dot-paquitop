@@ -78,11 +78,11 @@
 
 	<arg name="arm" default="gen3_lite"/>
 	<arg name="robot_name" default="my_$(arg arm)"/>
-  <node machine="client" name="kinova_teleop" pkg="kortex_movement" type="kinova_teleop.py" ns="$(arg robot_name)" output="screen" respawn="true"/>
+  <node machine="client" name="kinova_teleop" pkg="kortex_movement" type="kinova_teleop.py" ns="$(arg robot_name)" respawn="true"/>
 
-  <node machine="client" name="tablet_movement" pkg="kortex_movement" type="tablet_movement.py" ns="$(arg robot_name)" output="screen" />
+  <node machine="client" name="tablet_movement" pkg="kortex_movement" type="tablet_movement.py" ns="$(arg robot_name)" />
 
-	<node machine="client" name="rest_position" pkg="kortex_movement" type="rest_position.py" ns="$(arg robot_name)" output="screen" respawn="true"> 
+	<node machine="client" name="rest_position" pkg="kortex_movement" type="rest_position.py" ns="$(arg robot_name)" respawn="true"> 
    	<param name="robot_name" value="$(arg robot_name)"/>
   </node>
 
