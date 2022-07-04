@@ -77,13 +77,14 @@ class DOT_PAQUITOP_GUI(MDApp):
             print(self.arm_position)
             if not(self.arm_position):
                 count = 0
+                self.arm_position = True
                 while count < 3:
                     count = count +1
                     extract = rospy.Publisher("/extract_tablet", Bool, queue_size=1)
                     extract_msg = Bool()
                     extract_msg.data = True
                     extract.publish(extract_msg)
-                self.arm_position = True
+                
 
             for (markerCorner, markerID) in zip(corners, ids):
                 # extract the marker corners (which are always returned in
