@@ -60,7 +60,7 @@ class DOT_PAQUITOP_GUI(MDApp):
         return self.layout
 
     def load_video(self, *args):
-        
+        global robotic_arm_up
         # Load the aruco dict
         default = cv2.aruco.DICT_5X5_100
         arucoDict = cv2.aruco.Dictionary_get(default)
@@ -128,7 +128,7 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.layout.ids.identification.text = "Hi " + nome + "!"
 
     def goON(self, *args):
-        
+        global robotic_arm_up
         self.layout.ids.identification.md_bg_color = (200/255,200/255,200/255,1)
         self.layout.ids.identification.text = "Waiting for identifier"
         # Tablet store
