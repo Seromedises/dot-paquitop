@@ -32,23 +32,19 @@ Config.set('graphics', 'fullscreen', 1)
 Config.set('graphics', 'window_state', 'maximized')
 Config.write()
 
-global robotic_arm_up
-robotic_arm_up = False
-
 class DOT_PAQUITOP_GUI(MDApp):
 
     def __init__(self, **kwargs):
         rospy.init_node('paquitop_gui')
         super().__init__(**kwargs)
         self.layout = Builder.load_file('dot_paquitop_GUI.kv')
-
         self.pipeline = rs.pipeline()
         config = rs.config()
         config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
         profile = self.pipeline.start(config)
         align_to = rs.stream.color
         self.align = rs.align(align_to)
-
+        self.robotic_arm_up = False
         
     def build(self):
     
@@ -59,7 +55,6 @@ class DOT_PAQUITOP_GUI(MDApp):
         return self.layout
 
     def load_video(self, *args):
-        global robotic_arm_up
         # Load the aruco dict
         default = cv2.aruco.DICT_5X5_100
         arucoDict = cv2.aruco.Dictionary_get(default)
@@ -79,7 +74,7 @@ class DOT_PAQUITOP_GUI(MDApp):
             # flatten the ArUco IDs list
             ids = ids.flatten()
 
-            if not robotic_arm_up:
+            if not self.robotic_arm_up:
                 count = 0
                 while count < 3:
                     count = count +1
@@ -87,7 +82,7 @@ class DOT_PAQUITOP_GUI(MDApp):
                     extract_msg = Bool()
                     extract_msg.data = True
                     extract.publish(extract_msg)
-                    robotic_arm_up = True
+                    self.robotic_arm_up = True
 
             for (markerCorner, markerID) in zip(corners, ids):
                 # extract the marker corners (which are always returned in
@@ -127,7 +122,6 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.layout.ids.identification.text = "Hi " + nome + "!"
 
     def goON(self, *args):
-        global robotic_arm_up
         self.layout.ids.identification.md_bg_color = (200/255,200/255,200/255,1)
         self.layout.ids.identification.text = "Waiting for identifier"
         # Tablet store
@@ -139,7 +133,7 @@ class DOT_PAQUITOP_GUI(MDApp):
             retrain_msg.data = True
             retrain.publish(retrain_msg)
         # Update status
-        robotic_arm_up = False
+        self.robotic_arm_up = False
         
 
 if __name__ == '__main__':
