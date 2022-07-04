@@ -48,7 +48,7 @@ class DOT_PAQUITOP_GUI(MDApp):
         
         
     def build(self):
-        self.robotic_arm_up = False
+        self.arm_position = False
         self.image = Image(pos_hint={"center_x": .775, "center_y":0.45},size_hint=(.4,.5),keep_ratio=True)
         self.layout.add_widget(self.image)
         Clock.schedule_interval(self.load_video,1.0/10.0)
@@ -75,7 +75,7 @@ class DOT_PAQUITOP_GUI(MDApp):
             # flatten the ArUco IDs list
             ids = ids.flatten()
 
-            if not(self.robotic_arm_up):
+            if not(self.arm_position):
                 count = 0
                 while count < 3:
                     count = count +1
@@ -83,7 +83,7 @@ class DOT_PAQUITOP_GUI(MDApp):
                     extract_msg = Bool()
                     extract_msg.data = True
                     extract.publish(extract_msg)
-                    self.robotic_arm_up = True
+                    self.arm_position = True
 
             for (markerCorner, markerID) in zip(corners, ids):
                 # extract the marker corners (which are always returned in
@@ -134,7 +134,7 @@ class DOT_PAQUITOP_GUI(MDApp):
             retrain_msg.data = True
             retrain.publish(retrain_msg)
         # Update status
-        self.robotic_arm_up = False
+        self.arm_position = False
         
 
 if __name__ == '__main__':
