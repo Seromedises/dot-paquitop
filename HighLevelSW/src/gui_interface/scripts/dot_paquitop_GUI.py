@@ -79,7 +79,7 @@ class DOT_PAQUITOP_GUI(MDApp):
             # flatten the ArUco IDs list
             ids = ids.flatten()
             print(self.arm_position)
-            if not(self.arm_position):
+            if not self.arm_position:
                 count = 0
                 self.arm_position = True
                 while count < 3:
