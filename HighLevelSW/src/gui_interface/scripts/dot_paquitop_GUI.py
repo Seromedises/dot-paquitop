@@ -35,6 +35,7 @@ Config.write()
 class DOT_PAQUITOP_GUI(MDApp):
 
     def __init__(self, **kwargs):
+        self.robotic_arm_up = False
         rospy.init_node('paquitop_gui')
         super().__init__(**kwargs)
         self.layout = Builder.load_file('dot_paquitop_GUI.kv')
@@ -44,7 +45,7 @@ class DOT_PAQUITOP_GUI(MDApp):
         profile = self.pipeline.start(config)
         align_to = rs.stream.color
         self.align = rs.align(align_to)
-        self.robotic_arm_up = False
+        
         
     def build(self):
     
