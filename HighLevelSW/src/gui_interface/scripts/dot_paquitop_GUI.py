@@ -58,7 +58,6 @@ class DOT_PAQUITOP_GUI(MDApp):
 
     def load_video(self, *args):
         global robotic_arm_up
-        print(robotic_arm_up)
         # Load the aruco dict
         default = cv2.aruco.DICT_5X5_100
         arucoDict = cv2.aruco.Dictionary_get(default)
@@ -80,7 +79,7 @@ class DOT_PAQUITOP_GUI(MDApp):
 
             if not robotic_arm_up:
                 count = 0
-                while count < 2:
+                while count < 3:
                     count = count +1
                     extract = rospy.Publisher("/extract_tablet", Bool, queue_size=1)
                     extract_msg = Bool()
@@ -131,7 +130,7 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.layout.ids.identification.text = "Waiting for identifier"
         # Tablet store
         count = 0
-        while count < 2:
+        while count < 3:
             count = count +1
             retrain = rospy.Publisher("/retrain_tablet", Bool, queue_size=1)
             retrain_msg = Bool()
