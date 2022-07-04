@@ -78,11 +78,11 @@
 
 	<arg name="arm" default="gen3_lite"/>
 	<arg name="robot_name" default="my_$(arg arm)"/>
-  <node machine="server" name="kinova_teleop" pkg="kortex_movement" type="kinova_teleop.py" ns="$(arg robot_name)" respawn="true"/>
+  <node machine="server" name="kinova_teleop" pkg="kortex_movement" type="kinova_teleop.py" ns="$(arg robot_name)" respawn="true" output="screen"/>
 
-  <node machine="server" name="tablet_movement" pkg="kortex_movement" type="tablet_movement.py" ns="$(arg robot_name)" respawn="true"/>
+  <node machine="server" name="tablet_movement" pkg="kortex_movement" type="tablet_movement.py" ns="$(arg robot_name)" respawn="true" output="screen"/>
 
-	<node machine="server" name="rest_position" pkg="kortex_movement" type="rest_position.py" ns="$(arg robot_name)" respawn="true"> 
+	<node machine="server" name="rest_position" pkg="kortex_movement" type="rest_position.py" ns="$(arg robot_name)" respawn="true" output="screen"> 
    	<param name="robot_name" value="$(arg robot_name)"/>
   </node>
 
@@ -91,6 +91,6 @@
 		<param name="start_moveit" value="false"/>
 	</include>
 
-	<node machine="client" name="dot_paquitop_GUI" pkg="gui_interface" type="dot_paquitop_GUI.py"/>
+	<node machine="client" name="dot_paquitop_GUI" pkg="gui_interface" type="dot_paquitop_GUI.py" output="screen"/>
 
 </launch>
