@@ -83,7 +83,7 @@ class DOT_PAQUITOP_GUI(MDApp):
                     extract_msg = Bool()
                     extract_msg.data = True
                     extract.publish(extract_msg)
-                    self.arm_position = True
+                self.arm_position = True
 
             for (markerCorner, markerID) in zip(corners, ids):
                 # extract the marker corners (which are always returned in
