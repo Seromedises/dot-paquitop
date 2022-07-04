@@ -77,12 +77,12 @@ class DOT_PAQUITOP_GUI(MDApp):
             # flatten the ArUco IDs list
             ids = ids.flatten()
 
-            if not robotic_arm_up:
-                extract = rospy.Publisher("/extract_tablet", Bool, queue_size=1)
-                extract_msg = Bool()
-                extract_msg.data = True
-                extract.publish(extract_msg)
-                robotic_arm_up = True
+            
+            extract = rospy.Publisher("/extract_tablet", Bool, queue_size=1)
+            extract_msg = Bool()
+            extract_msg.data = True
+            extract.publish(extract_msg)
+            robotic_arm_up = True
 
             for (markerCorner, markerID) in zip(corners, ids):
                 # extract the marker corners (which are always returned in
