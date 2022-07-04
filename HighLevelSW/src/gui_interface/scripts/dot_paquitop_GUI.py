@@ -37,7 +37,7 @@ class DOT_PAQUITOP_GUI(MDApp):
     def __init__(self, **kwargs):
         rospy.init_node('paquitop_gui')
         super().__init__(**kwargs)
-        self.robotic_arm_up = False
+        
         self.layout = Builder.load_file('dot_paquitop_GUI.kv')
         self.pipeline = rs.pipeline()
         config = rs.config()
@@ -48,7 +48,7 @@ class DOT_PAQUITOP_GUI(MDApp):
         
         
     def build(self):
-    
+        self.robotic_arm_up = False
         self.image = Image(pos_hint={"center_x": .775, "center_y":0.45},size_hint=(.4,.5),keep_ratio=True)
         self.layout.add_widget(self.image)
         Clock.schedule_interval(self.load_video,1.0/10.0)
@@ -75,7 +75,7 @@ class DOT_PAQUITOP_GUI(MDApp):
             # flatten the ArUco IDs list
             ids = ids.flatten()
 
-            if self.robotic_arm_up == False:
+            if not(self.robotic_arm_up):
                 count = 0
                 while count < 3:
                     count = count +1
