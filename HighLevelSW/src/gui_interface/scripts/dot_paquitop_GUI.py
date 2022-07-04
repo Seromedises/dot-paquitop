@@ -45,6 +45,7 @@ class DOT_PAQUITOP_GUI(MDApp):
         profile = self.pipeline.start(config)
         align_to = rs.stream.color
         self.align = rs.align(align_to)
+        self.goON()
         
         
     def build(self):
