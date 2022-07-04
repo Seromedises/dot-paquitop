@@ -77,12 +77,15 @@ class DOT_PAQUITOP_GUI(MDApp):
             # flatten the ArUco IDs list
             ids = ids.flatten()
 
-            
-            extract = rospy.Publisher("/extract_tablet", Bool, queue_size=1)
-            extract_msg = Bool()
-            extract_msg.data = True
-            extract.publish(extract_msg)
-            robotic_arm_up = True
+            if not robotic_arm_up:
+                count = 0
+                while count < 2:
+                    count = count +1
+                    extract = rospy.Publisher("/extract_tablet", Bool, queue_size=1)
+                    extract_msg = Bool()
+                    extract_msg.data = True
+                    extract.publish(extract_msg)
+                    robotic_arm_up = True
 
             for (markerCorner, markerID) in zip(corners, ids):
                 # extract the marker corners (which are always returned in
@@ -126,10 +129,13 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.layout.ids.identification.md_bg_color = (200/255,200/255,200/255,1)
         self.layout.ids.identification.text = "Waiting for identifier"
         # Tablet store
-        retrain = rospy.Publisher("/retrain_tablet", Bool, queue_size=1)
-        retrain_msg = Bool()
-        retrain_msg.data = True
-        retrain.publish(retrain_msg)
+        count = 0
+        while count < 2:
+            count = count +1
+            retrain = rospy.Publisher("/retrain_tablet", Bool, queue_size=1)
+            retrain_msg = Bool()
+            retrain_msg.data = True
+            retrain.publish(retrain_msg)
         # Update status
         robotic_arm_up = False
         
