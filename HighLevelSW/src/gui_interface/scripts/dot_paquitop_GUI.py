@@ -45,7 +45,10 @@ class DOT_PAQUITOP_GUI(MDApp):
         profile = self.pipeline.start(config)
         align_to = rs.stream.color
         self.align = rs.align(align_to)
-        self.goON()
+        retrain = rospy.Publisher("/retrain_tablet", Bool, queue_size=1)
+        retrain_msg = Bool()
+        retrain_msg.data = False
+        retrain.publish(retrain_msg)
         
         
     def build(self):
