@@ -45,10 +45,7 @@ class DOT_PAQUITOP_GUI(MDApp):
         profile = self.pipeline.start(config)
         align_to = rs.stream.color
         self.align = rs.align(align_to)
-        retrain = rospy.Publisher("/retrain_tablet", Bool, queue_size=1)
-        retrain_msg = Bool()
-        retrain_msg.data = False
-        retrain.publish(retrain_msg)
+        
         
         
     def build(self):
@@ -56,6 +53,8 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.image = Image(pos_hint={"center_x": .775, "center_y":0.45},size_hint=(.4,.5),keep_ratio=True)
         self.layout.add_widget(self.image)
         Clock.schedule_interval(self.load_video,1.0/10.0)
+        # Update status
+        self.arm_position = False
          
         return self.layout
 
@@ -79,7 +78,9 @@ class DOT_PAQUITOP_GUI(MDApp):
             # flatten the ArUco IDs list
             ids = ids.flatten()
             print(self.arm_position)
-            if not self.arm_position:
+            if self.arm_position:
+                print("")
+            else:
                 count = 0
                 self.arm_position = True
                 while count < 3:
