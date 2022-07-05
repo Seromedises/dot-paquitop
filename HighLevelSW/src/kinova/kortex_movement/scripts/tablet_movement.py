@@ -364,177 +364,182 @@ class ExampleFullArmMovement:
                 self.example_clear_faults()
 
 def extract_tablet(data):
-  global rest_position
-  if data.data and rest_position:
-    gripper_open = 0.0
-    gripper_close = 1.0
-    reach = False
-    joint = np.zeros(6)
+    global rest_position
+    if data.data and rest_position:
+        gripper_open = 0.0
+        gripper_close = 1.0
+        reach = False
+        joint = np.zeros(6)
 
-    # open gripper
-    reach = example.example_send_gripper_command(gripper_open)
-    rospy.loginfo('gripper opened')
-    
+        # open gripper
+        reach = example.example_send_gripper_command(gripper_open)
+        rospy.loginfo('gripper opened')
+        
 
-    # reconfigure position
-    joint[0] = 65.459
-    joint[1] = 38.516
-    joint[2] = -55.806
-    joint[3] = 9.371
-    joint[4] = -120
-    joint[5] = 10.311
+        # reconfigure position
+        joint[0] = 65.459
+        joint[1] = 38.516
+        joint[2] = -55.806
+        joint[3] = 9.371
+        joint[4] = -120
+        joint[5] = 10.311
+            
+        reach = example.example_send_joint_angles(joint)
+        if reach:
+            rospy.loginfo('joint done')
         
-    reach = example.example_send_joint_angles(joint)
-    if reach:
-        rospy.loginfo('joint done')
-    
-    
-    # tablet approach position
-    joint[0] = 68.452
-    joint[1] = 82.279
-    joint[2] = -77.663
-    joint[3] = 67.203
-    joint[4] = -108.603
-    joint[5] = 82.363
         
-    reach = example.example_send_joint_angles(joint)
-    if reach:
-        rospy.loginfo('joint done')
-    
-    # tablet pick position
-    joint[0] = 58.75
-    joint[1] = 73.103
-    joint[2] = -110.242
-    joint[3] = 58.704
-    joint[4] = -87.14
-    joint[5] = 91.737
+        # tablet approach position
+        joint[0] = 68.452
+        joint[1] = 82.279
+        joint[2] = -77.663
+        joint[3] = 67.203
+        joint[4] = -108.603
+        joint[5] = 82.363
+            
+        reach = example.example_send_joint_angles(joint)
+        if reach:
+            rospy.loginfo('joint done')
         
-    reach = example.example_send_joint_angles(joint)
-    
-    # close gripper
-    reach = example.example_send_gripper_command(gripper_close)
-    rospy.loginfo('gripper closed')
-    
-    
-    # lift pose
-    pose = PlayCartesianTrajectoryRequest()
-    pose.input.target_pose.x = -0.18
-    pose.input.target_pose.y = -0.032
-    pose.input.target_pose.z = 0.156
-    pose.input.target_pose.theta_x = -90
-    pose.input.target_pose.theta_y = 0
-    pose.input.target_pose.theta_z = 0
-    
-    reach = False
-    while not reach: 
-      reach = example.example_send_cartesian_pose(pose)
+        # tablet pick position
+        joint[0] = 58.75
+        joint[1] = 73.103
+        joint[2] = -110.242
+        joint[3] = 58.704
+        joint[4] = -87.14
+        joint[5] = 91.737
+            
+        reach = example.example_send_joint_angles(joint)
+        
+        # close gripper
+        reach = example.example_send_gripper_command(gripper_close)
+        rospy.loginfo('gripper closed')
+        
+        
+        # lift pose
+        pose = PlayCartesianTrajectoryRequest()
+        pose.input.target_pose.x = -0.18
+        pose.input.target_pose.y = -0.032
+        pose.input.target_pose.z = 0.156
+        pose.input.target_pose.theta_x = -90
+        pose.input.target_pose.theta_y = 0
+        pose.input.target_pose.theta_z = 0
+        
+        reach = False
+        while not reach: 
+            reach = example.example_send_cartesian_pose(pose)
 
-    # lift pose 2
-    pose = PlayCartesianTrajectoryRequest()
-    pose.input.target_pose.x = -0.18 
-    pose.input.target_pose.y = -0.05
-    pose.input.target_pose.z = 0.25
-    pose.input.target_pose.theta_x = -90
-    pose.input.target_pose.theta_y = 0
-    pose.input.target_pose.theta_z = 0
-    reach = False
-    while not reach: 
-      reach = example.example_send_cartesian_pose(pose)
-    
-    # tablet deliver
-    joint[0] = -69.73
-    joint[1] = 35.37
-    joint[2] = 60.48
-    joint[3] = -9.63
-    joint[4] = -63.40
-    joint[5] = -116.43
+        # lift pose 2
+        pose = PlayCartesianTrajectoryRequest()
+        pose.input.target_pose.x = -0.18 
+        pose.input.target_pose.y = -0.05
+        pose.input.target_pose.z = 0.25
+        pose.input.target_pose.theta_x = -90
+        pose.input.target_pose.theta_y = 0
+        pose.input.target_pose.theta_z = 0
+        reach = False
+        while not reach: 
+            reach = example.example_send_cartesian_pose(pose)
         
-    reach = example.example_send_joint_angles(joint)
-    rest_position = False
+        # tablet deliver
+        joint[0] = -69.73
+        joint[1] = 35.37
+        joint[2] = 60.48
+        joint[3] = -9.63
+        joint[4] = -63.40
+        joint[5] = -116.43
+            
+        reach = example.example_send_joint_angles(joint)
+        rest_position = False
 
-  
-    
+    if data.data:
+        tablet_extracted = rospy.Publisher("/tablet_extracted", Bool, queue_size=1)
+        tablet_extracted_msg = Bool()
+        tablet_extracted.data = True
+        tablet_extracted.publish(tablet_extracted_msg)
+        
 
 def retrain_tablet(data):
-  global rest_position
-  if data.data and not rest_position:
-    gripper_open = 0.0
-    gripper_close = 1.0
-    reach = False
-    joint = np.zeros(6)
-    
-    # tablet lift 2
-    joint[0] = 53.69
-    joint[1] = 33.71
-    joint[2] = -130.425
-    joint[3] = 52.569
-    joint[4] = -102.714
-    joint[5] = 80.438
+    global rest_position
+    if data.data and not rest_position:
+        gripper_open = 0.0
+        gripper_close = 1.0
+        reach = False
+        joint = np.zeros(6)
         
-    reach = example.example_send_joint_angles(joint)
+        # tablet lift 2
+        joint[0] = 53.69
+        joint[1] = 33.71
+        joint[2] = -130.425
+        joint[3] = 52.569
+        joint[4] = -102.714
+        joint[5] = 80.438
+            
+        reach = example.example_send_joint_angles(joint)
 
-    # lift pose 
-    pose = PlayCartesianTrajectoryRequest()
-    pose.input.target_pose.x = -0.18 
-    pose.input.target_pose.y = -0.032
-    pose.input.target_pose.z = 0.156
-    pose.input.target_pose.theta_x = -90
-    pose.input.target_pose.theta_y = 0
-    pose.input.target_pose.theta_z = 0
-    reach = False
-    while not reach: 
-      reach = example.example_send_cartesian_pose(pose)
+        # lift pose 
+        pose = PlayCartesianTrajectoryRequest()
+        pose.input.target_pose.x = -0.18 
+        pose.input.target_pose.y = -0.032
+        pose.input.target_pose.z = 0.156
+        pose.input.target_pose.theta_x = -90
+        pose.input.target_pose.theta_y = 0
+        pose.input.target_pose.theta_z = 0
+        reach = False
+        while not reach: 
+            reach = example.example_send_cartesian_pose(pose)
 
-    # tablet 
-    joint[0] = 58.75
-    joint[1] = 73.103
-    joint[2] = -110.242
-    joint[3] = 58.704
-    joint[4] = -87.14
-    joint[5] = 91.737
+        # tablet 
+        joint[0] = 58.75
+        joint[1] = 73.103
+        joint[2] = -110.242
+        joint[3] = 58.704
+        joint[4] = -87.14
+        joint[5] = 91.737
+            
+        reach = example.example_send_joint_angles(joint)
         
-    reach = example.example_send_joint_angles(joint)
-    
-    # open gripper
-    reach = example.example_send_gripper_command(gripper_open)
-    rospy.loginfo('gripper opened') 
-    
-    # tablet approach position
-    joint[0] = 68.452
-    joint[1] = 82.279
-    joint[2] = -77.663
-    joint[3] = 67.203
-    joint[4] = -108.603
-    joint[5] = 82.363
+        # open gripper
+        reach = example.example_send_gripper_command(gripper_open)
+        rospy.loginfo('gripper opened') 
         
-    reach = example.example_send_joint_angles(joint)
+        # tablet approach position
+        joint[0] = 68.452
+        joint[1] = 82.279
+        joint[2] = -77.663
+        joint[3] = 67.203
+        joint[4] = -108.603
+        joint[5] = 82.363
+            
+        reach = example.example_send_joint_angles(joint)
 
-    # reconfigure position
-    joint[0] = 65.459
-    joint[1] = 38.516
-    joint[2] = -55.806
-    joint[3] = 9.371
-    joint[4] = -120
-    joint[5] = 10.311
+        # reconfigure position
+        joint[0] = 65.459
+        joint[1] = 38.516
+        joint[2] = -55.806
+        joint[3] = 9.371
+        joint[4] = -120
+        joint[5] = 10.311
+            
+        reach = example.example_send_joint_angles(joint)
+
+        # rest position
+        joint[0] = 0.0
+        joint[1] = 105.0
+        joint[2] = 148.0
+        joint[3] = 90.0
+        joint[4] = 45.0
+        joint[5] = 90.0
+            
+        reach = example.example_send_joint_angles(joint)
+
+        rest_position = True
         
-    reach = example.example_send_joint_angles(joint)
-
-    # rest position
-    joint[0] = 0.0
-    joint[1] = 105.0
-    joint[2] = 148.0
-    joint[3] = 90.0
-    joint[4] = 45.0
-    joint[5] = 90.0
-        
-    reach = example.example_send_joint_angles(joint)
-
-    rest_position = True
-
-    tablet_stored = rospy.Publisher("/tablet_stored", Bool, queue_size=1)
-    tablet_stored_msg = Bool()
-    tablet_stored.data = True
-    tablet_stored.publish(tablet_stored_msg)
+    if data.data:
+        tablet_stored = rospy.Publisher("/tablet_stored", Bool, queue_size=1)
+        tablet_stored_msg = Bool()
+        tablet_stored.data = True
+        tablet_stored.publish(tablet_stored_msg)
     
   
 
