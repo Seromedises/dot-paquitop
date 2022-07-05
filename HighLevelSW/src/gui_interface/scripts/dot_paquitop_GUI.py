@@ -2,6 +2,7 @@
 
 # Per evitare problemi di risoluzione con diversi schermi:
 from cgitb import text
+from glob import glob
 from token import DOT
 #from ctypes import windll, c_int64
 from turtle import color
@@ -75,9 +76,11 @@ class DOT_PAQUITOP_GUI(MDApp):
 
         if len(corners) > 0:
             # flatten the ArUco IDs list
+            global first
             ids = ids.flatten()
             print(DOT_PAQUITOP_GUI.arm_position)
-            if not DOT_PAQUITOP_GUI.arm_position:
+            if first or not DOT_PAQUITOP_GUI.arm_position:
+                first = False
                 count = 0
                 DOT_PAQUITOP_GUI.arm_position = True
                 while count < 3:
@@ -141,6 +144,7 @@ class DOT_PAQUITOP_GUI(MDApp):
         
 
 if __name__ == '__main__':
-    
+    global first
+    first = True
     DOT_PAQUITOP_GUI().run()
     
