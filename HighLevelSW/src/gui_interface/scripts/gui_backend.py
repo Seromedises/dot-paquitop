@@ -1,26 +1,28 @@
 #!/usr/bin/env python3
 
-import numpy as np
 import rospy
+import numpy as np
 from std_msgs.msg import Empty, Bool
 import rospkg
 from geometry_msgs.msg import PoseWithCovarianceStamped
+import time
 
 def pub_pose(data):
     global all_point_published
     global pub_pose_counter
+    global in_movement
 
     if pub_pose_counter == 0:
-        goal = "Letto 1"
-
-    if pub_pose_counter == 1:
         goal = "Letto 2"
 
-    if pub_pose_counter == 2:
+    if pub_pose_counter == 1:
         goal = "Laboratorio"
 
+    if pub_pose_counter == 2:
+        goal = "Sala Prelievi"
 
-    if data.data:
+
+    if data.data and in_movement:
         rospack = rospkg.RosPack()
         folder = rospack.get_path('navstack_pub')
         folder = folder + "/trajectory_point/" + goal + ".txt"
@@ -64,10 +66,12 @@ def pub_pose(data):
 
         pub_pose_counter = pub_pose_counter + 1
         all_point_published = True
+        in_movement = False
 
 def startPAQUITOP(data):
     global all_point_published
-    if data.data: #and all_point_published:
+    global in_movement
+    if data.data and not in_movement: #and all_point_published:
         all_point_published = False
         count = 0
         while count < 2:
@@ -77,16 +81,25 @@ def startPAQUITOP(data):
             publisher.publish(Start)
         input_file_path = rospkg.RosPack().get_path('follow_waypoints')+"/saved_path/pose.csv"
         f = open(input_file_path, 'w')
-        f.close()    
+        f.close() 
+        in_movement = True   
     
 
 if __name__ == '__main__':
-
+    rospy.init_node('backend')
     # global variables    
     global pub_pose_counter
     pub_pose_counter = 0
+    global in_movement
+    in_movement = True
+    
 
     # Subscribers functions
-    rospy.init_node("gui_backend")
-    rospy.Subscriber("/extract_tablet", Bool, pub_pose)
-    rospy.Subscriber("/tablet_stored", Bool, startPAQUITOP)
+    while not rospy.is_shutdown():
+        
+        rospy.Subscriber("/extract_tablet", Bool, pub_pose)
+        rospy.Subscriber("/tablet_stored", Bool, startPAQUITOP)
+        time.sleep(0.5)
+
+
+    
