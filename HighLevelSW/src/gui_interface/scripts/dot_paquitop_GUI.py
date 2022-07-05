@@ -3,6 +3,7 @@
 # Per evitare problemi di risoluzione con diversi schermi:
 from cgitb import text
 from glob import glob
+from tkinter.tix import Tree
 from token import DOT
 #from ctypes import windll, c_int64
 from turtle import color
@@ -76,31 +77,9 @@ class DOT_PAQUITOP_GUI(MDApp):
 
         if len(corners) > 0:
             # flatten the ArUco IDs list
-            global first
-            ids = ids.flatten()
-
-            if first:
-                first = False
-                
-                count = 0
-                while count < 5:
-                    count = count +1
-                    extract = rospy.Publisher("/extract_tablet", Bool, queue_size=1)
-                    extract_msg = Bool()
-                    extract_msg.data = True
-                    extract.publish(extract_msg)
+            self.goUP()
             
-            if not DOT_PAQUITOP_GUI.arm_position:
-                
-                count = 0
-                DOT_PAQUITOP_GUI.arm_position = True
-                while count < 3:
-                    count = count +1
-                    extract = rospy.Publisher("/extract_tablet", Bool, queue_size=1)
-                    extract_msg = Bool()
-                    extract_msg.data = True
-                    extract.publish(extract_msg)
-                
+            ids = ids.flatten()             
 
             for (markerCorner, markerID) in zip(corners, ids):
                 # extract the marker corners (which are always returned in
@@ -151,7 +130,20 @@ class DOT_PAQUITOP_GUI(MDApp):
             retrain_msg.data = True
             retrain.publish(retrain_msg)
         # Update status
-        DOT_PAQUITOP_GUI.arm_position = False
+        self.arm_position = False
+    
+    def goUP(self, *args):
+        #Tablet extract
+        if self.arm_position == False:
+            count = 0
+            while count < 3:
+                count = count +1
+                tab_ext = rospy.Publisher("/extract_tablet", Bool, queue_size=1)
+                tab_ext_msg = Bool()
+                tab_ext_msg.data = True
+                tab_ext.publish(tab_ext_msg)
+            # Update status
+            self.arm_position = True
         
 
 if __name__ == '__main__':
