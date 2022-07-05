@@ -72,7 +72,7 @@ class DOT_PAQUITOP_GUI(MDApp):
         images = color_image
 
         (corners, ids, rejected) = cv2.aruco.detectMarkers(images, arucoDict, parameters=arucoParams)
-
+        print(self.arm_position)
         if len(corners) > 0:
             # flatten the ArUco IDs list
             self.goUP()
