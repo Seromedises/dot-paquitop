@@ -36,13 +36,11 @@ Config.set('graphics', 'window_state', 'maximized')
 Config.write()
 
 class DOT_PAQUITOP_GUI(MDApp):
-    
-    arm_position = False
 
     def __init__(self, **kwargs):
         rospy.init_node('paquitop_gui')
         super().__init__(**kwargs)
-        #self.arm_position = False
+        self.arm_position = False
         self.layout = Builder.load_file('dot_paquitop_GUI.kv')
         self.pipeline = rs.pipeline()
         config = rs.config()
@@ -147,7 +145,6 @@ class DOT_PAQUITOP_GUI(MDApp):
         
 
 if __name__ == '__main__':
-    global first
-    first = True
+    
     DOT_PAQUITOP_GUI().run()
     
