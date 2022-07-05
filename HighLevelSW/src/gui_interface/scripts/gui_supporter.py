@@ -86,5 +86,6 @@ if __name__ == '__main__':
     pub_pose_counter = 0
 
     # Subscribers functions
+    rospy.init_node("gui_backend")
     rospy.Subscriber('/extract_tablet', Bool, pub_pose)
     rospy.Subscriber("/tablet_stored", Bool, )
