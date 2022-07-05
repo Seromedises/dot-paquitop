@@ -60,6 +60,7 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.last = -1
         self.seat1 = False
         self.seat2 = False
+        self.PAQUITOP_STOP = False
 
         
     def build(self):
@@ -115,19 +116,16 @@ class DOT_PAQUITOP_GUI(MDApp):
 
                 self.markerID = markerID
                 self.identificationOK()
-            moveArm = rospy.wait_for_message("/cmd_vel", Twist)
-        
-
-            if moveArm.linear.x < 0.05 and moveArm.linear.y < 0.05 and moveArm.angular.z <0.1:
             
-                if (self.markerID == 0 or self.markerID == 1) and not self.seat1:
-                    self.seat1 = True
-                    self.goUP()
+            
+            if (self.markerID == 0 or self.markerID == 1) and not self.seat1:
+                self.seat1 = True
+                self.goUP()
 
-                if (self.markerID == 2 or self.markerID == 3) and not self.seat2:
-                    self.seat2 = True
-                    self.goUP()
-                
+            if (self.markerID == 2 or self.markerID == 3) and not self.seat2:
+                self.seat2 = True
+                self.goUP()
+            
         frame = cv2.resize(images, None, fx=1.0, fy=1.0, interpolation=cv2.INTER_AREA)
 
         buffer = cv2.flip(frame, 0).tobytes()
@@ -177,9 +175,10 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.arm_position = False
     
     def goUP(self, *args):
-          
+        rospy.Subscriber("/cmd_vel", Twist, self.is_in_movement)    
+
         #Tablet extract
-        if self.arm_position == False and self.markerID != self.last :
+        if self.arm_position == False and self.markerID != self.last and self.PAQUITOP_STOP:
             count = 0
             while count < 3:
                 count = count +1
@@ -190,7 +189,12 @@ class DOT_PAQUITOP_GUI(MDApp):
             # Update status
             self.arm_position = True    
             self.last = self.markerID
-
+    
+    def is_in_movement(self, movePAQUITOP):
+        if movePAQUITOP.linear.x < 0.05 and movePAQUITOP.linear.y < 0.05 and movePAQUITOP.angular.z <0.1:
+            self.PAQUITOP_STOP = True
+        else:
+            self.PAQUITOP_STOP = False
 if __name__ == '__main__':
     
     DOT_PAQUITOP_GUI().run()
