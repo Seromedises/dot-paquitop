@@ -48,6 +48,14 @@ class DOT_PAQUITOP_GUI(MDApp):
         profile = self.pipeline.start(config)
         align_to = rs.stream.color
         self.align = rs.align(align_to)
+        #initialize topic extract table
+        while count < 3:
+                count = count +1
+                tab_ext = rospy.Publisher("/extract_tablet", Bool, queue_size=1)
+                tab_ext_msg = Bool()
+                tab_ext_msg.data = False
+                tab_ext.publish(tab_ext_msg)
+
         
     def build(self):
         
