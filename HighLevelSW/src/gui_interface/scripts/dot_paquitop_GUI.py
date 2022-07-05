@@ -49,6 +49,7 @@ class DOT_PAQUITOP_GUI(MDApp):
         align_to = rs.stream.color
         self.align = rs.align(align_to)
         #initialize topic extract table
+        count = 0
         while count < 3:
                 count = count +1
                 tab_ext = rospy.Publisher("/extract_tablet", Bool, queue_size=1)
