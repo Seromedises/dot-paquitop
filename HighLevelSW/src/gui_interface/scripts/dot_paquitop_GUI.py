@@ -175,7 +175,7 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.startPAQUITOP()
 
     def startPAQUITOP(self,*args):
-        rospy.wait_for_message("/tablet_stored", Bool)
+        # rospy.wait_for_message("/tablet_stored", Bool)
         count = 0
         while count < 2:
             count = count +1
