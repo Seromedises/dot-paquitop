@@ -2,6 +2,7 @@
 
 # Per evitare problemi di risoluzione con diversi schermi:
 from cgitb import text
+from token import DOT
 #from ctypes import windll, c_int64
 from turtle import color
 #windll.user32.SetProcessDpiAwarenessContext(c_int64(-4))
@@ -34,6 +35,8 @@ Config.write()
 
 class DOT_PAQUITOP_GUI(MDApp):
 
+    arm_position = False
+
     def __init__(self, **kwargs):
         rospy.init_node('paquitop_gui')
         super().__init__(**kwargs)
@@ -46,16 +49,12 @@ class DOT_PAQUITOP_GUI(MDApp):
         align_to = rs.stream.color
         self.align = rs.align(align_to)
         
-        
-        
     def build(self):
         
         self.image = Image(pos_hint={"center_x": .775, "center_y":0.45},size_hint=(.4,.5),keep_ratio=True)
         self.layout.add_widget(self.image)
         Clock.schedule_interval(self.load_video,1.0/10.0)
-        # Update status
-        self.arm_position = False
-         
+                 
         return self.layout
 
     def load_video(self, *args):
@@ -79,10 +78,8 @@ class DOT_PAQUITOP_GUI(MDApp):
             ids = ids.flatten()
             print(self.arm_position)
             if self.arm_position:
-                print("")
-            else:
                 count = 0
-                self.arm_position = True
+                DOT_PAQUITOP_GUI.arm_position = True
                 while count < 3:
                     count = count +1
                     extract = rospy.Publisher("/extract_tablet", Bool, queue_size=1)
@@ -140,7 +137,7 @@ class DOT_PAQUITOP_GUI(MDApp):
             retrain_msg.data = True
             retrain.publish(retrain_msg)
         # Update status
-        self.arm_position = False
+        DOT_PAQUITOP_GUI.arm_position = False
         
 
 if __name__ == '__main__':
