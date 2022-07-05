@@ -56,6 +56,7 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.path_counter = 0
         self.paziente = -1
         self.sacca = -1
+        self.last = -1
 
         
     def build(self):
@@ -162,8 +163,9 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.arm_position = False
     
     def goUP(self, *args):
+        
         #Tablet extract
-        if self.arm_position == False:
+        if self.arm_position == False and self.markerID != self.last :
             count = 0
             while count < 3:
                 count = count +1
@@ -173,6 +175,7 @@ class DOT_PAQUITOP_GUI(MDApp):
                 tab_ext.publish(tab_ext_msg)
             # Update status
             self.arm_position = True    
+            self.last = self.markerID
 
 if __name__ == '__main__':
     

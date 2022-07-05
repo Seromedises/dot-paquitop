@@ -566,7 +566,7 @@ def main():
     example.example_subscribe_to_a_robot_notification()
 
     while not rospy.is_shutdown():
-        rospy.Subscriber("/stop_arm", Bool, example.stop)
+        # rospy.Subscriber("/stop_arm", Bool, example.stop)
         rospy.Subscriber('/extract_tablet', Bool, extract_tablet)
         rospy.Subscriber('/retrain_tablet', Bool, retrain_tablet)
         time.sleep(0.1)
