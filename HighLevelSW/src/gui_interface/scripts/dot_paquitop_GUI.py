@@ -82,7 +82,7 @@ class DOT_PAQUITOP_GUI(MDApp):
             if first:
                 first = False
                 DOT_PAQUITOP_GUI.arm_position = True
-                while count < 3:
+                while count < 5:
                     count = count +1
                     extract = rospy.Publisher("/extract_tablet", Bool, queue_size=1)
                     extract_msg = Bool()
