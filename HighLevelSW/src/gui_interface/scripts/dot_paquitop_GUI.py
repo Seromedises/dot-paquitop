@@ -3,8 +3,6 @@
 # Per evitare problemi di risoluzione con diversi schermi:
 from cgitb import text
 from glob import glob
-from tkinter.tix import Tree
-from token import DOT
 #from ctypes import windll, c_int64
 from turtle import color
 #windll.user32.SetProcessDpiAwarenessContext(c_int64(-4))

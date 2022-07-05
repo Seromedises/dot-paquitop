@@ -42,6 +42,7 @@
 
 from cgitb import reset
 import imp
+from itertools import count
 import re
 import sys
 import time
@@ -536,11 +537,12 @@ def retrain_tablet(data):
         rest_position = True
         
     if data.data:
+              
         tablet_stored = rospy.Publisher("/tablet_stored", Bool, queue_size=1)
         tablet_stored_msg = Bool()
-        tablet_stored.data = True
+        tablet_stored_msg.data = True
         tablet_stored.publish(tablet_stored_msg)
-    
+
   
 
 def main():

@@ -102,7 +102,7 @@ class GetPath(State):
     def __init__(self):
         State.__init__(self, outcomes=['success'], input_keys=['waypoints'], output_keys=['waypoints'])
         # Subscribe to pose message to get new waypoints
-        self.addpose_topic = rospy.get_param('~addpose_topic','/initialpose')
+        self.addpose_topic = rospy.get_param('~addpose_topic','/addpose')
         # Create publsher to publish waypoints as pose array so that you can see them in rviz, etc.
         self.posearray_topic = rospy.get_param('~posearray_topic','/waypoints')
         self.poseArray_publisher = rospy.Publisher(self.posearray_topic, PoseArray, queue_size=1)

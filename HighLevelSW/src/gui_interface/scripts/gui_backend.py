@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+
 import numpy as np
 import rospy
 from std_msgs.msg import Empty, Bool
@@ -27,7 +28,7 @@ def pub_pose(data):
         f = open(folder,'r')
 
         publisher = rospy.Publisher("/addpose", PoseWithCovarianceStamped, queue_size=20)
-        rate = rospy.Rate(0.75) # rospy.Rate(0.5)
+        rate = rospy.Rate(0.5) # rospy.Rate(0.5)
 
         pose = PoseWithCovarianceStamped()
 
@@ -66,7 +67,7 @@ def pub_pose(data):
 
 def startPAQUITOP(data):
     global all_point_published
-    if data.data and all_point_published:
+    if data.data: #and all_point_published:
         all_point_published = False
         count = 0
         while count < 2:
@@ -87,5 +88,5 @@ if __name__ == '__main__':
 
     # Subscribers functions
     rospy.init_node("gui_backend")
-    rospy.Subscriber('/extract_tablet', Bool, pub_pose)
-    rospy.Subscriber("/tablet_stored", Bool, )
+    rospy.Subscriber("/extract_tablet", Bool, pub_pose)
+    rospy.Subscriber("/tablet_stored", Bool, startPAQUITOP)
