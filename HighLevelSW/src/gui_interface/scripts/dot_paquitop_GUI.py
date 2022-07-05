@@ -48,13 +48,7 @@ class DOT_PAQUITOP_GUI(MDApp):
         profile = self.pipeline.start(config)
         align_to = rs.stream.color
         self.align = rs.align(align_to)
-        #initialize topic extract table
-        """
-        count = 0
-        while count < 3:
-                count = count +1
-                """
-        
+        #initialize topic extract table    
         tab_ext = rospy.Publisher("/extract_tablet", Bool, queue_size=1)
         tab_ext_msg = Bool()
         tab_ext_msg.data = False
@@ -84,7 +78,7 @@ class DOT_PAQUITOP_GUI(MDApp):
         images = color_image
 
         (corners, ids, rejected) = cv2.aruco.detectMarkers(images, arucoDict, parameters=arucoParams)
-        print(self.arm_position)
+        
         if len(corners) > 0:
             # flatten the ArUco IDs list
             self.goUP()
