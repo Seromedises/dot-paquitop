@@ -14,7 +14,6 @@ from kivy.core.window import Window
 import numpy as np
 import cv2
 import sys
-from HighLevelSW.src.gui_interface.scripts.dot_first_GUI import pub_pose
 import pyrealsense2 as rs
 from kivy.lang import Builder
 from kivy.clock import Clock
@@ -197,7 +196,7 @@ class DOT_PAQUITOP_GUI(MDApp):
             elif self.goUPcounter == 3:
                 goal = "Laboratorio"
             
-            pub_pose(goal)
+            self.pub_pose(goal)
 
             self.goUPcounter = self.goUPcounter+1
     
