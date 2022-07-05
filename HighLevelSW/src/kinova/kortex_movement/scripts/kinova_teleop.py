@@ -313,8 +313,8 @@ def main():
             moveGripper = rospy.wait_for_message("/moveGripper", Float32)
 
             if abs(moveGripper.data - old_pos)>0.02:
-        	    example.example_send_gripper_command(moveGripper.data)
-        	    old_pos = moveGripper.data
+                example.example_send_gripper_command(moveGripper.data)
+                old_pos = moveGripper.data
 		
 
 

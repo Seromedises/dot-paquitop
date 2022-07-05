@@ -14,6 +14,7 @@ from kivy.core.window import Window
 import numpy as np
 import cv2
 import sys
+from HighLevelSW.src.gui_interface.scripts.dot_first_GUI import pub_pose
 import pyrealsense2 as rs
 from kivy.lang import Builder
 from kivy.clock import Clock
@@ -26,6 +27,8 @@ from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.menu import MDDropdownMenu 
 import rospy
 from std_msgs.msg import Empty, Bool
+import rospkg
+from geometry_msgs.msg import PoseWithCovarianceStamped
 
 Config.set('graphics', 'width', '1920')
 Config.set('graphics', 'height', '1080')
@@ -53,6 +56,9 @@ class DOT_PAQUITOP_GUI(MDApp):
         tab_ext_msg = Bool()
         tab_ext_msg.data = False
         tab_ext.publish(tab_ext_msg)
+        self.goUPcounter = 0
+        self.paziente = -1
+        self.sacca = -1
 
         
     def build(self):
@@ -80,9 +86,7 @@ class DOT_PAQUITOP_GUI(MDApp):
         (corners, ids, rejected) = cv2.aruco.detectMarkers(images, arucoDict, parameters=arucoParams)
         
         if len(corners) > 0:
-            # flatten the ArUco IDs list
-            self.goUP()
-            
+            # flatten the ArUco IDs list         
             ids = ids.flatten()             
 
             for (markerCorner, markerID) in zip(corners, ids):
@@ -108,8 +112,10 @@ class DOT_PAQUITOP_GUI(MDApp):
                 # draw the ArUco marker ID on the image
                 cv2.putText(images, str(markerID),(topLeft[0] - 15, topLeft[1] - 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
 
-        
-
+                self.markerID = markerID
+                self.identificationOK()
+            self.goUP()
+                
         frame = cv2.resize(images, None, fx=1.0, fy=1.0, interpolation=cv2.INTER_AREA)
 
         buffer = cv2.flip(frame, 0).tobytes()
@@ -118,13 +124,35 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.image.texture = texture
 
     def identificationOK(self, *args):
-        self.layout.ids.identification.md_bg_color = (20/255,180/255,10/255,.6)
-        nome = "Lorenzo"
-        self.layout.ids.identification.text = "Hi " + nome + "!"
+        if self.arm_position:
+            self.paziente = self.markerID
+        elif not self.arm_position:
+            self.sacca = self.markerID
+
+        if self.sacca == 0 and self.paziente == 1:
+            nome = "Lorenzo"
+            self.layout.ids.identification.md_bg_color = (20/255,180/255,10/255,.6)
+            self.layout.ids.identification.text = "Hi " + nome + "!"
+
+        elif self.sacca == 2 and self.paziente == 3:
+            nome = "Luigi"
+            self.layout.ids.identification.md_bg_color = (20/255,180/255,10/255,.6)
+            self.layout.ids.identification.text = "Hi " + nome + "!"
+        elif self.sacca == 4 and self.paziente == 5:
+            nome = "Giovanni"
+            self.layout.ids.identification.md_bg_color = (20/255,180/255,10/255,.6)
+            self.layout.ids.identification.text = "Hi " + nome + "!"
+        elif self.sacca == 6 and self.paziente == 7:
+            nome = "Giulia"
+            self.layout.ids.identification.md_bg_color = (20/255,180/255,10/255,.6)
+            self.layout.ids.identification.text = "Hi " + nome + "!"
+        
 
     def goON(self, *args):
         self.layout.ids.identification.md_bg_color = (200/255,200/255,200/255,1)
         self.layout.ids.identification.text = "Waiting for identifier"
+        self.paziente = -1
+        self.sacca = -1
         # Tablet store
         count = 0
         while count < 3:
@@ -135,6 +163,19 @@ class DOT_PAQUITOP_GUI(MDApp):
             retrain.publish(retrain_msg)
         # Update status
         self.arm_position = False
+        self.startPAQUITOP()
+
+    def startPAQUITOP(self,*args):
+        rospy.wait_for_message("/tablet_stored", Bool)
+        count = 0
+        while count < 2:
+            count = count +1
+            Start = Empty()
+            publisher = rospy.Publisher('/path_ready', Empty, queue_size=1)
+            publisher.publish(Start)
+        input_file_path = rospkg.RosPack().get_path('follow_waypoints')+"/saved_path/pose.csv"
+        f = open(input_file_path, 'w')
+        f.close()    
     
     def goUP(self, *args):
         #Tablet extract
@@ -148,6 +189,60 @@ class DOT_PAQUITOP_GUI(MDApp):
                 tab_ext.publish(tab_ext_msg)
             # Update status
             self.arm_position = True
+
+            if self.goUPcounter == 0:
+                goal = "Letto 1"
+            elif self.goUPcounter == 1:
+                goal = "Letto 2"
+            elif self.goUPcounter == 3:
+                goal = "Laboratorio"
+            
+            pub_pose(goal)
+
+            self.goUPcounter = self.goUPcounter+1
+    
+    def pub_pose(self, goal):
+        rospack = rospkg.RosPack()
+        folder = rospack.get_path('navstack_pub')
+        folder = folder + "/trajectory_point/" + goal + ".txt"
+
+        f = open(folder,'r')
+
+        # rospy.init_node('waypoints_publisher')
+        publisher = rospy.Publisher("/addpose", PoseWithCovarianceStamped, queue_size=20)
+        rate = rospy.Rate(0.75) # rospy.Rate(0.5)
+
+        pose = PoseWithCovarianceStamped()
+
+        pose.header.frame_id = 'map'
+        pose.pose.covariance = np.zeros(36)
+
+        values = np.zeros(7)
+        end = False
+        while not rospy.is_shutdown() and not end: 		
+            count = 0
+            while count < 7 and not end:
+                line = f.readline()
+                if line:
+                    # print(line)
+                    values[count] = round(float(line.strip()),5)
+                    # [float(x.strip('-')) for x in range(7) ]
+                    count = count+1
+                else:
+                    end = True
+            
+            line = f.readline()
+
+            pose.pose.pose.position.x = values[0]
+            pose.pose.pose.position.y = values[1]
+            pose.pose.pose.position.z = values[2]
+
+            pose.pose.pose.orientation.x = values[3]
+            pose.pose.pose.orientation.y = values[4]
+            pose.pose.pose.orientation.z = values[5]
+            pose.pose.pose.orientation.w = values[6]  
+            rate.sleep()
+            publisher.publish(pose)
         
 
 if __name__ == '__main__':
