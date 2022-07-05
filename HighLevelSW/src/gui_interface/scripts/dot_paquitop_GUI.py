@@ -26,6 +26,7 @@ import rospy
 from std_msgs.msg import Empty, Bool
 import rospkg
 from geometry_msgs.msg import PoseWithCovarianceStamped
+from geometry_msgs.msg import Twist
 
 Config.set('graphics', 'width', '1920')
 Config.set('graphics', 'height', '1080')
@@ -57,6 +58,8 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.paziente = -1
         self.sacca = -1
         self.last = -1
+        self.seat1 = False
+        self.seat2 = False
 
         
     def build(self):
@@ -112,7 +115,18 @@ class DOT_PAQUITOP_GUI(MDApp):
 
                 self.markerID = markerID
                 self.identificationOK()
-            self.goUP()
+            moveArm = rospy.wait_for_message("/cmd_vel", Twist)
+        
+
+            if moveArm.linear.x < 0.05 and moveArm.linear.y < 0.05 and moveArm.angular.z <0.1:
+            
+                if (self.markerID == 0 or self.markerID == 1) and not self.seat1:
+                    self.seat1 = True
+                    self.goUP()
+
+                if (self.markerID == 2 or self.markerID == 3) and not self.seat2:
+                    self.seat2 = True
+                    self.goUP()
                 
         frame = cv2.resize(images, None, fx=1.0, fy=1.0, interpolation=cv2.INTER_AREA)
 
@@ -163,7 +177,7 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.arm_position = False
     
     def goUP(self, *args):
-        
+          
         #Tablet extract
         if self.arm_position == False and self.markerID != self.last :
             count = 0
