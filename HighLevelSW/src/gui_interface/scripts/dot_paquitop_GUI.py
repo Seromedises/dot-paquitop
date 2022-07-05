@@ -162,29 +162,6 @@ class DOT_PAQUITOP_GUI(MDApp):
             retrain.publish(retrain_msg)
         # Update status
         self.arm_position = False
-
-        if self.path_counter == 0:
-            goal = "Letto 1"
-        elif self.path_counter == 1:
-            goal = "Letto 2"
-        elif self.path_counter == 3:
-            goal = "Laboratorio"
-            
-        # self.pub_pose(goal)
-        self.path_counter = self.path_counter+1
-        self.startPAQUITOP()
-
-    def startPAQUITOP(self,*args):
-        # rospy.wait_for_message("/tablet_stored", Bool)
-        count = 0
-        while count < 2:
-            count = count +1
-            Start = Empty()
-            publisher = rospy.Publisher('/path_ready', Empty, queue_size=1)
-            publisher.publish(Start)
-        input_file_path = rospkg.RosPack().get_path('follow_waypoints')+"/saved_path/pose.csv"
-        f = open(input_file_path, 'w')
-        f.close()    
     
     def goUP(self, *args):
         #Tablet extract
@@ -197,53 +174,7 @@ class DOT_PAQUITOP_GUI(MDApp):
                 tab_ext_msg.data = True
                 tab_ext.publish(tab_ext_msg)
             # Update status
-            self.arm_position = True
-
-            
-    
-    def pub_pose(self, goal):
-        rospack = rospkg.RosPack()
-        folder = rospack.get_path('navstack_pub')
-        folder = folder + "/trajectory_point/" + goal + ".txt"
-
-        f = open(folder,'r')
-
-        # rospy.init_node('waypoints_publisher')
-        publisher = rospy.Publisher("/addpose", PoseWithCovarianceStamped, queue_size=20)
-        rate = rospy.Rate(0.75) # rospy.Rate(0.5)
-
-        pose = PoseWithCovarianceStamped()
-
-        pose.header.frame_id = 'map'
-        pose.pose.covariance = np.zeros(36)
-
-        values = np.zeros(7)
-        end = False
-        while not rospy.is_shutdown() and not end: 		
-            count = 0
-            while count < 7 and not end:
-                line = f.readline()
-                if line:
-                    # print(line)
-                    values[count] = round(float(line.strip()),5)
-                    # [float(x.strip('-')) for x in range(7) ]
-                    count = count+1
-                else:
-                    end = True
-            
-            line = f.readline()
-
-            pose.pose.pose.position.x = values[0]
-            pose.pose.pose.position.y = values[1]
-            pose.pose.pose.position.z = values[2]
-
-            pose.pose.pose.orientation.x = values[3]
-            pose.pose.pose.orientation.y = values[4]
-            pose.pose.pose.orientation.z = values[5]
-            pose.pose.pose.orientation.w = values[6]  
-            rate.sleep()
-            publisher.publish(pose)
-        
+            self.arm_position = True    
 
 if __name__ == '__main__':
     

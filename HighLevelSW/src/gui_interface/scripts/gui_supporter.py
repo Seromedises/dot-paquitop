@@ -5,7 +5,8 @@ from std_msgs.msg import Empty, Bool
 import rospkg
 from geometry_msgs.msg import PoseWithCovarianceStamped
 
-def pub_pose(self, data):
+def pub_pose(data):
+    global all_point_published
     global pub_pose_counter
 
     if pub_pose_counter == 0:
@@ -25,7 +26,6 @@ def pub_pose(self, data):
 
         f = open(folder,'r')
 
-        # rospy.init_node('waypoints_publisher')
         publisher = rospy.Publisher("/addpose", PoseWithCovarianceStamped, queue_size=20)
         rate = rospy.Rate(0.75) # rospy.Rate(0.5)
 
@@ -41,9 +41,9 @@ def pub_pose(self, data):
             while count < 7 and not end:
                 line = f.readline()
                 if line:
-                    # print(line)
+                   
                     values[count] = round(float(line.strip()),5)
-                    # [float(x.strip('-')) for x in range(7) ]
+                    
                     count = count+1
                 else:
                     end = True
@@ -62,9 +62,29 @@ def pub_pose(self, data):
             publisher.publish(pose)
 
         pub_pose_counter = pub_pose_counter + 1
+        all_point_published = True
+
+def startPAQUITOP(data):
+    global all_point_published
+    if data.data and all_point_published:
+        all_point_published = False
+        count = 0
+        while count < 2:
+            count = count +1
+            Start = Empty()
+            publisher = rospy.Publisher('/path_ready', Empty, queue_size=1)
+            publisher.publish(Start)
+        input_file_path = rospkg.RosPack().get_path('follow_waypoints')+"/saved_path/pose.csv"
+        f = open(input_file_path, 'w')
+        f.close()    
+    
 
 if __name__ == '__main__':
+
+    # global variables    
     global pub_pose_counter
     pub_pose_counter = 0
 
+    # Subscribers functions
     rospy.Subscriber('/extract_tablet', Bool, pub_pose)
+    rospy.Subscriber("/tablet_stored", Bool, )
