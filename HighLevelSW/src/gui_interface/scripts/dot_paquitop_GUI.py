@@ -162,7 +162,7 @@ class DOT_PAQUITOP_GUI(MDApp):
             retrain.publish(retrain_msg)
         # Update status
         self.arm_position = False
-        
+
         if self.path_counter == 0:
             goal = "Letto 1"
         elif self.path_counter == 1:
@@ -170,7 +170,7 @@ class DOT_PAQUITOP_GUI(MDApp):
         elif self.path_counter == 3:
             goal = "Laboratorio"
             
-        self.pub_pose(goal)
+        # self.pub_pose(goal)
         self.path_counter = self.path_counter+1
         self.startPAQUITOP()
 
