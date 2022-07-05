@@ -173,19 +173,22 @@ class DOT_PAQUITOP_GUI(MDApp):
     def startPAQUITOP(self,*args):
         print("Avvio PAQUITOP")
         self.screen.ids.statusFB._set_text("DEMO avviata")
-        #start()
-        Start = Empty()
-        publisher = rospy.Publisher('/path_ready', Empty, queue_size=1)
-        publisher.publish(Start)
+        count = 0
+        while count < 2:
+            count = count +1
+            Start = Empty()
+            publisher = rospy.Publisher('/path_ready', Empty, queue_size=1)
+            publisher.publish(Start)
+        
         input_file_path = rospkg.RosPack().get_path('follow_waypoints')+"/saved_path/pose.csv"
         f = open(input_file_path, 'w')
         f.close()
-
+        """
         stop_pub = rospy.Publisher('/stop_arm', Bool, queque_size=1)
         message_stop = Bool()
         message_stop.data = False
         stop_pub.publish(message_stop)
-
+        """
             
         
 

@@ -71,7 +71,9 @@ def pub_pose(data):
 def startPAQUITOP(data):
     global all_point_published
     global in_movement
-    if data.data and not in_movement: #and all_point_published:
+    print(data.data)
+    print(in_movement)
+    if data.data and in_movement == False: 
         all_point_published = False
         count = 0
         while count < 2:
