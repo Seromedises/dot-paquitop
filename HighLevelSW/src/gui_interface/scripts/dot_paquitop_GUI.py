@@ -78,9 +78,19 @@ class DOT_PAQUITOP_GUI(MDApp):
             # flatten the ArUco IDs list
             global first
             ids = ids.flatten()
-            print(DOT_PAQUITOP_GUI.arm_position)
-            if first or not DOT_PAQUITOP_GUI.arm_position:
+
+            if first:
                 first = False
+                DOT_PAQUITOP_GUI.arm_position = True
+                while count < 3:
+                    count = count +1
+                    extract = rospy.Publisher("/extract_tablet", Bool, queue_size=1)
+                    extract_msg = Bool()
+                    extract_msg.data = True
+                    extract.publish(extract_msg)
+            
+            if not DOT_PAQUITOP_GUI.arm_position:
+                
                 count = 0
                 DOT_PAQUITOP_GUI.arm_position = True
                 while count < 3:
