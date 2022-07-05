@@ -55,7 +55,7 @@ class DOT_PAQUITOP_GUI(MDApp):
         tab_ext_msg = Bool()
         tab_ext_msg.data = False
         tab_ext.publish(tab_ext_msg)
-        self.goUPcounter = 0
+        self.path_counter = 0
         self.paziente = -1
         self.sacca = -1
 
@@ -162,6 +162,16 @@ class DOT_PAQUITOP_GUI(MDApp):
             retrain.publish(retrain_msg)
         # Update status
         self.arm_position = False
+        
+        if self.path_counter == 0:
+            goal = "Letto 1"
+        elif self.path_counter == 1:
+            goal = "Letto 2"
+        elif self.path_counter == 3:
+            goal = "Laboratorio"
+            
+        self.pub_pose(goal)
+        self.path_counter = self.path_counter+1
         self.startPAQUITOP()
 
     def startPAQUITOP(self,*args):
@@ -189,16 +199,7 @@ class DOT_PAQUITOP_GUI(MDApp):
             # Update status
             self.arm_position = True
 
-            if self.goUPcounter == 0:
-                goal = "Letto 1"
-            elif self.goUPcounter == 1:
-                goal = "Letto 2"
-            elif self.goUPcounter == 3:
-                goal = "Laboratorio"
             
-            self.pub_pose(goal)
-
-            self.goUPcounter = self.goUPcounter+1
     
     def pub_pose(self, goal):
         rospack = rospkg.RosPack()
