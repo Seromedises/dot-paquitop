@@ -534,14 +534,17 @@ def retrain_tablet(data):
             
         reach = example.example_send_joint_angles(joint)
 
-        rest_position = True
-        
-    if data.data:
-              
+        rest_position = True            
         tablet_stored = rospy.Publisher("/tablet_stored", Bool, queue_size=1)
         tablet_stored_msg = Bool()
         tablet_stored_msg.data = True
         tablet_stored.publish(tablet_stored_msg)
+
+
+
+        
+    #if data.data:
+        
 
   
 
