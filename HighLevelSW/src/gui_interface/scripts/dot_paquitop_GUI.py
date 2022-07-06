@@ -122,14 +122,17 @@ class DOT_PAQUITOP_GUI(MDApp):
                 self.markerID = markerID
                 self.identificationOK()
             
+            global PAQUITOP_STOP    
             
-            if (self.markerID == 0 or self.markerID == 1) and not self.seat1 and not self.arm_up:
-                self.seat1 = True
-                self.goUP()
+            if  PAQUITOP_STOP:
+                
+                if (self.markerID == 0 or self.markerID == 1) and not self.seat1 and not self.arm_up:
+                    self.seat1 = True
+                    self.goUP()
 
-            if (self.markerID == 2 or self.markerID == 3) and not self.seat2 and not self.arm_up:
-                self.seat2 = True
-                self.goUP()
+                if (self.markerID == 2 or self.markerID == 3) and not self.seat2 and not self.arm_up:
+                    self.seat2 = True
+                    self.goUP()
             
         frame = cv2.resize(images, None, fx=1.0, fy=1.0, interpolation=cv2.INTER_AREA)
 
@@ -181,20 +184,16 @@ class DOT_PAQUITOP_GUI(MDApp):
     
     def goUP(self, *args):
         
-        global PAQUITOP_STOP    
-        print(PAQUITOP_STOP)
-        #Tablet extract
-        if self.arm_up == False and self.markerID != self.last and PAQUITOP_STOP:
-            count = 0
-            while count < 3:
-                count = count +1
-                tab_ext = rospy.Publisher("/extract_tablet", Bool, queue_size=1)
-                tab_ext_msg = Bool()
-                tab_ext_msg.data = True
-                tab_ext.publish(tab_ext_msg)
-            # Update status
-            self.arm_up = True    
-            self.last = self.markerID
+        count = 0
+        while count < 3:
+            count = count +1
+            tab_ext = rospy.Publisher("/extract_tablet", Bool, queue_size=1)
+            tab_ext_msg = Bool()
+            tab_ext_msg.data = True
+            tab_ext.publish(tab_ext_msg)
+        # Update status
+        self.arm_up = True    
+        self.last = self.markerID
     
 def is_in_movement(movePAQUITOP):
     global PAQUITOP_STOP
