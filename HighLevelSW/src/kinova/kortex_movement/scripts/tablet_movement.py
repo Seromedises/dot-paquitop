@@ -452,11 +452,13 @@ def extract_tablet(data):
             
         reach = example.example_send_joint_angles(joint)
         rest_position = False
-
-        tablet_extracted = rospy.Publisher("/tablet_extracted", Bool, queue_size=1)
-        tablet_extracted_msg = Bool()
-        tablet_extracted.data = True
-        tablet_extracted.publish(tablet_extracted_msg)
+        count = 0
+        while count < 3:
+            count = count +1
+            tablet_extracted = rospy.Publisher("/tablet_extracted", Bool, queue_size=20)
+            tablet_extracted_msg = Bool()
+            tablet_extracted.data = True
+            tablet_extracted.publish(tablet_extracted_msg)
         
 
 def retrain_tablet(data):
@@ -532,12 +534,15 @@ def retrain_tablet(data):
         joint[5] = 90.0
             
         reach = example.example_send_joint_angles(joint)
+        rest_position = True 
 
-        rest_position = True            
-        tablet_stored = rospy.Publisher("/tablet_stored", Bool, queue_size=1)
-        tablet_stored_msg = Bool()
-        tablet_stored_msg.data = True
-        tablet_stored.publish(tablet_stored_msg)
+        count = 0
+        while count < 3:
+            count = count +1
+            tablet_stored = rospy.Publisher("/tablet_stored", Bool, queue_size=20)
+            tablet_stored_msg = Bool()
+            tablet_stored_msg.data = True
+            tablet_stored.publish(tablet_stored_msg)
 
 
 
@@ -560,24 +565,24 @@ def main():
     
     try:
         rospy.delete_param("/kortex_examples_test_results/moveit_general_python")
-        msg = Bool()
-        msg.data = False
-        tablet_init = rospy.Publisher("/tablet_stored", Bool, queue_size=1)
-        tablet_init.publish(msg)
-        tablet_init = rospy.Publisher("/tablet_extracted", Bool, queue_size=1)
-        tablet_init.publish(msg)
     except:
         pass
     
     example.protection_zone_mod(0.08)
     example.example_clear_faults()
     example.example_subscribe_to_a_robot_notification()
+    msg = Bool()
+    msg.data = False
+    tablet_init = rospy.Publisher("/tablet_stored", Bool, queue_size=1)
+    tablet_init.publish(msg)
+    tablet_init = rospy.Publisher("/tablet_extracted", Bool, queue_size=1)
+    tablet_init.publish(msg)
 
     while not rospy.is_shutdown():
         # rospy.Subscriber("/stop_arm", Bool, example.stop)
         rospy.Subscriber('/extract_tablet', Bool, extract_tablet)
         rospy.Subscriber('/retrain_tablet', Bool, retrain_tablet)
-        time.sleep(0.1)
+        time.sleep(0.5)
     
   
 if __name__ == '__main__':

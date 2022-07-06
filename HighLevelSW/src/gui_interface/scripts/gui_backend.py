@@ -66,35 +66,27 @@ def pub_pose(data):
 
         pub_pose_counter = pub_pose_counter + 1
         all_point_published = True
-        in_movement = False
+        
 
 def startPAQUITOP(data):
     global all_point_published
-    global in_movement
+    
     print(data.data)
-    print(in_movement)
-    if data.data and in_movement == False: 
+    print(all_point_published)
+    if data.data and all_point_published: 
         all_point_published = False
-        count = 0
-        while count < 2:
-            count = count +1
-            Start = Empty()
-            publisher = rospy.Publisher('/path_ready', Empty, queue_size=1)
-            publisher.publish(Start)
-        input_file_path = rospkg.RosPack().get_path('follow_waypoints')+"/saved_path/pose.csv"
-        f = open(input_file_path, 'w')
-        f.close() 
-        in_movement = True   
+        
+        Start = Empty()
+        publisher = rospy.Publisher('/path_ready', Empty, queue_size=20)
+        publisher.publish(Start)
+         
     
 
 if __name__ == '__main__':
     rospy.init_node('backend')
     # global variables    
     global pub_pose_counter
-    pub_pose_counter = 0
-    global in_movement
-    in_movement = True
-    
+    pub_pose_counter = 0  
 
     # Subscribers functions
     while not rospy.is_shutdown():
