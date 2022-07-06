@@ -198,6 +198,7 @@ def is_in_movement(movePAQUITOP):
         PAQUITOP_STOP = True
     else:
         PAQUITOP_STOP = False
+        
 if __name__ == '__main__':
     
     DOT_PAQUITOP_GUI().run()
