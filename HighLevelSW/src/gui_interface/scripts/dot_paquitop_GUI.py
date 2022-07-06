@@ -51,9 +51,11 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.align = rs.align(align_to)
         #initialize topic extract table    
         tab_ext = rospy.Publisher("/extract_tablet", Bool, queue_size=1)
+        tab_ret = rospy.Publisher("/retrain_tablet", Bool, queue_size=1)
         tab_ext_msg = Bool()
         tab_ext_msg.data = False
         tab_ext.publish(tab_ext_msg)
+        tab_ret.publish(tab_ext_msg)
         self.path_counter = 0
         self.paziente = -1
         self.sacca = -1
