@@ -67,8 +67,7 @@ class DOT_PAQUITOP_GUI(MDApp):
 
         
     def build(self):
-        # Paquitop Movement controll
-        rospy.Subscriber("/cmd_vel", Twist, is_in_movement)
+        
         self.image = Image(pos_hint={"center_x": .775, "center_y":0.45},size_hint=(.4,.5),keep_ratio=True)
         self.layout.add_widget(self.image)
         Clock.schedule_interval(self.load_video,1.0/10.0)
@@ -76,8 +75,8 @@ class DOT_PAQUITOP_GUI(MDApp):
         return self.layout
 
     def load_video(self, *args):
-        
-
+        # Paquitop Movement controll
+        rospy.Subscriber("/cmd_vel", Twist, is_in_movement)
         # Load the aruco dict
         default = cv2.aruco.DICT_5X5_100
         arucoDict = cv2.aruco.Dictionary_get(default)
