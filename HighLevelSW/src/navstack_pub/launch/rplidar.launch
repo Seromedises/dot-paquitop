@@ -5,7 +5,7 @@
 
   <arg name="node_start_delay" default="0.0" /> 
 
-  <node machine="client" name="rplidarNode" pkg="rplidar_ros" type="rplidarNode" output="screen" launch-prefix="bash -c 'sleep $(arg node_start_delay); $0 $@' ">
+  <node machine="client" name="rplidarNode" pkg="rplidar_ros" type="rplidarNode" output="screen" launch-prefix="bash -c 'sleep $(arg node_start_delay); $0 $@' " respawn="true">
     
     <param name="serial_port"         type="string" value="/dev/ttyUSB0"/>
     <param name="serial_baudrate"     type="int"    value="115200"/><!--A1/A2 -->
