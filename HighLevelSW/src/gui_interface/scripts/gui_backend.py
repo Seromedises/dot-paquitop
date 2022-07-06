@@ -10,7 +10,7 @@ import time
 def pub_pose(data):
     global all_point_published
     global pub_pose_counter
-    global in_movement
+    
 
     if pub_pose_counter == 0:
         goal = "Letto 2"
@@ -22,14 +22,14 @@ def pub_pose(data):
         goal = "Sala Prelievi"
 
 
-    if data.data and in_movement:
+    if data.data and not all_point_published:
         rospack = rospkg.RosPack()
         folder = rospack.get_path('navstack_pub')
         folder = folder + "/trajectory_point/" + goal + ".txt"
 
         f = open(folder,'r')
 
-        publisher = rospy.Publisher("/addpose", PoseWithCovarianceStamped, queue_size=20)
+        publisher = rospy.Publisher("/addpose", PoseWithCovarianceStamped, queue_size=10)
         rate = rospy.Rate(0.5) # rospy.Rate(0.5)
 
         pose = PoseWithCovarianceStamped()
@@ -73,13 +73,13 @@ def startPAQUITOP(data):
     
     print(data.data)
     #print(all_point_published)
-    if data.data and all_point_published# and all_point_published: 
+    if data.data and all_point_published:# and all_point_published: 
         all_point_published = False
         count = 0
         while count < 3:
             cout = count +1
             Start = Empty()
-            publisher = rospy.Publisher('/path_ready', Empty, queue_size=)
+            publisher = rospy.Publisher('/path_ready', Empty, queue_size=1)
             publisher.publish(Start)
          
     
