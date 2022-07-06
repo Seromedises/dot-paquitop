@@ -73,13 +73,13 @@ def startPAQUITOP(data):
     
     print(data.data)
     #print(all_point_published)
-    if data.data:# and all_point_published: 
+    if data.data and all_point_published# and all_point_published: 
         all_point_published = False
         count = 0
         while count < 3:
             cout = count +1
             Start = Empty()
-            publisher = rospy.Publisher('/path_ready', Empty, queue_size=20)
+            publisher = rospy.Publisher('/path_ready', Empty, queue_size=)
             publisher.publish(Start)
          
     
@@ -89,6 +89,8 @@ if __name__ == '__main__':
     # global variables    
     global pub_pose_counter
     pub_pose_counter = 0  
+    global all_point_published
+    all_point_published = False
 
     # Subscribers functions
     while not rospy.is_shutdown():
