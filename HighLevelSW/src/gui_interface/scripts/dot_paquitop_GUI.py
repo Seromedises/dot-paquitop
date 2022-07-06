@@ -60,7 +60,8 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.last = -1
         self.seat1 = False
         self.seat2 = False
-        self.PAQUITOP_STOP = False
+        global PAQUITOP_STOP
+        PAQUITOP_STOP = False
 
         
     def build(self):
@@ -175,10 +176,10 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.arm_position = False
     
     def goUP(self, *args):
-        rospy.Subscriber("/cmd_vel", Twist, self.is_in_movement)    
+        rospy.Subscriber("/cmd_vel", Twist, is_in_movement)    
 
         #Tablet extract
-        if self.arm_position == False and self.markerID != self.last and self.PAQUITOP_STOP:
+        if self.arm_position == False and self.markerID != self.last and PAQUITOP_STOP:
             count = 0
             while count < 3:
                 count = count +1
@@ -190,11 +191,12 @@ class DOT_PAQUITOP_GUI(MDApp):
             self.arm_position = True    
             self.last = self.markerID
     
-    def is_in_movement(self, movePAQUITOP):
-        if movePAQUITOP.linear.x < 0.05 and movePAQUITOP.linear.y < 0.05 and movePAQUITOP.angular.z <0.1:
-            self.PAQUITOP_STOP = True
-        else:
-            self.PAQUITOP_STOP = False
+def is_in_movement(movePAQUITOP):
+    global PAQUITOP_STOP
+    if movePAQUITOP.linear.x < 0.05 and movePAQUITOP.linear.y < 0.05 and movePAQUITOP.angular.z <0.1:
+        PAQUITOP_STOP = True
+    else:
+        PAQUITOP_STOP = False
 if __name__ == '__main__':
     
     DOT_PAQUITOP_GUI().run()
