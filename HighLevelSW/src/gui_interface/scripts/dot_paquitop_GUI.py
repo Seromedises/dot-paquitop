@@ -123,11 +123,11 @@ class DOT_PAQUITOP_GUI(MDApp):
                 self.identificationOK()
             
             
-            if (self.markerID == 0 or self.markerID == 1) and not self.seat1 and self.arm_position:
+            if (self.markerID == 0 or self.markerID == 1) and not self.seat1 and not self.arm_position:
                 self.seat1 = True
                 self.goUP()
 
-            if (self.markerID == 2 or self.markerID == 3) and not self.seat2 and self.arm_position:
+            if (self.markerID == 2 or self.markerID == 3) and not self.seat2 and not self.arm_position:
                 self.seat2 = True
                 self.goUP()
             
