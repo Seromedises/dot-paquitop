@@ -176,7 +176,8 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.arm_position = False
     
     def goUP(self, *args):
-        rospy.Subscriber("/cmd_vel", Twist, is_in_movement)    
+        rospy.Subscriber("/cmd_vel", Twist, is_in_movement)
+        global PAQUITOP_STOP    
 
         #Tablet extract
         if self.arm_position == False and self.markerID != self.last and PAQUITOP_STOP:
