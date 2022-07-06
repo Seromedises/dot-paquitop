@@ -198,6 +198,7 @@ class DOT_PAQUITOP_GUI(MDApp):
     
 def is_in_movement(movePAQUITOP):
     global PAQUITOP_STOP
+    print(PAQUITOP_STOP)
     if movePAQUITOP.linear.x < 0.05 and movePAQUITOP.linear.y < 0.05 and movePAQUITOP.angular.z <0.1:
         PAQUITOP_STOP = True
     else:
