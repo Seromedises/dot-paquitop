@@ -41,7 +41,7 @@ class DOT_PAQUITOP_GUI(MDApp):
     def __init__(self, **kwargs):
         rospy.init_node('paquitop_gui')
         super().__init__(**kwargs)
-        self.arm_position = False
+        self.arm_up = False
         self.layout = Builder.load_file('dot_paquitop_GUI.kv')
         self.pipeline = rs.pipeline()
         config = rs.config()
@@ -123,11 +123,11 @@ class DOT_PAQUITOP_GUI(MDApp):
                 self.identificationOK()
             
             
-            if (self.markerID == 0 or self.markerID == 1) and not self.seat1 and not self.arm_position:
+            if (self.markerID == 0 or self.markerID == 1) and not self.seat1 and not self.arm_up:
                 self.seat1 = True
                 self.goUP()
 
-            if (self.markerID == 2 or self.markerID == 3) and not self.seat2 and not self.arm_position:
+            if (self.markerID == 2 or self.markerID == 3) and not self.seat2 and not self.arm_up:
                 self.seat2 = True
                 self.goUP()
             
@@ -139,9 +139,9 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.image.texture = texture
 
     def identificationOK(self, *args):
-        if self.arm_position:
+        if self.arm_up:
             self.paziente = self.markerID
-        elif not self.arm_position:
+        elif not self.arm_up:
             self.sacca = self.markerID
 
         if self.sacca == 0 and self.paziente == 1:
@@ -177,14 +177,14 @@ class DOT_PAQUITOP_GUI(MDApp):
             retrain_msg.data = True
             retrain.publish(retrain_msg)
         # Update status
-        self.arm_position = False
+        self.arm_up = False
     
     def goUP(self, *args):
         
         global PAQUITOP_STOP    
         print(PAQUITOP_STOP)
         #Tablet extract
-        if self.arm_position == False and self.markerID != self.last and PAQUITOP_STOP:
+        if self.arm_up == False and self.markerID != self.last and PAQUITOP_STOP:
             count = 0
             while count < 3:
                 count = count +1
@@ -193,7 +193,7 @@ class DOT_PAQUITOP_GUI(MDApp):
                 tab_ext_msg.data = True
                 tab_ext.publish(tab_ext_msg)
             # Update status
-            self.arm_position = True    
+            self.arm_up = True    
             self.last = self.markerID
     
 def is_in_movement(movePAQUITOP):
