@@ -62,6 +62,8 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.seat2 = False
         global PAQUITOP_STOP
         PAQUITOP_STOP = False
+        # Paquitop Movement controll
+        rospy.Subscriber("/cmd_vel", Twist, is_in_movement)
 
         
     def build(self):
@@ -73,6 +75,7 @@ class DOT_PAQUITOP_GUI(MDApp):
         return self.layout
 
     def load_video(self, *args):
+        
         # Load the aruco dict
         default = cv2.aruco.DICT_5X5_100
         arucoDict = cv2.aruco.Dictionary_get(default)
@@ -176,7 +179,7 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.arm_position = False
     
     def goUP(self, *args):
-        rospy.Subscriber("/cmd_vel", Twist, is_in_movement)
+        
         global PAQUITOP_STOP    
 
         #Tablet extract
@@ -198,7 +201,7 @@ def is_in_movement(movePAQUITOP):
         PAQUITOP_STOP = True
     else:
         PAQUITOP_STOP = False
-        
+
 if __name__ == '__main__':
     
     DOT_PAQUITOP_GUI().run()
