@@ -453,7 +453,6 @@ def extract_tablet(data):
         reach = example.example_send_joint_angles(joint)
         rest_position = False
 
-    if data.data:
         tablet_extracted = rospy.Publisher("/tablet_extracted", Bool, queue_size=1)
         tablet_extracted_msg = Bool()
         tablet_extracted.data = True
@@ -561,6 +560,12 @@ def main():
     
     try:
         rospy.delete_param("/kortex_examples_test_results/moveit_general_python")
+        msg = Bool()
+        msg.data = False
+        tablet_init = rospy.Publisher("/tablet_stored", Bool, queue_size=1)
+        tablet_init.publish(msg)
+        tablet_init = rospy.Publisher("/tablet_extracted", Bool, queue_size=1)
+        tablet_init.publish(msg)
     except:
         pass
     
