@@ -75,10 +75,12 @@ def startPAQUITOP(data):
     #print(all_point_published)
     if data.data:# and all_point_published: 
         all_point_published = False
-        
-        Start = Empty()
-        publisher = rospy.Publisher('/path_ready', Empty, queue_size=20)
-        publisher.publish(Start)
+        count = 0
+        while count < 3:
+            cout = count +1
+            Start = Empty()
+            publisher = rospy.Publisher('/path_ready', Empty, queue_size=20)
+            publisher.publish(Start)
          
     
 
