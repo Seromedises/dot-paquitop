@@ -72,8 +72,8 @@ def startPAQUITOP(data):
     global all_point_published
     
     print(data.data)
-    print(all_point_published)
-    if data.data and all_point_published: 
+    #print(all_point_published)
+    if data.data:# and all_point_published: 
         all_point_published = False
         
         Start = Empty()
