@@ -92,6 +92,6 @@
 	</include>
 
 	<node machine="client" name="dot_paquitop_GUI" pkg="gui_interface" type="dot_paquitop_GUI.py" />
-	<node machine="server" name="gui_backend" pkg="gui_interface" type="gui_backend.py" />
+	<node machine="server" name="gui_backend" pkg="gui_interface" type="gui_backend.py" output="screen"/>
 
 </launch>
