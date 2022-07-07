@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
-# from dbus import StarterBus
+import imp
+
+from matplotlib import image
 import rospy
 import time
 import numpy
@@ -15,7 +17,17 @@ import rospkg
 from kivy.lang import Builder
 from kivymd.app import MDApp
 from kivymd.uix.menu import MDDropdownMenu 
+from kivy.uix.image import Image
 import csv
+from imutils.video import videostream
+
+#from PIL import Image as PILImage
+#import requests
+#from io import BytesIO
+from skimage import io  
+from kivy.clock import Clock
+import cv2
+from kivy.graphics.texture import Texture
 
 def quaternion_multiply(Q0,Q1):
     """
@@ -134,7 +146,8 @@ class DOT_PAQUITOP_GUI(MDApp):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         rospy.init_node('gui_interface')
-
+        self.url = "http://172.21.15.100:8080/stream?topic=/rviz_stream/camera_rviz/Image"
+        self.cap = cv2.VideoCapture(self.url)
         self.screen = Builder.load_file('dot_first_GUI.kv')
 
         places_items = [
@@ -168,7 +181,21 @@ class DOT_PAQUITOP_GUI(MDApp):
 
 
     def build(self):
+        
+        self.image = Image(pos_hint={"center_x": .25, "center_y":0.375},size_hint=(.4,.5),keep_ratio=True)
+        self.screen.add_widget(self.image)
+        Clock.schedule_interval(self.rviz_stream,1.0/20.0)
         return self.screen
+    
+    def rviz_stream(self, *args):
+
+        ret, frame = self.cap.read()
+        frame = cv2.resize(frame, None, fx=1.0, fy=1.0, interpolation=cv2.INTER_AREA)
+        buffer = cv2.flip(frame, 0).tobytes()
+        texture = Texture.create(size=(frame.shape[1], frame.shape[0]), colorfmt='bgr')
+        texture.blit_buffer(buffer, colorfmt = 'bgr', bufferfmt = 'ubyte')
+        self.image.texture = texture
+        
 
     def startPAQUITOP(self,*args):
         print("Avvio PAQUITOP")

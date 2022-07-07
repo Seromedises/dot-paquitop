@@ -27,6 +27,7 @@ from std_msgs.msg import Empty, Bool
 import rospkg
 from geometry_msgs.msg import PoseWithCovarianceStamped
 from geometry_msgs.msg import Twist
+from move_base_msgs.msg import MoveBaseActionResult
 
 Config.set('graphics', 'width', '1920')
 Config.set('graphics', 'height', '1080')
@@ -64,9 +65,8 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.seat2 = False
         global PAQUITOP_STOP
         PAQUITOP_STOP = False
-        
-        
-
+        global GOAL_REACHED
+        GOAL_REACHED = False
         
     def build(self):
         
@@ -77,8 +77,12 @@ class DOT_PAQUITOP_GUI(MDApp):
         return self.layout
 
     def load_video(self, *args):
+        # global variables
+        global PAQUITOP_STOP 
+        global GOAL_REACHED
         # Paquitop Movement controll
         rospy.Subscriber("/cmd_vel", Twist, is_in_movement)
+        rospy.Subscriber("/move_base/result", MoveBaseActionResult, move_base_goal_reached )
         # Load the aruco dict
         default = cv2.aruco.DICT_5X5_100
         arucoDict = cv2.aruco.Dictionary_get(default)
@@ -123,10 +127,8 @@ class DOT_PAQUITOP_GUI(MDApp):
 
                 self.markerID = markerID
                 self.identificationOK()
-            
-            global PAQUITOP_STOP    
-            
-            if  PAQUITOP_STOP:
+                        
+            if  PAQUITOP_STOP and GOAL_REACHED:
                 
                 if (self.markerID == 0 or self.markerID == 1) and not self.seat1 and not self.arm_up:
                     self.seat1 = True
@@ -137,7 +139,6 @@ class DOT_PAQUITOP_GUI(MDApp):
                     self.goUP()
             
         frame = cv2.resize(images, None, fx=1.0, fy=1.0, interpolation=cv2.INTER_AREA)
-
         buffer = cv2.flip(frame, 0).tobytes()
         texture = Texture.create(size=(frame.shape[1], frame.shape[0]), colorfmt='bgr')
         texture.blit_buffer(buffer, colorfmt = 'bgr', bufferfmt = 'ubyte')
@@ -204,6 +205,15 @@ def is_in_movement(movePAQUITOP):
         PAQUITOP_STOP = True
     else:
         PAQUITOP_STOP = False
+
+def move_base_goal_reached(data):
+    global GOAL_REACHED
+    data = MoveBaseActionResult()    
+    print(data.status.status)
+    if data.status.status == 3:
+        GOAL_REACHED = True
+    else:
+        GOAL_REACHED = False
 
 if __name__ == '__main__':
     
