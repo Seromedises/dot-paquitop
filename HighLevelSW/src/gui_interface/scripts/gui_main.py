@@ -1,20 +1,17 @@
 #!/usr/bin/env python
 
-from itertools import count
-from tokenize import String
-from HighLevelSW.src.gui_interface.scripts.dot_first_GUI import pub_pose
 import rospy
 import numpy as np
-from std_msgs.msg import Empty, Bool, Int32, String
+from std_msgs.msg import Empty, Bool, Int64, String
 import rospkg
 from geometry_msgs.msg import PoseWithCovarianceStamped
 import time
 from move_base_msgs.msg import MoveBaseActionResult
 
 def pub_pose(goal):
-    global all_point_published
+    global ALL_POINT_PUBLISHED
     
-    if not all_point_published:
+    if not ALL_POINT_PUBLISHED:
         rospack = rospkg.RosPack()
         folder = rospack.get_path('navstack_pub')
         folder = folder + "/trajectory_point/" + goal + ".txt"
@@ -54,7 +51,7 @@ def pub_pose(goal):
             rate.sleep()
             publisher.publish(pose)
 
-        all_point_published = True
+        ALL_POINT_PUBLISHED = True
         
 
 def start(data):
@@ -120,6 +117,8 @@ if __name__ == '__main__':
 
     # nodes to subscribe to
     rospy.Subscriber("/move_base/result", MoveBaseActionResult, move_base_goal_reached)
+    patient_name = rospy.Publisher("/patient_name", String, queue_size=1)
+    patient_name_msg = String()
     # rospy.Subscriber("/paquitop_start", Bool, start)
     
 
@@ -127,39 +126,53 @@ if __name__ == '__main__':
         count = 0
         while count < num_el and not rospy.is_shutdown():
             goal = patient_list[count]
+            if count != num_el:
+                next_goal = patient_list[count+1]
+            else:
+                next_goal = last_bed_to_home
             if count == 0:
                 pub_pose(goal)
+                print("Pose Published")
             
-            while not ARM_UP:
-
+            while not ARM_UP and not rospy.is_shutdown():
+                print("Waiting for Goal Reached")
                 if GOAL_REACHED:
-                    blood_bag.append(rospy.wait_for_message("/id_blood_bag", Int32))
-                    if blood_bag[count] == 0 or blood_bag[count]%2 == 0:
+                    pub_pose(next_goal)
+                    print("Waiting for blood id bag")
+                    id_bag = rospy.wait_for_message("/id_blood_bag", Int64 )
+                    blood_bag.append(float(id_bag.data))
+                        
+                    if blood_bag[count] == 0 or float(blood_bag[count])%2 == 0:
+                        print("Going Up")
                         goUP()
                 else:
                     time.sleep(0.5)
             
             wait = rospy.wait_for_message("/tablet_extracted", Bool)
             # From this time the tablet orienting procedure has started
-            person_id.append(rospy.wait_for_message("/id_blood_bag", Int32))
+            print("Tablet extracted, waiting for person id")
+            id_bag = rospy.wait_for_message("/id_blood_bag", Int64 )
+            person_id.append(id_bag.data)
 
-            patient_name = rospy.Publisher("/patient_name", String, queue_size=1)
-            patient_name_msg = String()
-            
             if person_id[count] == 1:
                 name.append(DataName[0])
                 patient_name_msg.data = DataName[0]
+                patient_name.publish(patient_name_msg)
             elif person_id[count] == 3:
                 name.append(DataName[1])
                 patient_name_msg.data = DataName[1]
+                patient_name.publish(patient_name_msg)
             elif person_id[count] == 5:
                 name.append(DataName[2])
                 patient_name_msg.data = DataName[2]
+                patient_name.publish(patient_name_msg)
             elif person_id[count] == 7:
                 name.append(DataName[3])
                 patient_name_msg.data = DataName[3]
-
-            patient_name.publish(patient_name_msg)
+                patient_name.publish(patient_name_msg)
+            else: 
+                name.append("None")
+            
                 
             
             
