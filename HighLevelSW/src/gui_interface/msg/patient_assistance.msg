@@ -1,0 +1,2 @@
+bool need_help
+float64 temperature

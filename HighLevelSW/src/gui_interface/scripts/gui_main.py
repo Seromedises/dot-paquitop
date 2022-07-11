@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+from calendar import c
 import rospy
 import numpy as np
 from std_msgs.msg import Empty, Bool, Int64, String
@@ -86,6 +87,18 @@ def goUP():
         # Update status
         ARM_UP = True    
         
+def goON():
+    global ARM_UP
+    # Tablet store
+    count = 0
+    while count < 3:
+        count = count +1
+        retrain = rospy.Publisher("/retrain_tablet", Bool, queue_size=1)
+        retrain_msg = Bool()
+        retrain_msg.data = True
+        retrain.publish(retrain_msg)
+    # Update status
+    ARM_UP = False
 
 
 if __name__ == '__main__':
@@ -101,19 +114,19 @@ if __name__ == '__main__':
     blood_bag = []
     person_id = []
     name = []
+    match_id = []
+    temp_patient = []
+    assistance_patient = []
     DataName = ["Lorenzo", "Luigi", "Giovanni", "Giulia"]
 
     # definition of global variables
-    global goal
-    goal = ""
+    
     global GOAL_REACHED
     GOAL_REACHED = False
     global ARM_UP
     ARM_UP = False
     global ALL_POINT_PUBLISHED
-    ALL_POINT_PUBLISHED = False
-    
-    
+    ALL_POINT_PUBLISHED = False   
 
     # nodes to subscribe to
     rospy.Subscriber("/move_base/result", MoveBaseActionResult, move_base_goal_reached)
@@ -151,8 +164,8 @@ if __name__ == '__main__':
             wait = rospy.wait_for_message("/tablet_extracted", Bool)
             # From this time the tablet orienting procedure has started
             print("Tablet extracted, waiting for person id")
-            id_bag = rospy.wait_for_message("/id_blood_bag", Int64 )
-            person_id.append(id_bag.data)
+            id_patient = rospy.wait_for_message("/id_patient", Int64 )
+            person_id.append(id_patient.data)
 
             if person_id[count] == 1:
                 name.append(DataName[0])
@@ -172,6 +185,12 @@ if __name__ == '__main__':
                 patient_name.publish(patient_name_msg)
             else: 
                 name.append("None")
+
+            if person_id[count] == blood_bag[count]+1:
+                match_id.append(True)
+            else:
+                match_id.append(False)
+
             
                 
             
