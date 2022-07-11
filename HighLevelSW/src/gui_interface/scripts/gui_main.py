@@ -99,6 +99,12 @@ if __name__ == '__main__':
     # number of patients
     num_el = len(patient_list)
 
+    # database variables
+    blood_bag = []
+    person_id = []
+    name = []
+    DataName = ["Lorenzo", "Luigi", "Giovanni", "Giulia"]
+
     # definition of global variables
     global goal
     goal = ""
@@ -126,13 +132,24 @@ if __name__ == '__main__':
             while not ARM_UP:
 
                 if GOAL_REACHED:
-                    blood_bag = rospy.wait_for_message("/id_blood_bag", Int32)
-                    if blood_bag == 0 or blood_bag%2 == 0:
+                    blood_bag.append(rospy.wait_for_message("/id_blood_bag", Int32))
+                    if blood_bag[count] == 0 or blood_bag[count]%2 == 0:
                         goUP()
                 else:
                     time.sleep(0.5)
             
+            wait = rospy.wait_for_message("/tablet_extracted", Bool)
+            # From this time the tablet orienting procedure has started
+            person_id.append(rospy.wait_for_message("/id_blood_bag", Int32))
 
+            if person_id[count] == 1:
+                name.append(DataName[0])
+            elif person_id[count] == 3:
+                name.append(DataName[1])
+            elif person_id[count] == 5:
+                name.append(DataName[2])
+            elif person_id[count] == 7:
+                name.append(DataName[3])
                 
             
             

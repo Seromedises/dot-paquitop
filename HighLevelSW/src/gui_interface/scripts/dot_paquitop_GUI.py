@@ -208,7 +208,7 @@ def is_in_movement(movePAQUITOP):
 
 def move_base_goal_reached(data):
     global GOAL_REACHED
-    data = MoveBaseActionResult()    
+     
     print(data.status.status)
     if data.status.status == 3:
         GOAL_REACHED = True
