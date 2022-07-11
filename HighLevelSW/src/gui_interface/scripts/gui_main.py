@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 
 from itertools import count
+from tokenize import String
 from HighLevelSW.src.gui_interface.scripts.dot_first_GUI import pub_pose
 import rospy
 import numpy as np
-from std_msgs.msg import Empty, Bool, Int32
+from std_msgs.msg import Empty, Bool, Int32, String
 import rospkg
 from geometry_msgs.msg import PoseWithCovarianceStamped
 import time
@@ -142,14 +143,23 @@ if __name__ == '__main__':
             # From this time the tablet orienting procedure has started
             person_id.append(rospy.wait_for_message("/id_blood_bag", Int32))
 
+            patient_name = rospy.Publisher("/patient_name", String, queue_size=1)
+            patient_name_msg = String()
+            
             if person_id[count] == 1:
                 name.append(DataName[0])
+                patient_name_msg.data = DataName[0]
             elif person_id[count] == 3:
                 name.append(DataName[1])
+                patient_name_msg.data = DataName[1]
             elif person_id[count] == 5:
                 name.append(DataName[2])
+                patient_name_msg.data = DataName[2]
             elif person_id[count] == 7:
                 name.append(DataName[3])
+                patient_name_msg.data = DataName[3]
+
+            patient_name.publish(patient_name_msg)
                 
             
             
