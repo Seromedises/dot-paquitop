@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 
 from calendar import c
+from glob import glob
+import imp
+from sre_constants import GROUPREF_IGNORE
 import rospy
 import numpy as np
 from std_msgs.msg import Empty, Bool, Int64, String
@@ -8,6 +11,7 @@ import rospkg
 from geometry_msgs.msg import PoseWithCovarianceStamped
 import time
 from move_base_msgs.msg import MoveBaseActionResult
+from gui_interface.msg import patient_assistance
 
 def pub_pose(goal):
     global ALL_POINT_PUBLISHED
@@ -100,6 +104,17 @@ def goON():
     # Update status
     ARM_UP = False
 
+def patient_data(data):
+    global assistance_patient
+    global temp_patient
+    
+
+    assistance_patient.append(data.need_help)  
+    temp_patient.append(data.temperature)
+    goON()
+
+
+
 
 if __name__ == '__main__':
     rospy.init_node("gui_main")
@@ -115,7 +130,9 @@ if __name__ == '__main__':
     person_id = []
     name = []
     match_id = []
+    global temp_patient
     temp_patient = []
+    global assistance_patient
     assistance_patient = []
     DataName = ["Lorenzo", "Luigi", "Giovanni", "Giulia"]
 
@@ -130,6 +147,7 @@ if __name__ == '__main__':
 
     # nodes to subscribe to
     rospy.Subscriber("/move_base/result", MoveBaseActionResult, move_base_goal_reached)
+    rospy.Subscriber("/patient_data", patient_assistance, patient_data )
     patient_name = rospy.Publisher("/patient_name", String, queue_size=1)
     patient_name_msg = String()
     # rospy.Subscriber("/paquitop_start", Bool, start)
