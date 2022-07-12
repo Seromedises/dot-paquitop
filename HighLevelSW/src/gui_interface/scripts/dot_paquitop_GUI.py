@@ -198,22 +198,22 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.arm_up = True    
         self.last = self.markerID
     
-def is_in_movement(movePAQUITOP):
-    global PAQUITOP_STOP
+# def is_in_movement(movePAQUITOP):
+#     global PAQUITOP_STOP
     
-    if movePAQUITOP.linear.x < 0.05 and movePAQUITOP.linear.y < 0.05 and movePAQUITOP.angular.z <0.1:
-        PAQUITOP_STOP = True
-    else:
-        PAQUITOP_STOP = False
+#     if movePAQUITOP.linear.x < 0.05 and movePAQUITOP.linear.y < 0.05 and movePAQUITOP.angular.z <0.1:
+#         PAQUITOP_STOP = True
+#     else:
+#         PAQUITOP_STOP = False
 
-def move_base_goal_reached(data):
-    global GOAL_REACHED
+# def move_base_goal_reached(data):
+#     global GOAL_REACHED
      
-    print(data.status.status)
-    if data.status.status == 3:
-        GOAL_REACHED = True
-    else:
-        GOAL_REACHED = False
+#     print(data.status.status)
+#     if data.status.status == 3:
+#         GOAL_REACHED = True
+#     else:
+#         GOAL_REACHED = False
 
 if __name__ == '__main__':
     
