@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 
-from calendar import c
-from glob import glob
-import imp
-from sre_constants import GROUPREF_IGNORE
+import re
 import rospy
 import numpy as np
 from std_msgs.msg import Empty, Bool, Int64, String
@@ -13,21 +10,26 @@ import time
 from move_base_msgs.msg import MoveBaseActionResult
 from gui_interface.msg import patient_assistance
 
-def pub_pose(goal):
+def pub_pose(data):
     global ALL_POINT_PUBLISHED
+    global published_pose
+    goal = data.data
     
-    if not ALL_POINT_PUBLISHED:
+    NOT_YET_PUBLISHED = True
+    for element in published_pose:
+        if element == goal:
+            NOT_YET_PUBLISHED = False
+        
+    if NOT_YET_PUBLISHED and not ALL_POINT_PUBLISHED:
+        published_pose.append(goal)
         rospack = rospkg.RosPack()
         folder = rospack.get_path('navstack_pub')
         folder = folder + "/trajectory_point/" + goal + ".txt"
-
         f = open(folder,'r')
 
         publisher = rospy.Publisher("/addpose", PoseWithCovarianceStamped, queue_size=10)
-        rate = rospy.Rate(0.5) # rospy.Rate(0.5)
-
+        rate = rospy.Rate(0.5) 
         pose = PoseWithCovarianceStamped()
-
         pose.header.frame_id = 'map'
         pose.pose.covariance = np.zeros(36)
 
@@ -48,7 +50,6 @@ def pub_pose(goal):
             pose.pose.pose.position.x = values[0]
             pose.pose.pose.position.y = values[1]
             pose.pose.pose.position.z = values[2]
-
             pose.pose.pose.orientation.x = values[3]
             pose.pose.pose.orientation.y = values[4]
             pose.pose.pose.orientation.z = values[5]
@@ -108,12 +109,9 @@ def patient_data(data):
     global assistance_patient
     global temp_patient
     
-
     assistance_patient.append(data.need_help)  
     temp_patient.append(data.temperature)
     goON()
-
-
 
 
 if __name__ == '__main__':
@@ -134,6 +132,7 @@ if __name__ == '__main__':
     temp_patient = []
     global assistance_patient
     assistance_patient = []
+    
     DataName = ["Lorenzo", "Luigi", "Giovanni", "Giulia"]
 
     # definition of global variables
@@ -148,22 +147,24 @@ if __name__ == '__main__':
     # nodes to subscribe to
     rospy.Subscriber("/move_base/result", MoveBaseActionResult, move_base_goal_reached)
     rospy.Subscriber("/patient_data", patient_assistance, patient_data )
+    rospy.Subscriber("/tablet_stored", Bool, start)
+    rospy.Subscriber("/pub_pose",String,pub_pose)
     patient_name = rospy.Publisher("/patient_name", String, queue_size=1)
     patient_name_msg = String()
-    # rospy.Subscriber("/paquitop_start", Bool, start)
+    
     
 
     while not rospy.is_shutdown():
         count = 0
+        global published_pose
+        published_pose = []
         while count < num_el and not rospy.is_shutdown():
-            goal = patient_list[count]
+            next_goal = String()
             if count != num_el:
-                next_goal = patient_list[count+1]
+                next_goal.data = patient_list[count+1]
             else:
-                next_goal = last_bed_to_home
-            if count == 0:
-                pub_pose(goal)
-                print("Pose Published")
+                next_goal.data = last_bed_to_home
+            
             
             while not ARM_UP and not rospy.is_shutdown():
                 print("Waiting for Goal Reached")

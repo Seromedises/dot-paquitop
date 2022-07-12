@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
-import imp
-
+from tokenize import String
 from matplotlib import image
 import rospy
 import time
@@ -85,7 +84,6 @@ def save_pose(goal):
     
     l= str(a) + "\n" + str(b)+ "\n" + str(c) + "\n" +str(d) + "\n" + str(e) + "\n" + str(f1) + "\n" + str(g)
     l = l + "\n\n"
-    # print(l + "\n")
 
     f.write(str(l))
     f.close()
@@ -99,48 +97,14 @@ def clean_pose(goal):
     f.close()
 
 def pub_pose(goal):
-    rospack = rospkg.RosPack()
-    folder = rospack.get_path('navstack_pub')
-    folder = folder + "/trajectory_point/" + goal + ".txt"
 
-    f = open(folder,'r')
+    publisher = rospy.Publisher("/pub_pose", String, queue_size=20)
+    msg_to_pub = String()
+    msg_to_pub.data = goal
+    publisher.publish(msg_to_pub)
 
-    # rospy.init_node('waypoints_publisher')
-    publisher = rospy.Publisher("/addpose", PoseWithCovarianceStamped, queue_size=20)
-    rate = rospy.Rate(0.5)
 
-    pose = PoseWithCovarianceStamped()
-
-    pose.header.frame_id = 'map'
-    pose.pose.covariance = numpy.zeros(36)
-
-    values = numpy.zeros(7)
-    end = False
-    while not rospy.is_shutdown() and not end: 		
-        count = 0
-        while count < 7 and not end:
-            line = f.readline()
-            if line:
-                # print(line)
-                values[count] = round(float(line.strip()),5)
-                # [float(x.strip('-')) for x in range(7) ]
-                count = count+1
-            else:
-                end = True
-        
-        line = f.readline()
-
-        pose.pose.pose.position.x = values[0]
-        pose.pose.pose.position.y = values[1]
-        pose.pose.pose.position.z = values[2]
-
-        pose.pose.pose.orientation.x = values[3]
-        pose.pose.pose.orientation.y = values[4]
-        pose.pose.pose.orientation.z = values[5]
-        pose.pose.pose.orientation.w = values[6]  
-        rate.sleep()
-        publisher.publish(pose)
-
+    
 class DOT_PAQUITOP_GUI(MDApp):
 
     def __init__(self, **kwargs):
