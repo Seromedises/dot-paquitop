@@ -52,7 +52,7 @@ class DOT_PAQUITOP_GUI(MDApp):
     def __init__(self, **kwargs):
         rospy.init_node('paquitop_gui')
         super().__init__(**kwargs)
-        self.layout = Builder.load_file('dot_paquitop_GUI.kv')
+        self.layout = Builder.load_file('old_dot_paquitop_GUI .kv')
         self.pipeline = rs.pipeline()
         config = rs.config()
         config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)

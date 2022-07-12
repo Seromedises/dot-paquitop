@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
 
-from cgitb import text
-from glob import glob
-from turtle import color
-from kivy.core.window import Window
 import numpy as np
 import cv2
 import sys
 import pyrealsense2 as rs
+
+from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.clock import Clock
 from kivy.graphics.texture import Texture
@@ -17,9 +15,10 @@ from kivy.config import Config
 from kivymd.app import MDApp
 from kivymd.uix.boxlayout import MDBoxLayout 
 from kivymd.uix.menu import MDDropdownMenu 
+
+import rospkg
 import rospy
 from std_msgs.msg import Empty, Bool, Int64, String
-import rospkg
 from geometry_msgs.msg import PoseWithCovarianceStamped
 from geometry_msgs.msg import Twist
 from move_base_msgs.msg import MoveBaseActionResult
@@ -32,6 +31,10 @@ Config.set('graphics', 'fullscreen', 1)
 Config.set('graphics', 'window_state', 'maximized')
 Config.write()
 
+# def TabletExtracetd(data):
+#     global TABLET_EXTRACTED
+#     TABLET_EXTRACTED = True
+
 def NameReceiver(data):
     name = data.data
     DOT_PAQUITOP_GUI.identificationOK(name)
@@ -40,9 +43,10 @@ def NameReceiver(data):
 class DOT_PAQUITOP_GUI(MDApp):
 
     def __init__(self, **kwargs):
-        rospy.init_node('paquitop_gui')
+
         super().__init__(**kwargs)
-        self.layout = Builder.load_file('dot_paquitop_GUI.kv')
+        rospy.init_node('paquitop_gui')
+        self.layout = Builder.load_file('old_dot_paquitop_GUI .kv')
         self.pipeline = rs.pipeline()
         config = rs.config()
         config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
@@ -53,6 +57,7 @@ class DOT_PAQUITOP_GUI(MDApp):
         # initialize Publisher topic extract/retrain table    
         self.tab_ext = rospy.Publisher("/extract_tablet", Bool, queue_size=1)
         self.tab_ret = rospy.Publisher("/retrain_tablet", Bool, queue_size=1)
+        # self.blood_id = rospy.Publisher("/id_blood_bag", Int64, queue_size=1)
         self.id = rospy.Publisher("/id", Int64, queue_size=1)
         tab_ext_msg = Bool()
         tab_ext_msg.data = False
@@ -60,7 +65,19 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.tab_ret.publish(tab_ext_msg)
 
         # initialize Subscriber topic
+        # rospy.Subscriber("/tablet_extracted", Bool, TabletExtracetd)
         rospy.Subscriber("/patient_name", String, NameReceiver)
+        
+
+        # initialize variables
+        # global TABLET_EXTRACTED
+        # TABLET_EXTRACTED = False
+        # self.path_counter = 0
+        # self.paziente = -1
+        # self.sacca = -1
+        # self.last = -1
+        # self.seat1 = False
+        # self.seat2 = False
         
         
     def build(self):
@@ -132,7 +149,7 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.layout.ids.help_text.text_color = (0,0,0,1)
         self.layout.ids.needHelp.md_bg_color = (20/255,180/255,10/255,.6)
         self.layout.ids.noNeedHelp.md_bg_color = (220/255,20/255,60/255,.6)
-    
+
     def helpPlease(self, *args):
         # Aggiungere codice per salvataggio richiesta
         self.layout.ids.bodyTemp_text.text_color = (0,0,0,1)
@@ -141,24 +158,23 @@ class DOT_PAQUITOP_GUI(MDApp):
     def noHelpThanks(self, *args):
         # Aggiungere codice per salvataggio richiesta
         self.layout.ids.bodyTemp_text.text_color = (0,0,0,1)
-        self.layout.ids.acquireTemp.md_bg_color = (52/255,168/255,235/255,.6)
+        self.layout.ids.acquireTemp.md_bg_color = (20/255,180/255,10/255,.6)
 
     def acqTemp(self, *args):
-        self.layout.ids.goOn_text.text_color = (0,0,0,1)
+        self.layout.goOn_text.text_color = (0,0,0,1)
         self.layout.ids.moveOn.md_bg_color = (20/255,180/255,10/255,.6)
-
 
     def goON(self, *args):
         self.layout.ids.identification.md_bg_color = (200/255,200/255,200/255,1)
         self.layout.ids.identification.text = "Waiting for identifier"
-        
-        self.layout.ids.help_text.text_color = (0,0,0,.1)
-        self.layout.ids.needHelp.md_bg_color = (20/255,180/255,10/255,.1)
-        self.layout.ids.noNeedHelp.md_bg_color = (220/255,20/255,60/255,.1)
-        self.layout.ids.bodyTemp_text.text_color = (0,0,0,.1)
-        self.layout.ids.acquireTemp.md_bg_color = (52/255,168/255,235/255,.1)
-        self.layout.ids.goOn_text.text_color = (0,0,0,.1)
-        self.layout.ids.moveOn.md_bg_color = (20/255,180/255,10/255,.1)
+
+        self.layout.ids.help_text.text_color = (0,0,0,.2)
+        self.layout.ids.needHelp.md_bg_color = (20/255,180/255,10/255,.2)
+        self.layout.ids.noNeedHelp.md_bg_color = (220/255,20/255,60/255,.2)
+        self.layout.ids.bodyTemp_text.text_color = (0,0,0,.2)
+        self.layout.ids.acquireTemp.md_bg_color = (52/255,168/255,235/255,.2)
+        self.layout.goOn_text.text_color = (0,0,0,.2)
+        self.layout.ids.moveOn.md_bg_color = (20/255,180/255,10/255,.2)
 
         # Tablet store
         count = 0
@@ -168,6 +184,37 @@ class DOT_PAQUITOP_GUI(MDApp):
             retrain_msg = Bool()
             retrain_msg.data = True
             retrain.publish(retrain_msg)
+      
+    
+    # def goUP(self, *args):
+        
+    #     count = 0
+    #     while count < 3:
+    #         count = count +1
+    #         tab_ext = rospy.Publisher("/extract_tablet", Bool, queue_size=1)
+    #         tab_ext_msg = Bool()
+    #         tab_ext_msg.data = True
+    #         tab_ext.publish(tab_ext_msg)
+    #     # Update status
+    #     self.arm_up = True    
+    #     self.last = self.markerID
+    
+# def is_in_movement(movePAQUITOP):
+#     global PAQUITOP_STOP
+    
+#     if movePAQUITOP.linear.x < 0.05 and movePAQUITOP.linear.y < 0.05 and movePAQUITOP.angular.z <0.1:
+#         PAQUITOP_STOP = True
+#     else:
+#         PAQUITOP_STOP = False
+
+# def move_base_goal_reached(data):
+#     global GOAL_REACHED
+     
+#     print(data.status.status)
+#     if data.status.status == 3:
+#         GOAL_REACHED = True
+#     else:
+#         GOAL_REACHED = False
 
 if __name__ == '__main__':
     

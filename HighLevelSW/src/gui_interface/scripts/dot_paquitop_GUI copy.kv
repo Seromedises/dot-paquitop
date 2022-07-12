@@ -41,7 +41,7 @@ FloatLayout:
         theme_text_color: "Custom"
         font_size: 30
         text_color: 0, 0, 0, 1
-        size_hint: .9, .5
+        size_hint: .4, .5
         pos_hint: {"center_x": .5, "center_y":0.8}
 
     MDRaisedButton:
@@ -53,32 +53,32 @@ FloatLayout:
         pos_hint: {"center_x": .775, "center_y": .75}
         
     MDLabel:
-        id: help_text
+        id = help_text
         text: "Do you need anything from the hospital staff? If it is so, I will call you someone."
         halign: "left"
         valign: "top"
         theme_text_color: "Custom"
         font_size: 30
-        text_color: 0, 0, 0, 0.2
+        text_color: 0, 0, 0, .2
         size_hint: .5, .1
         pos_hint: {"center_x": .3, "center_y":0.65}
 
     MDRaisedButton:
-        id: needHelp
+        id: needHelph
         text: "Yes, please"
         font_size: 25
-        md_bg_color: (20/255,180/255,10/255,.1)
+        md_bg_color: (20/255,180/255,10/255,.2)
         size_hint: .15, .1
         pos_hint: {"center_x": .15, "center_y": .55}
         on_release: app.helpPlease(*args)
 
     MDRaisedButton:
-        id: noNeedHelp
+        id: noNeedHelph
         text: "No, thanks"
         font_size: 25
-        md_bg_color: (220/255,20/255,60/255,.1)
+        md_bg_color: (220/255,20/255,60/255,.2)
         size_hint: .15, .1
-        pos_hint: {"center_x": .35, "center_y": .55}
+        pos_hint: {"center_x": .35, "center_y": .55}}
         on_release: app.noHelpThanks(*args)
 
     MDLabel:
@@ -95,14 +95,14 @@ FloatLayout:
     MDRaisedButton:
         id: acquireTemp
         text: "Acquire body temperature"
-        md_bg_color: (52/255,20/255,235/255,.1)
         font_size: 25
+        md_bg_color: (52/255,168/255,235/255,.2)
         size_hint: .3, .1
         pos_hint: {"center_x": .3, "center_y": .25}
         on_release: app.acqTemp(*args)
 
     MDLabel:
-        id: goOn_text
+        id: goON_text
         text: "That was all! If it is ok for you, I would like to continue with the other patients."
         halign: "left"
         valign: "top"
@@ -126,7 +126,7 @@ FloatLayout:
         id: moveOn
         text: "Please go on!"
         font_size: 25
-        md_bg_color: (20/255,180/255,10/255,.1)
+        md_bg_color: (20/255,180/255,10/255,.2)
         size_hint: .2, .1
         pos_hint: {"center_x": .775, "center_y": .10}
         on_release: app.goON(*args)
