@@ -90,12 +90,12 @@ class PAQUITOP_MAIN:
                 rate.sleep()
                 publisher.publish(pose)
 
-            ALL_POINT_PUBLISHED = True
+            self.ALL_POINT_PUBLISHED = True
             
     def start(self, data):
         
-        if data.data and ALL_POINT_PUBLISHED and not ARM_UP:
-            ALL_POINT_PUBLISHED = False
+        if data.data and self.ALL_POINT_PUBLISHED and not self.ARM_UP:
+            self.ALL_POINT_PUBLISHED = False
             count = 0
             while count < 3:
                 cout = count +1
@@ -112,19 +112,19 @@ class PAQUITOP_MAIN:
             self.GOAL_REACHED = False
 
     def goUP(self):
-            self.ARM_UP
-            count = 0
-            while count < 3:
-                count = count +1
-                tab_ext = rospy.Publisher("/extract_tablet", Bool, queue_size=1)
-                tab_ext_msg = Bool()
-                tab_ext_msg.data = True
-                tab_ext.publish(tab_ext_msg)
-            # Update status
-            ARM_UP = True    
+            
+        count = 0
+        while count < 3:
+            count = count +1
+            tab_ext = rospy.Publisher("/extract_tablet", Bool, queue_size=1)
+            tab_ext_msg = Bool()
+            tab_ext_msg.data = True
+            tab_ext.publish(tab_ext_msg)
+        # Update status
+        self.ARM_UP = True    
             
     def goON(self):
-        global ARM_UP
+        
         # Tablet store
         count = 0
         while count < 3:
@@ -134,7 +134,7 @@ class PAQUITOP_MAIN:
             retrain_msg.data = True
             retrain.publish(retrain_msg)
         # Update status
-        ARM_UP = False
+        self.ARM_UP = False
 
     def patient_data(self, data):
         global assistance_patient
@@ -155,15 +155,15 @@ class PAQUITOP_MAIN:
                 next_goal.data = self.last_bed_to_home
             
             
-            while not ARM_UP and not rospy.is_shutdown():
-                print("Waiting for Goal Reached")
+            while not self.ARM_UP and not rospy.is_shutdown():
+                
                 if self.GOAL_REACHED:
                     self.pub_pose(next_goal)
                     print("Waiting for blood id bag")
                     id_bag = Int64()
-                    id_bag.data = 1
+                    id_bag.data = -1
 
-                    while id_bag % 2 != 0 or id_bag != 0:
+                    while id_bag % 2 != 0 and not rospy.is_shutdown():
                         id_bag = rospy.wait_for_message("/id", Int64 )
 
                     ALREADY_RECIVED_BAG = False
@@ -176,9 +176,15 @@ class PAQUITOP_MAIN:
                         print("Going Up")
                         self.goUP()
                 else:
+                    print("Waiting for Goal Reached")
                     time.sleep(0.5)
             
             wait = rospy.wait_for_message("/tablet_extracted", Bool)
+            
+            # Start gui orienting 
+            orient_gui_msg = Bool()
+            orient_gui_msg.data = True
+            self.orient_gui.publish(orient_gui_msg)
             # From this time the tablet orienting procedure has started
             print("Tablet extracted, waiting for person id")
             id_patient = rospy.wait_for_message("/id", Int64 )
