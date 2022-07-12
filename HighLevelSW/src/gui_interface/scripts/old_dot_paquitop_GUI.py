@@ -1,11 +1,19 @@
 #!/usr/bin/env python3
 
+# Per evitare problemi di risoluzione con diversi schermi:
+from cgitb import text
+from glob import glob
+
+# from ctypes import windll, c_int64
+from turtle import color
+# windll.user32.SetProcessDpiAwarenessContext(c_int64(-4))
+
+# Per aprire l'interfaccia a schermo intero:
+from kivy.core.window import Window
 import numpy as np
 import cv2
 import sys
 import pyrealsense2 as rs
-
-from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.clock import Clock
 from kivy.graphics.texture import Texture
@@ -15,10 +23,9 @@ from kivy.config import Config
 from kivymd.app import MDApp
 from kivymd.uix.boxlayout import MDBoxLayout 
 from kivymd.uix.menu import MDDropdownMenu 
-
-import rospkg
 import rospy
 from std_msgs.msg import Empty, Bool, Int64, String
+import rospkg
 from geometry_msgs.msg import PoseWithCovarianceStamped
 from geometry_msgs.msg import Twist
 from move_base_msgs.msg import MoveBaseActionResult
@@ -43,9 +50,8 @@ def NameReceiver(data):
 class DOT_PAQUITOP_GUI(MDApp):
 
     def __init__(self, **kwargs):
-
-        super().__init__(**kwargs)
         rospy.init_node('paquitop_gui')
+        super().__init__(**kwargs)
         self.layout = Builder.load_file('dot_paquitop_GUI.kv')
         self.pipeline = rs.pipeline()
         config = rs.config()
@@ -145,37 +151,11 @@ class DOT_PAQUITOP_GUI(MDApp):
     def identificationOK(self, name):
         self.layout.ids.identification.md_bg_color = (20/255,180/255,10/255,.6)
         self.layout.ids.identification.text = "Hi " + name + "!"
-
-        self.layout.ids.help_text.text_color = (0,0,0,1)
-        self.layout.ids.needHelp.md_bg_color = (20/255,180/255,10/255,.6)
-        self.layout.ids.noNeedHelp.md_bg_color = (220/255,20/255,60/255,.6)
-
-    def helpPlease(self, *args):
-        # Aggiungere codice per salvataggio richiesta
-        self.layout.ids.bodyTemp_text.text_color = (0,0,0,1)
-        self.layout.ids.acquireTemp.md_bg_color = (52/255,168/255,235/255,.6)
-
-    def noHelpThanks(self, *args):
-        # Aggiungere codice per salvataggio richiesta
-        self.layout.ids.bodyTemp_text.text_color = (0,0,0,1)
-        self.layout.ids.acquireTemp.md_bg_color = (20/255,180/255,10/255,.6)
-
-    def acqTemp(self, *args):
-        self.layout.goOn_text.text_color = (0,0,0,1)
-        self.layout.ids.moveOn.md_bg_color = (20/255,180/255,10/255,.6)
+        
 
     def goON(self, *args):
         self.layout.ids.identification.md_bg_color = (200/255,200/255,200/255,1)
         self.layout.ids.identification.text = "Waiting for identifier"
-
-        self.layout.ids.help_text.text_color = (0,0,0,.2)
-        self.layout.ids.needHelp.md_bg_color = (20/255,180/255,10/255,.2)
-        self.layout.ids.noNeedHelp.md_bg_color = (220/255,20/255,60/255,.2)
-        self.layout.ids.bodyTemp_text.text_color = (0,0,0,.2)
-        self.layout.ids.acquireTemp.md_bg_color = (52/255,168/255,235/255,.2)
-        self.layout.goOn_text.text_color = (0,0,0,.2)
-        self.layout.ids.moveOn.md_bg_color = (20/255,180/255,10/255,.2)
-
         # Tablet store
         count = 0
         while count < 3:
