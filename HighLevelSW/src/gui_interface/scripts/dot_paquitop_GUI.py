@@ -38,9 +38,9 @@ Config.set('graphics', 'fullscreen', 1)
 Config.set('graphics', 'window_state', 'maximized')
 Config.write()
 
-def TabletExtracetd(data):
-    global TABLET_EXTRACTED
-    TABLET_EXTRACTED = True
+# def TabletExtracetd(data):
+#     global TABLET_EXTRACTED
+#     TABLET_EXTRACTED = True
 
 def NameReceiver(data):
     name = data.data
@@ -71,7 +71,7 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.tab_ret.publish(tab_ext_msg)
 
         # initialize Subscriber topic
-        rospy.Subscriber("/tablet_extracted", Bool, TabletExtracetd)
+        # rospy.Subscriber("/tablet_extracted", Bool, TabletExtracetd)
         rospy.Subscriber("/patient_name", String, NameReceiver)
         
 
