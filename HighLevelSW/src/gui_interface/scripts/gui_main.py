@@ -14,11 +14,11 @@ from gui_interface.msg import patient_assistance
 
 class PAQUITOP_MAIN:
     def __init__(self):
-        patient_list = ["Letto 1", "Letto 2"]
+        self.patient_list = ["Letto 1", "Letto 2"]
         # initialazing the path from the last bed to home
         self.last_bed_to_home = "Laboratorio"
         # number of patients
-        self.num_el = len(patient_list)
+        self.num_el = len(self.patient_list)
 
         # database variables
         self.blood_bag = []
@@ -27,6 +27,7 @@ class PAQUITOP_MAIN:
         self.match_id = []
         self.temp_patient = []
         self.assistance_patient = []
+        self.published_pose = []
         self.DataName = ["Lorenzo", "Luigi", "Giovanni", "Giulia"]
 
         # definition of global variables
@@ -40,21 +41,20 @@ class PAQUITOP_MAIN:
         rospy.Subscriber("/tablet_stored", Bool, self.start)
         rospy.Subscriber("/pub_pose",String, self.pub_pose)
         self.patient_name = rospy.Publisher("/patient_name", String, queue_size=1)
-        self.orient_gui = rospy.Publisher("")
+        self.orient_gui = rospy.Publisher("/orient_gui", Bool,queue_size=1)
         self.patient_name_msg = String()
         
     def pub_pose(self, data):
-        global ALL_POINT_PUBLISHED
-        global published_pose
+        
         goal = data.data
         
-        NOT_YET_PUBLISHED = True
-        for element in published_pose:
+        self.NOT_YET_PUBLISHED = True
+        for element in self.published_pose:
             if element == goal:
-                NOT_YET_PUBLISHED = False
+                self.NOT_YET_PUBLISHED = False
             
-        if NOT_YET_PUBLISHED and not ALL_POINT_PUBLISHED:
-            published_pose.append(goal)
+        if self.NOT_YET_PUBLISHED and not self.ALL_POINT_PUBLISHED:
+            self.published_pose.append(goal)
             rospack = rospkg.RosPack()
             folder = rospack.get_path('navstack_pub')
             folder = folder + "/trajectory_point/" + goal + ".txt"
@@ -92,10 +92,8 @@ class PAQUITOP_MAIN:
 
             ALL_POINT_PUBLISHED = True
             
-
     def start(self, data):
-        global ALL_POINT_PUBLISHED
-        global ARM_UP
+        
         if data.data and ALL_POINT_PUBLISHED and not ARM_UP:
             ALL_POINT_PUBLISHED = False
             count = 0
@@ -106,15 +104,15 @@ class PAQUITOP_MAIN:
                 publisher.publish(Start)
 
     def move_base_goal_reached(self, data):
-        global GOAL_REACHED
+        self.GOAL_REACHED
         
         if data.status.status == 3:
-            GOAL_REACHED = True
+            self.GOAL_REACHED = True
         else:
-            GOAL_REACHED = False
+            self.GOAL_REACHED = False
 
     def goUP(self):
-            global ARM_UP
+            self.ARM_UP
             count = 0
             while count < 3:
                 count = count +1
@@ -148,11 +146,10 @@ class PAQUITOP_MAIN:
 
     def main(self):
         count = 0
-        global published_pose
-        published_pose = []
+        
         while count < self.num_el and not rospy.is_shutdown():
             next_goal = String()
-            if count != self.num_el:
+            if count != self.num_el-1:
                 next_goal.data = self.patient_list[count+1]
             else:
                 next_goal.data = self.last_bed_to_home
@@ -160,13 +157,22 @@ class PAQUITOP_MAIN:
             
             while not ARM_UP and not rospy.is_shutdown():
                 print("Waiting for Goal Reached")
-                if GOAL_REACHED:
+                if self.GOAL_REACHED:
                     self.pub_pose(next_goal)
                     print("Waiting for blood id bag")
-                    id_bag = rospy.wait_for_message("/id", Int64 )
-                    self.blood_bag.append(float(id_bag.data))
-                        
-                    if self.blood_bag[count] == 0 or float(self.blood_bag[count])%2 == 0:
+                    id_bag = Int64()
+                    id_bag.data = 1
+
+                    while id_bag % 2 != 0 or id_bag != 0:
+                        id_bag = rospy.wait_for_message("/id", Int64 )
+
+                    ALREADY_RECIVED_BAG = False
+                    for recived_bag in self.blood_bag:
+                        if recived_bag == id_bag.data:
+                            ALREADY_RECIVED_BAG == True
+                    
+                    if not ALREADY_RECIVED_BAG:
+                        self.blood_bag.append(float(id_bag.data))
                         print("Going Up")
                         self.goUP()
                 else:
