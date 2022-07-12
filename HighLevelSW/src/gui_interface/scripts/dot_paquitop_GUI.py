@@ -32,11 +32,6 @@ Config.set('graphics', 'fullscreen', 1)
 Config.set('graphics', 'window_state', 'maximized')
 Config.write()
 
-def NameReceiver(data):
-    name = data.data
-    DOT_PAQUITOP_GUI.identificationOK(name)
-
-
 class DOT_PAQUITOP_GUI(MDApp):
 
     def __init__(self, **kwargs):
@@ -49,19 +44,6 @@ class DOT_PAQUITOP_GUI(MDApp):
         profile = self.pipeline.start(config)
         align_to = rs.stream.color
         self.align = rs.align(align_to)
-
-        # initialize Publisher topic extract/retrain table    
-        self.tab_ext = rospy.Publisher("/extract_tablet", Bool, queue_size=1)
-        self.tab_ret = rospy.Publisher("/retrain_tablet", Bool, queue_size=1)
-        self.id = rospy.Publisher("/id", Int64, queue_size=1)
-        tab_ext_msg = Bool()
-        tab_ext_msg.data = False
-        self.tab_ext.publish(tab_ext_msg)
-        self.tab_ret.publish(tab_ext_msg)
-
-        # initialize Subscriber topic
-        rospy.Subscriber("/patient_name", String, NameReceiver)
-        
         
     def build(self):
         
@@ -152,12 +134,12 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.layout.ids.identification.md_bg_color = (200/255,200/255,200/255,1)
         self.layout.ids.identification.text = "Waiting for identifier"
         
-        self.layout.ids.help_text.text_color = (0,0,0,.1)
+        self.layout.ids.help_text.text_color = (.8, .8, .8, 1)
         self.layout.ids.needHelp.md_bg_color = (20/255,180/255,10/255,.1)
         self.layout.ids.noNeedHelp.md_bg_color = (220/255,20/255,60/255,.1)
-        self.layout.ids.bodyTemp_text.text_color = (0,0,0,.1)
+        self.layout.ids.bodyTemp_text.text_color = (.8, .8, .8, 1)
         self.layout.ids.acquireTemp.md_bg_color = (52/255,168/255,235/255,.1)
-        self.layout.ids.goOn_text.text_color = (0,0,0,.1)
+        self.layout.ids.goOn_text.text_color = (.8, .8, .8, 1)
         self.layout.ids.moveOn.md_bg_color = (20/255,180/255,10/255,.1)
 
         # Tablet store
@@ -169,7 +151,24 @@ class DOT_PAQUITOP_GUI(MDApp):
             retrain_msg.data = True
             retrain.publish(retrain_msg)
 
+def NameReceiver(data):
+    name = data.data
+    gui.identificationOK(name)
+
 if __name__ == '__main__':
     
-    DOT_PAQUITOP_GUI().run()
+    gui = DOT_PAQUITOP_GUI()
+
+    # initialize Publisher topic extract/retrain table    
+    gui.tab_ext = rospy.Publisher("/extract_tablet", Bool, queue_size=1)
+    gui.tab_ret = rospy.Publisher("/retrain_tablet", Bool, queue_size=1)
+    gui.id = rospy.Publisher("/id", Int64, queue_size=1)
+    tab_ext_msg = Bool()
+    tab_ext_msg.data = False
+    gui.tab_ext.publish(tab_ext_msg)
+    gui.tab_ret.publish(tab_ext_msg)
+
+    # initialize Subscriber topic
+    rospy.Subscriber("/patient_name", String, NameReceiver)
+    gui.run()
     
