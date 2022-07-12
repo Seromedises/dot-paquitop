@@ -150,6 +150,7 @@ if __name__ == '__main__':
     rospy.Subscriber("/tablet_stored", Bool, start)
     rospy.Subscriber("/pub_pose",String,pub_pose)
     patient_name = rospy.Publisher("/patient_name", String, queue_size=1)
+    orient_gui = rospy.Publisher("")
     patient_name_msg = String()
     
     
@@ -171,7 +172,7 @@ if __name__ == '__main__':
                 if GOAL_REACHED:
                     pub_pose(next_goal)
                     print("Waiting for blood id bag")
-                    id_bag = rospy.wait_for_message("/id_blood_bag", Int64 )
+                    id_bag = rospy.wait_for_message("/id", Int64 )
                     blood_bag.append(float(id_bag.data))
                         
                     if blood_bag[count] == 0 or float(blood_bag[count])%2 == 0:
@@ -183,7 +184,7 @@ if __name__ == '__main__':
             wait = rospy.wait_for_message("/tablet_extracted", Bool)
             # From this time the tablet orienting procedure has started
             print("Tablet extracted, waiting for person id")
-            id_patient = rospy.wait_for_message("/id_patient", Int64 )
+            id_patient = rospy.wait_for_message("/id", Int64 )
             person_id.append(id_patient.data)
 
             if person_id[count] == 1:
