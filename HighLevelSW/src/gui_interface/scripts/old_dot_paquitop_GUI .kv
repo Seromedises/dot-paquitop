@@ -1,0 +1,125 @@
+FloatLayout:   
+    
+    MDToolbar:
+        id: menu
+        title: ""
+        elevation: 20
+        icon: "git"
+        type: "top"
+        size_hint: 1, 0.1
+        pos_hint: {"center_x": .5, "center_y":.95}
+        
+
+    MDLabel:
+        text: "D.O.T. PAQUITOP: Graphic User Interface"
+        halign: "left"
+        valign: "top"
+        theme_text_color: "Custom"
+        font_size: 35
+        text_color: 1, 1, 1, 1
+        size_hint: .95, 0.1
+        pos_hint: {"center_x": .5, "center_y":0.95}
+
+    Image:
+        id: logoPaquitopDOT
+        keep_ratio: True
+        size_hint: .2, .1
+        pos_hint: {"center_x": .95, "center_y":0.95}
+        source: '../images/renderDOTPAQUITOP.png'
+    
+    Image:
+        id: logoPoli
+        keep_ratio: True
+        size_hint: .2, .1
+        pos_hint: {"center_x": .80, "center_y":0.95}
+        source: '../images/Poli_Pic4Ser.png'
+
+    MDLabel:
+        text: "Hi! I'm PAQUITOP, a mobile robot for hospital assistance. I will disturb you just for a few moments to ask you if you need any help and to measure your body temperature. \n \nFirst things first, please show me your identifier, so I can double check your identity."
+        halign: "left"
+        valign: "top"
+        theme_text_color: "Custom"
+        font_size: 30
+        text_color: 0, 0, 0, 1
+        size_hint: .4, .5
+        pos_hint: {"center_x": .5, "center_y":0.8}
+
+    MDRaisedButton:
+        id: identification
+        text: "Waiting for identifier"
+        font_size: 25
+        md_bg_color: (200/255,200/255,200/255,1)
+        size_hint: .15, .1
+        pos_hint: {"center_x": .775, "center_y": .75}
+        
+    MDLabel:
+        text: "Do you need anything from the hospital staff? If it is so, I will call you someone."
+        halign: "left"
+        valign: "top"
+        theme_text_color: "Custom"
+        font_size: 30
+        text_color: 0, 0, 0, 1
+        size_hint: .5, .1
+        pos_hint: {"center_x": .3, "center_y":0.65}
+
+    MDRaisedButton:
+        id: needHelph
+        text: "Yes, please"
+        font_size: 25
+        md_bg_color: (20/255,180/255,10/255,.6)
+        size_hint: .15, .1
+        pos_hint: {"center_x": .15, "center_y": .55}
+
+    MDRaisedButton:
+        id: noNeedHelph
+        text: "No, thanks"
+        font_size: 25
+        md_bg_color: (220/255,20/255,60/255,.6)
+        size_hint: .15, .1
+        pos_hint: {"center_x": .35, "center_y": .55}
+
+    MDLabel:
+        text: "To measure the body temperature, please make sure that your face is correctly inside the camera screen and then press the button."
+        halign: "left"
+        valign: "top"
+        theme_text_color: "Custom"
+        font_size: 30
+        text_color: 0, 0, 0, 1
+        size_hint: .5, .1
+        pos_hint: {"center_x": .3, "center_y":0.375}
+
+    MDRaisedButton:
+        id: acquireTemp
+        text: "Acquire body temperature"
+        font_size: 25
+        size_hint: .3, .1
+        pos_hint: {"center_x": .3, "center_y": .25}
+
+    MDLabel:
+        text: "That was all! If it is ok for you, I would like to continue with the other patients."
+        halign: "left"
+        valign: "top"
+        theme_text_color: "Custom"
+        font_size: 30
+        text_color: 0, 0, 0, 1
+        size_hint: .5, .1
+        pos_hint: {"center_x": .3, "center_y":0.10}
+
+    MDLabel:
+        text: "Robot's point of view."
+        halign: "left"
+        valign: "top"
+        theme_text_color: "Custom"
+        font_size: 20
+        text_color: 0, 0, 0, 1
+        size_hint: .2, .1
+        pos_hint: {"center_x": .925, "center_y":0.2}
+
+    MDRaisedButton:
+        id: moveOn
+        text: "Please go on!"
+        font_size: 25
+        md_bg_color: (20/255,180/255,10/255,.6)
+        size_hint: .2, .1
+        pos_hint: {"center_x": .775, "center_y": .10}
+        on_release: app.goON(*args)
