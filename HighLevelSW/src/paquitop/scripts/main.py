@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
-import re
+import csv
+import rospkg
 
 from matplotlib.pyplot import cla
 import rospy
@@ -33,16 +34,25 @@ class PAQUITOP_MAIN:
         # definition of global variables
         self.GOAL_REACHED = False
         self.ARM_UP = False
-        self.ALL_POINT_PUBLISHED = False   
+        self.ALL_POINT_PUBLISHED = False 
+        self.END = False  
 
-        # nodes to subscribe to
+        # topics to subscribe to
         rospy.Subscriber("/move_base/result", MoveBaseActionResult, self.move_base_goal_reached)
         rospy.Subscriber("/patient_data", patient_assistance, self.patient_data )
         rospy.Subscriber("/tablet_stored", Bool, self.start)
         rospy.Subscriber("/pub_pose",String, self.pub_pose)
+
+        # output topics
         self.patient_name = rospy.Publisher("/patient_name", String, queue_size=1)
         self.orient_gui = rospy.Publisher("/orient_gui", Bool,queue_size=1)
-        self.patient_name_msg = String()
+        self.retrain = rospy.Publisher("/retrain_tablet", Bool, queue_size=1)
+        self.pose_publisher = rospy.Publisher("/addpose", PoseWithCovarianceStamped, queue_size=10)
+        self.path_ready_publisher = rospy.Publisher('/path_ready', Empty, queue_size=1)
+        self.tab_ext = rospy.Publisher("/extract_tablet", Bool, queue_size=1)
+
+        
+        
         
     def pub_pose(self, data):
         
@@ -60,7 +70,7 @@ class PAQUITOP_MAIN:
             folder = folder + "/trajectory_point/" + goal + ".txt"
             f = open(folder,'r')
 
-            publisher = rospy.Publisher("/addpose", PoseWithCovarianceStamped, queue_size=10)
+            
             rate = rospy.Rate(0.5) 
             pose = PoseWithCovarianceStamped()
             pose.header.frame_id = 'map'
@@ -88,23 +98,23 @@ class PAQUITOP_MAIN:
                 pose.pose.pose.orientation.z = values[5]
                 pose.pose.pose.orientation.w = values[6]  
                 rate.sleep()
-                publisher.publish(pose)
+                self.pose_publisher.publish(pose)
 
             self.ALL_POINT_PUBLISHED = True
             
     def start(self, data):
-        
+        self.GOAL_REACHED = False
+        self.END = True
         if data.data and self.ALL_POINT_PUBLISHED and not self.ARM_UP:
             self.ALL_POINT_PUBLISHED = False
             count = 0
             while count < 3:
-                cout = count +1
+                count = count +1
                 Start = Empty()
-                publisher = rospy.Publisher('/path_ready', Empty, queue_size=1)
-                publisher.publish(Start)
+                
+                self.path_ready_publisher.publish(Start)
 
     def move_base_goal_reached(self, data):
-        self.GOAL_REACHED
         
         if data.status.status == 3:
             self.GOAL_REACHED = True
@@ -116,10 +126,9 @@ class PAQUITOP_MAIN:
         count = 0
         while count < 3:
             count = count +1
-            tab_ext = rospy.Publisher("/extract_tablet", Bool, queue_size=1)
             tab_ext_msg = Bool()
             tab_ext_msg.data = True
-            tab_ext.publish(tab_ext_msg)
+            self.tab_ext.publish(tab_ext_msg)
         # Update status
         self.ARM_UP = True    
             
@@ -129,19 +138,22 @@ class PAQUITOP_MAIN:
         count = 0
         while count < 3:
             count = count +1
-            retrain = rospy.Publisher("/retrain_tablet", Bool, queue_size=1)
+            
             retrain_msg = Bool()
             retrain_msg.data = True
-            retrain.publish(retrain_msg)
+            self.retrain.publish(retrain_msg)
         # Update status
         self.ARM_UP = False
 
     def patient_data(self, data):
-        global assistance_patient
-        global temp_patient
+              
+        self.assistance_patient.append(data.need_help)  
+        self.temp_patient.append(data.temperature)
         
-        assistance_patient.append(data.need_help)  
-        temp_patient.append(data.temperature)
+        orient_gui_msg = Bool()
+        orient_gui_msg.data = False
+        self.orient_gui.publish(orient_gui_msg)
+
         self.goON()
 
     def main(self):
@@ -160,60 +172,95 @@ class PAQUITOP_MAIN:
                 if self.GOAL_REACHED:
                     self.pub_pose(next_goal)
                     print("Waiting for blood id bag")
-                    id_bag = Int64()
-                    id_bag.data = -1
+                                        
+                    id_bag = rospy.wait_for_message("/id", Int64 )
 
-                    while id_bag % 2 != 0 and not rospy.is_shutdown():
-                        id_bag = rospy.wait_for_message("/id", Int64 )
-
-                    ALREADY_RECIVED_BAG = False
-                    for recived_bag in self.blood_bag:
-                        if recived_bag == id_bag.data:
-                            ALREADY_RECIVED_BAG == True
+                    if float(id_bag.data) % 2 == 0:
+                        ALREADY_RECIVED_BAG = False
+                        for recived_bag in self.blood_bag:
+                            if recived_bag == id_bag.data:
+                                ALREADY_RECIVED_BAG == True
+                        
+                        if not ALREADY_RECIVED_BAG:
+                            self.blood_bag.append(id_bag.data)
+                            print("Going Up")
+                            self.goUP()
                     
-                    if not ALREADY_RECIVED_BAG:
-                        self.blood_bag.append(float(id_bag.data))
-                        print("Going Up")
-                        self.goUP()
                 else:
                     print("Waiting for Goal Reached")
                     time.sleep(0.5)
             
             wait = rospy.wait_for_message("/tablet_extracted", Bool)
-            
+
             # Start gui orienting 
             orient_gui_msg = Bool()
             orient_gui_msg.data = True
             self.orient_gui.publish(orient_gui_msg)
             # From this time the tablet orienting procedure has started
             print("Tablet extracted, waiting for person id")
-            id_patient = rospy.wait_for_message("/id", Int64 )
-            self.person_id.append(id_patient.data)
 
-            if self.person_id[count] == 1:
-                self.name.append(self.DataName[0])
-                self.patient_name_msg.data = self.DataName[0]
-                self.patient_name.publish(self.patient_name_msg)
-            elif self.person_id[count] == 3:
-                self.name.append(self.DataName[1])
-                self.patient_name_msg.data = self.DataName[1]
-                self.patient_name.publish(self.patient_name_msg)
-            elif self.person_id[count] == 5:
-                self.name.append(self.DataName[2])
-                self.patient_name_msg.data = self.DataName[2]
-                self.patient_name.publish(self.patient_name_msg)
-            elif self.person_id[count] == 7:
-                self.name.append(self.DataName[3])
-                self.patient_name_msg.data = self.DataName[3]
-                self.patient_name.publish(self.patient_name_msg)
-            else: 
-                self.name.append("None")
+            person_id_recieved = False
 
-            if self.person_id[count] == self.blood_bag[count]+1:
-                self.match_id.append(True)
-            else:
-                self.match_id.append(False)
+            while not person_id_recieved and not rospy.is_shutdown():
+                id_patient = rospy.wait_for_message("/id", Int64 )
 
+                already_person_id_recived = False
+                for patient in self.person_id:
+                    if patient == id_patient:
+                        already_person_id_recived = True
+
+                if not already_person_id_recived:
+                    self.person_id.append(id_patient.data)
+                    person_id_recieved = True
+                    patient_name_msg = String()
+                    print("new person added")
+
+                    if self.person_id[count] == 1:
+                        self.name.append(self.DataName[0])
+                        patient_name_msg.data = self.DataName[0]
+                        self.patient_name.publish(patient_name_msg)
+                    elif self.person_id[count] == 3:
+                        self.name.append(self.DataName[1])
+                        patient_name_msg.data = self.DataName[1]
+                        self.patient_name.publish(patient_name_msg)
+                    elif self.person_id[count] == 5:
+                        self.name.append(self.DataName[2])
+                        patient_name_msg.data = self.DataName[2]
+                        self.patient_name.publish(patient_name_msg)
+                    elif self.person_id[count] == 7:
+                        self.name.append(self.DataName[3])
+                        patient_name_msg.data = self.DataName[3]
+                        self.patient_name.publish(patient_name_msg)
+                    else: 
+                        self.name.append("None")
+
+                    if self.person_id[count] == self.blood_bag[count]+1:
+                        self.match_id.append(True)
+                        print("bag and person matched")
+                    else:
+                        self.match_id.append(False)
+            while not self.END:
+                time.sleep(0.5)
+                
+            
+            count = count +1
+            print("end of cycle")
+            self.END = False
+            
+        
+        first_line = ["Letto", "Nome", "Id Paziente", "Id Sacca", "Id Match", "Temp Paziente", "Assistenza"]
+        folder = rospkg.RosPack().get_path('paquitop')
+        folder = folder + '/../../../result/patient_result.csv'
+        f = open(folder,'w')
+        writer = csv.writer(f)
+        writer.writerow(first_line)
+
+        i = 0
+        while i<count:
+            line = [self.patient_list[i], self.name[i], self.person_id[i], self.blood_bag[i], self.match_id[i], self.temp_patient[i], self.assistance_patient[i] ]
+            writer.writerow(line)
+            i = i+1
+        f.close()
 
 if __name__ == '__main__':
     
