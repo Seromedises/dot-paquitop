@@ -67,7 +67,6 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.cascName = "haarcascade_frontalface_default.xml"
         self.faceCascade = cv2.CascadeClassifier(self.directoryPath+"/"+self.subdirectory+"/"+self.cascName)
         test = self.faceCascade.load(self.directoryPath+"/"+self.subdirectory+"/"+self.cascName)
-        print(test)
 
     def build(self):
         
@@ -91,10 +90,11 @@ class DOT_PAQUITOP_GUI(MDApp):
 
         (corners, ids, rejected) = cv2.aruco.detectMarkers(color_image, arucoDict, parameters=arucoParams)
         
+        
         # Face detect:
-        # frame = cv2.flip(color_image,1)
-        # gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        # faces = self.faceCascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=10, minSize=(40, 40), flags = cv2.CASCADE_SCALE_IMAGE)
+        frame = cv2.flip(color_image,1)
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        faces = self.faceCascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=10, minSize=(40, 40), flags = cv2.CASCADE_SCALE_IMAGE)
         # face_data = face_detection()
         # face_data.num_faces = len(faces)
         # face_data.face = faces[0]
