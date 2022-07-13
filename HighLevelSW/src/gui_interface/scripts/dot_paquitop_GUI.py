@@ -66,7 +66,7 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.subdirectory = "scripts"
         self.cascName = "haarcascade_frontalface_default.xml"
         self.faceCascade = cv2.CascadeClassifier(self.directoryPath+"/"+self.subdirectory+"/"+self.cascName)
-        test = self.faceCascade.load('haarcascade_frontalface_default.xml')
+        # test = self.faceCascade.load('haarcascade_frontalface_default.xml')
         
     def build(self):
         
@@ -91,13 +91,13 @@ class DOT_PAQUITOP_GUI(MDApp):
         (corners, ids, rejected) = cv2.aruco.detectMarkers(color_image, arucoDict, parameters=arucoParams)
         
         # Face detect:
-        frame = cv2.flip(color_image,1)
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        faces = self.faceCascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=10, minSize=(40, 40), flags = cv2.CASCADE_SCALE_IMAGE)
-        face_data = face_detection()
-        face_data.num_faces = len(faces)
-        face_data.face = faces[0]
-        self.face_publisher.publish(face_data)
+        # frame = cv2.flip(color_image,1)
+        # gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        # faces = self.faceCascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=10, minSize=(40, 40), flags = cv2.CASCADE_SCALE_IMAGE)
+        # face_data = face_detection()
+        # face_data.num_faces = len(faces)
+        # face_data.face = faces[0]
+        # self.face_publisher.publish(face_data)
 
         if len(corners) > 0:
             # flatten the ArUco IDs list         
