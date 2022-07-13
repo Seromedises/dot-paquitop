@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<launch>
+	<arg name="arm" default="gen3_lite"/>
+	<arg name="robot_name" default="my_$(arg arm)"/>
+  <node name="gui_orient" pkg="gui_interface" type="gui_orient.py" ns="$(arg robot_name)" output="screen" respawn="true"/>
+</launch>
