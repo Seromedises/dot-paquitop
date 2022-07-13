@@ -153,12 +153,12 @@ class DOT_PAQUITOP_GUI(MDApp):
     def helpPlease(self, *args):
         self.layout.ids.bodyTemp_text.text_color = (0,0,0,1)
         self.layout.ids.acquireTemp.md_bg_color = (52/255,168/255,235/255,.6)
-        self.patient_data.need_help = False
+        self.patient_data.need_help = True
 
     def noHelpThanks(self, *args):
         self.layout.ids.bodyTemp_text.text_color = (0,0,0,1)
         self.layout.ids.acquireTemp.md_bg_color = (52/255,168/255,235/255,.6)
-        self.patient_data.need_help = True
+        self.patient_data.need_help = False
 
     def acqTemp(self, *args):
         self.layout.ids.goOn_text.text_color = (0,0,0,1)
@@ -183,6 +183,7 @@ class DOT_PAQUITOP_GUI(MDApp):
         orient_gui_msg = Bool()
         orient_gui_msg.data = False
         self.orient_gui.publish(orient_gui_msg)
+        print(self.patient_data)
         self.patient_publisher.publish(self.patient_data)
         self.patient_data.temperature = -1
         self.patient_data.need_help = False
