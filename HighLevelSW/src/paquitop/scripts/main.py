@@ -131,7 +131,8 @@ class PAQUITOP_MAIN:
         self.ARM_UP = True    
             
     def goON(self):
-        
+        wait = rospy.wait_for_message("/orient_gui", Bool)
+        time.sleep(0.5)
         # Tablet store
         count = 0
         while count < 3:
@@ -155,7 +156,7 @@ class PAQUITOP_MAIN:
         while count < 3:
             count += 1
             self.orient_gui.publish(orient_gui_msg)
-        time.sleep(5)
+        
 
         self.goON()
 
