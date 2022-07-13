@@ -67,8 +67,8 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.cascName = "haarcascade_frontalface_default.xml"
         self.faceCascade = cv2.CascadeClassifier(self.directoryPath+"/"+self.subdirectory+"/"+self.cascName)
         test = self.faceCascade.load('haarcascade_frontalface_default.xml')
-        print(test)
-        
+        print(self.directoryPath+"/"+self.subdirectory+"/"+self.cascName)
+
     def build(self):
         
         self.image = Image(pos_hint={"center_x": .775, "center_y":0.45},size_hint=(.4,.5),keep_ratio=True)
