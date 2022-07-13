@@ -23,6 +23,8 @@ import rospkg
 from geometry_msgs.msg import PoseWithCovarianceStamped
 from geometry_msgs.msg import Twist
 from move_base_msgs.msg import MoveBaseActionResult
+from gui_interface.msg import patient_assistance
+import random
 
 Config.set('graphics', 'width', '1920')
 Config.set('graphics', 'height', '1080')
@@ -44,6 +46,12 @@ class DOT_PAQUITOP_GUI(MDApp):
         profile = self.pipeline.start(config)
         align_to = rs.stream.color
         self.align = rs.align(align_to)
+        self.patient_data = patient_assistance()
+        self.patient_data.temperature = -1
+        self.patient_data.need_help = False
+        self.id = rospy.Publisher("/id", Int64, queue_size=1)
+        self.patient_publisher = rospy.Publisher("/patient_data", patient_assistance, queue_size=1)
+        rospy.Subscriber("/patient_name", String, self.NameReceiver)
         
     def build(self):
         
@@ -119,15 +127,20 @@ class DOT_PAQUITOP_GUI(MDApp):
         # Aggiungere codice per salvataggio richiesta
         self.layout.ids.bodyTemp_text.text_color = (0,0,0,1)
         self.layout.ids.acquireTemp.md_bg_color = (52/255,168/255,235/255,.6)
+        self.patient_data.need_help = False
 
     def noHelpThanks(self, *args):
         # Aggiungere codice per salvataggio richiesta
         self.layout.ids.bodyTemp_text.text_color = (0,0,0,1)
         self.layout.ids.acquireTemp.md_bg_color = (52/255,168/255,235/255,.6)
+        self.patient_data.need_help = True
 
     def acqTemp(self, *args):
         self.layout.ids.goOn_text.text_color = (0,0,0,1)
         self.layout.ids.moveOn.md_bg_color = (20/255,180/255,10/255,.6)
+        delta = random.randint(-10,5)
+        delta = delta/5
+        self.patient_data.temperature = 38 + delta
 
 
     def goON(self, *args):
@@ -142,33 +155,37 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.layout.ids.goOn_text.text_color = (.8, .8, .8, 1)
         self.layout.ids.moveOn.md_bg_color = (20/255,180/255,10/255,.1)
 
+        self.patient_publisher.publish(self.patient_data)
+        self.patient_data.temperature = -1
+        self.patient_data.need_help = False
+        
         # Tablet store
-        count = 0
-        while count < 3:
-            count = count +1
-            retrain = rospy.Publisher("/retrain_tablet", Bool, queue_size=1)
-            retrain_msg = Bool()
-            retrain_msg.data = True
-            retrain.publish(retrain_msg)
+        # count = 0
+        # while count < 3:
+        #     count = count +1
+        #     retrain = rospy.Publisher("/retrain_tablet", Bool, queue_size=1)
+        #     retrain_msg = Bool()
+        #     retrain_msg.data = True
+        #     retrain.publish(retrain_msg)
 
-def NameReceiver(data):
-    name = data.data
-    gui.identificationOK(name)
+    def NameReceiver(self, data):
+        name = data.data
+        self.identificationOK(name)
 
 if __name__ == '__main__':
     
-    gui = DOT_PAQUITOP_GUI()
+    DOT_PAQUITOP_GUI().run()
 
     # initialize Publisher topic extract/retrain table    
-    gui.tab_ext = rospy.Publisher("/extract_tablet", Bool, queue_size=1)
-    gui.tab_ret = rospy.Publisher("/retrain_tablet", Bool, queue_size=1)
-    gui.id = rospy.Publisher("/id", Int64, queue_size=1)
-    tab_ext_msg = Bool()
-    tab_ext_msg.data = False
-    gui.tab_ext.publish(tab_ext_msg)
-    gui.tab_ret.publish(tab_ext_msg)
+    # gui.tab_ext = rospy.Publisher("/extract_tablet", Bool, queue_size=1)
+    # gui.tab_ret = rospy.Publisher("/retrain_tablet", Bool, queue_size=1)
+    # gui.id = rospy.Publisher("/id", Int64, queue_size=1)
+    # tab_ext_msg = Bool()
+    # tab_ext_msg.data = False
+    # gui.tab_ext.publish(tab_ext_msg)
+    # gui.tab_ret.publish(tab_ext_msg)
 
     # initialize Subscriber topic
-    rospy.Subscriber("/patient_name", String, NameReceiver)
-    gui.run()
+    
+    # gui.run()
     
