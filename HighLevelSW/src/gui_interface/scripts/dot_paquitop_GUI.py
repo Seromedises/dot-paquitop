@@ -3,13 +3,11 @@
 from cgitb import text
 from glob import glob
 from turtle import color
+from kivy.core.window import Window
 import numpy as np
 import cv2
 import sys
 import pyrealsense2 as rs
-import random
-
-from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.clock import Clock
 from kivy.graphics.texture import Texture
@@ -19,7 +17,6 @@ from kivy.config import Config
 from kivymd.app import MDApp
 from kivymd.uix.boxlayout import MDBoxLayout 
 from kivymd.uix.menu import MDDropdownMenu 
-
 import rospy
 from std_msgs.msg import Empty, Bool, Int64, String
 import rospkg
