@@ -167,11 +167,12 @@ class DOT_PAQUITOP_GUI(MDApp):
         #     retrain.publish(retrain_msg)
 
 def NameReceiver(data):
+    global gui
     name = data.data
     gui.identificationOK(name)
 
 if __name__ == '__main__':
-    
+    global gui
     gui = DOT_PAQUITOP_GUI()
 
     # initialize Publisher topic extract/retrain table    
