@@ -143,3 +143,4 @@ class faceFollowing():
 if __name__ == '__main__':
 
     faceFollowing(False)
+    rospy.spin()
