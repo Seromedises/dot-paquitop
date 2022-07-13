@@ -23,6 +23,8 @@ import rospkg
 from geometry_msgs.msg import PoseWithCovarianceStamped
 from geometry_msgs.msg import Twist
 from move_base_msgs.msg import MoveBaseActionResult
+from gui_interface.msg import patient_assistance
+import random
 
 Config.set('graphics', 'width', '1920')
 Config.set('graphics', 'height', '1080')
@@ -44,68 +46,74 @@ class DOT_PAQUITOP_GUI(MDApp):
         profile = self.pipeline.start(config)
         align_to = rs.stream.color
         self.align = rs.align(align_to)
-        
+        self.patient_data = patient_assistance()
+        self.patient_data.temperature = -1
+        self.patient_data.need_help = False
+        self.id = rospy.Publisher("/id", Int64, queue_size=1)
+        self.patient_publisher = rospy.Publisher("/patient_data", patient_assistance, queue_size=1)
+        rospy.Subscriber("/patient_name", String, self.NameReceiver)
+
     def build(self):
         
         self.image = Image(pos_hint={"center_x": .775, "center_y":0.45},size_hint=(.4,.5),keep_ratio=True)
-        self.layout.add_widget(self.image)
-        Clock.schedule_interval(self.load_video,1.0/10.0)
+        # self.layout.add_widget(self.image)
+        # Clock.schedule_interval(self.load_video,1.0/10.0)
                  
         return self.layout
 
-    def load_video(self, *args):
+    # def load_video(self, *args):
         
-        default = cv2.aruco.DICT_5X5_100
-        arucoDict = cv2.aruco.Dictionary_get(default)
-        arucoParams = cv2.aruco.DetectorParameters_create()
+    #     default = cv2.aruco.DICT_5X5_100
+    #     arucoDict = cv2.aruco.Dictionary_get(default)
+    #     arucoParams = cv2.aruco.DetectorParameters_create()
 
-        # Get frameset of color and depth
-        frames = self.pipeline.wait_for_frames()
-        aligned_frames = self.align.process(frames)
-        color_frame = aligned_frames.get_color_frame()
-        color_image = np.asanyarray(color_frame.get_data())
+    #     # Get frameset of color and depth
+    #     frames = self.pipeline.wait_for_frames()
+    #     aligned_frames = self.align.process(frames)
+    #     color_frame = aligned_frames.get_color_frame()
+    #     color_image = np.asanyarray(color_frame.get_data())
 
-        images = color_image
+    #     images = color_image
 
-        (corners, ids, rejected) = cv2.aruco.detectMarkers(images, arucoDict, parameters=arucoParams)
+    #     (corners, ids, rejected) = cv2.aruco.detectMarkers(images, arucoDict, parameters=arucoParams)
         
-        if len(corners) > 0:
-            # flatten the ArUco IDs list         
-            ids = ids.flatten()             
+    #     if len(corners) > 0:
+    #         # flatten the ArUco IDs list         
+    #         ids = ids.flatten()             
 
-            for (markerCorner, markerID) in zip(corners, ids):
-                # extract the marker corners (which are always returned in
-                # top-left, top-right, bottom-right, and bottom-left order)
-                corners = markerCorner.reshape((4, 2))
-                (topLeft, topRight, bottomRight, bottomLeft) = corners
-                # convert each of the (x, y)-coordinate pairs to integers
-                topRight = (int(topRight[0]), int(topRight[1]))
-                bottomRight = (int(bottomRight[0]), int(bottomRight[1]))
-                bottomLeft = (int(bottomLeft[0]), int(bottomLeft[1]))
-                topLeft = (int(topLeft[0]), int(topLeft[1]))
+    #         for (markerCorner, markerID) in zip(corners, ids):
+    #             # extract the marker corners (which are always returned in
+    #             # top-left, top-right, bottom-right, and bottom-left order)
+    #             corners = markerCorner.reshape((4, 2))
+    #             (topLeft, topRight, bottomRight, bottomLeft) = corners
+    #             # convert each of the (x, y)-coordinate pairs to integers
+    #             topRight = (int(topRight[0]), int(topRight[1]))
+    #             bottomRight = (int(bottomRight[0]), int(bottomRight[1]))
+    #             bottomLeft = (int(bottomLeft[0]), int(bottomLeft[1]))
+    #             topLeft = (int(topLeft[0]), int(topLeft[1]))
 
-                cv2.line(images, topLeft, topRight, (0, 255, 0), 2)
-                cv2.line(images, topRight, bottomRight, (0, 255, 0), 2)
-                cv2.line(images, bottomRight, bottomLeft, (0, 255, 0), 2)
-                cv2.line(images, bottomLeft, topLeft, (0, 255, 0), 2)
-                # compute and draw the center (x, y)-coordinates of the ArUco
-                # marker
-                cX = int((topLeft[0] + bottomRight[0]) / 2.0)
-                cY = int((topLeft[1] + bottomRight[1]) / 2.0)
-                cv2.circle(images, (cX, cY), 4, (0, 0, 255), -1)
-                # draw the ArUco marker ID on the image
-                cv2.putText(images, str(markerID),(topLeft[0] - 15, topLeft[1] - 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+    #             cv2.line(images, topLeft, topRight, (0, 255, 0), 2)
+    #             cv2.line(images, topRight, bottomRight, (0, 255, 0), 2)
+    #             cv2.line(images, bottomRight, bottomLeft, (0, 255, 0), 2)
+    #             cv2.line(images, bottomLeft, topLeft, (0, 255, 0), 2)
+    #             # compute and draw the center (x, y)-coordinates of the ArUco
+    #             # marker
+    #             cX = int((topLeft[0] + bottomRight[0]) / 2.0)
+    #             cY = int((topLeft[1] + bottomRight[1]) / 2.0)
+    #             cv2.circle(images, (cX, cY), 4, (0, 0, 255), -1)
+    #             # draw the ArUco marker ID on the image
+    #             cv2.putText(images, str(markerID),(topLeft[0] - 15, topLeft[1] - 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
 
-                id = Int64()
-                id.data = markerID
-                self.id.publish(id)
+    #             id = Int64()
+    #             id.data = markerID
+    #             self.id.publish(id)
                 
                         
-        frame = cv2.resize(images, None, fx=1.0, fy=1.0, interpolation=cv2.INTER_AREA)
-        buffer = cv2.flip(frame, 0).tobytes()
-        texture = Texture.create(size=(frame.shape[1], frame.shape[0]), colorfmt='bgr')
-        texture.blit_buffer(buffer, colorfmt = 'bgr', bufferfmt = 'ubyte')
-        self.image.texture = texture
+    #     frame = cv2.resize(images, None, fx=1.0, fy=1.0, interpolation=cv2.INTER_AREA)
+    #     buffer = cv2.flip(frame, 0).tobytes()
+    #     texture = Texture.create(size=(frame.shape[1], frame.shape[0]), colorfmt='bgr')
+    #     texture.blit_buffer(buffer, colorfmt = 'bgr', bufferfmt = 'ubyte')
+    #     self.image.texture = texture
 
     def identificationOK(self, name):
         self.layout.ids.identification.md_bg_color = (20/255,180/255,10/255,.6)
@@ -151,9 +159,9 @@ class DOT_PAQUITOP_GUI(MDApp):
             retrain_msg.data = True
             retrain.publish(retrain_msg)
 
-def NameReceiver(data):
-    name = data.data
-    gui.identificationOK(name)
+    def NameReceiver(self, data):
+        name = data.data
+        gui.identificationOK(name)
 
 if __name__ == '__main__':
     
