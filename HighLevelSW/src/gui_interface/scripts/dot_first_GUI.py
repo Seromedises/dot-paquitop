@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-from tokenize import String
-from matplotlib import image
 import rospy
 import time
 import numpy
@@ -10,7 +8,7 @@ from nav_msgs.msg import Path
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from geometry_msgs.msg import PoseWithCovarianceStamped
 from actionlib_msgs.msg import GoalStatusArray, GoalID
-from std_msgs.msg import Empty, Bool
+from std_msgs.msg import Empty, Bool, String
 import time
 import rospkg
 from kivy.lang import Builder
@@ -96,20 +94,14 @@ def clean_pose(goal):
     f = open(folder,'w')
     f.close()
 
-def pub_pose(goal):
-
-    publisher = rospy.Publisher("/pub_pose", String, queue_size=20)
-    msg_to_pub = String()
-    msg_to_pub.data = goal
-    publisher.publish(msg_to_pub)
-
-
-    
 class DOT_PAQUITOP_GUI(MDApp):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        # ROS INIT
         rospy.init_node('gui_interface')
+        self.pose_pub = rospy.Publisher("/pub_pose",String, queue_size=1)
+        # Interface init
         self.url = "http://172.21.15.100:8080/stream?topic=/rviz_stream/camera_rviz/Image"
         self.cap = cv2.VideoCapture(self.url)
         self.screen = Builder.load_file('dot_first_GUI.kv')
@@ -200,54 +192,55 @@ class DOT_PAQUITOP_GUI(MDApp):
 
     def go2(self,goal):
         print("Naviga fino a " + goal)
-        
-        # self.screen.ids.statusFB._set_text("Pubblica pose " + goal)
-        # pub_pose(goal)
+        goal_pose = String()
+        goal_pose.data = goal
 
-        rospack = rospkg.RosPack()
-        folder = rospack.get_path('navstack_pub')
-        folder = folder + "/trajectory_point/" + goal + ".txt"
+        self.pose_pub.publish(goal_pose)        
 
-        f = open(folder,'r')
+        # rospack = rospkg.RosPack()
+        # folder = rospack.get_path('navstack_pub')
+        # folder = folder + "/trajectory_point/" + goal + ".txt"
 
-        # rospy.init_node('waypoints_publisher')
-        publisher = rospy.Publisher("/addpose", PoseWithCovarianceStamped, queue_size=20)
-        rate = rospy.Rate(0.5)
+        # f = open(folder,'r')
 
-        pose = PoseWithCovarianceStamped()
+        # # rospy.init_node('waypoints_publisher')
+        # publisher = rospy.Publisher("/addpose", PoseWithCovarianceStamped, queue_size=20)
+        # rate = rospy.Rate(0.5)
 
-        pose.header.frame_id = 'map'
-        pose.pose.covariance = numpy.zeros(36)
+        # pose = PoseWithCovarianceStamped()
 
-        values = numpy.zeros(7)
-        end = False
-        while not rospy.is_shutdown() and not end: 		
-            count = 0
-            while count < 7 and not end:
-                line = f.readline()
-                if line:
-                    # print(line)
-                    values[count] = float(line.strip())
-                    # [float(x.strip('-')) for x in range(7) ]
-                    count = count+1
-                else:
-                    end = True
+        # pose.header.frame_id = 'map'
+        # pose.pose.covariance = numpy.zeros(36)
+
+        # values = numpy.zeros(7)
+        # end = False
+        # while not rospy.is_shutdown() and not end: 		
+        #     count = 0
+        #     while count < 7 and not end:
+        #         line = f.readline()
+        #         if line:
+        #             # print(line)
+        #             values[count] = float(line.strip())
+        #             # [float(x.strip('-')) for x in range(7) ]
+        #             count = count+1
+        #         else:
+        #             end = True
             
-            line = f.readline()
+        #     line = f.readline()
 
-            pose.pose.pose.position.x = values[0]
-            pose.pose.pose.position.y = values[1]
-            pose.pose.pose.position.z = values[2]
+        #     pose.pose.pose.position.x = values[0]
+        #     pose.pose.pose.position.y = values[1]
+        #     pose.pose.pose.position.z = values[2]
 
-            pose.pose.pose.orientation.x = values[3]
-            pose.pose.pose.orientation.y = values[4]
-            pose.pose.pose.orientation.z = values[5]
-            pose.pose.pose.orientation.w = values[6]  
-            rate.sleep()
-            publisher.publish(pose)
+        #     pose.pose.pose.orientation.x = values[3]
+        #     pose.pose.pose.orientation.y = values[4]
+        #     pose.pose.pose.orientation.z = values[5]
+        #     pose.pose.pose.orientation.w = values[6]  
+        #     rate.sleep()
+        #     publisher.publish(pose)
 
-        self.screen.ids.statusFB._set_text("Pose " + goal + " pubblicate")
-        f.close()
+        # self.screen.ids.statusFB._set_text("Pose " + goal + " pubblicate")
+        # f.close()
         
 
     def clear(self,goal):

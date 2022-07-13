@@ -158,110 +158,115 @@ class PAQUITOP_MAIN:
     def main(self):
         count = 0
         
-        while count < self.num_el and not rospy.is_shutdown():
-            next_goal = String()
-            if count != self.num_el-1:
-                next_goal.data = self.patient_list[count+1]
-            else:
-                next_goal.data = self.last_bed_to_home
-            
-            
-            while not self.ARM_UP and not rospy.is_shutdown():
-                
-                if self.GOAL_REACHED:
-                    self.pub_pose(next_goal)
-                    print("Waiting for blood id bag")
-                                        
-                    id_bag = rospy.wait_for_message("/id", Int64 )
+        while not rospy.is_shutdown():
 
-                    if float(id_bag.data) % 2 == 0:
-                        ALREADY_RECIVED_BAG = False
-                        for recived_bag in self.blood_bag:
-                            if recived_bag == id_bag.data:
-                                ALREADY_RECIVED_BAG == True
-                        
-                        if not ALREADY_RECIVED_BAG:
-                            self.blood_bag.append(id_bag.data)
-                            print("Going Up")
-                            self.goUP()
-                    
+            self.pose_goal = rospy.wait_for_message("/pub_pose",String)
+            self.pub_pose(self.pose_goal)
+
+            while count < self.num_el and not rospy.is_shutdown():
+                next_goal = String()
+                if count != self.num_el-1:
+                    next_goal.data = self.patient_list[count+1]
                 else:
-                    print("Waiting for Goal Reached")
-                    time.sleep(0.5)
-            
-            wait = rospy.wait_for_message("/tablet_extracted", Bool)
+                    next_goal.data = self.last_bed_to_home
+                
+                
+                while not self.ARM_UP and not rospy.is_shutdown():
+                    
+                    if self.GOAL_REACHED:
+                        self.pub_pose(next_goal)
+                        print("Waiting for blood id bag")
+                                            
+                        id_bag = rospy.wait_for_message("/id", Int64 )
 
-            # Start gui orienting 
-            orient_gui_msg = Bool()
-            orient_gui_msg.data = True
-            self.orient_gui.publish(orient_gui_msg)
-            # From this time the tablet orienting procedure has started
-            print("Tablet extracted, waiting for person id")
-
-            person_id_recieved = False
-
-            while not person_id_recieved and not rospy.is_shutdown():
-                id_patient = rospy.wait_for_message("/id", Int64 )
-
-                already_person_id_recived = False
-                for patient in self.person_id:
-                    if patient == id_patient:
-                        already_person_id_recived = True
-
-                if not already_person_id_recived:
-                    self.person_id.append(id_patient.data)
-                    person_id_recieved = True
-                    patient_name_msg = String()
-                    print("new person added")
-
-                    if self.person_id[count] == 1:
-                        self.name.append(self.DataName[0])
-                        patient_name_msg.data = self.DataName[0]
-                        self.patient_name.publish(patient_name_msg)
-                    elif self.person_id[count] == 3:
-                        self.name.append(self.DataName[1])
-                        patient_name_msg.data = self.DataName[1]
-                        self.patient_name.publish(patient_name_msg)
-                    elif self.person_id[count] == 5:
-                        self.name.append(self.DataName[2])
-                        patient_name_msg.data = self.DataName[2]
-                        self.patient_name.publish(patient_name_msg)
-                    elif self.person_id[count] == 7:
-                        self.name.append(self.DataName[3])
-                        patient_name_msg.data = self.DataName[3]
-                        self.patient_name.publish(patient_name_msg)
-                    else: 
-                        self.name.append("None")
-
-                    if self.person_id[count] == self.blood_bag[count]+1:
-                        self.match_id.append(True)
-                        print("bag and person matched")
+                        if float(id_bag.data) % 2 == 0:
+                            ALREADY_RECIVED_BAG = False
+                            for recived_bag in self.blood_bag:
+                                if recived_bag == id_bag.data:
+                                    ALREADY_RECIVED_BAG == True
+                            
+                            if not ALREADY_RECIVED_BAG:
+                                self.blood_bag.append(id_bag.data)
+                                print("Going Up")
+                                self.goUP()
+                        
                     else:
-                        self.match_id.append(False)
-            while not self.END:
-                time.sleep(0.5)
+                        print("Waiting for Goal Reached")
+                        time.sleep(0.5)
+                
+                wait = rospy.wait_for_message("/tablet_extracted", Bool)
+
+                # Start gui orienting 
+                orient_gui_msg = Bool()
+                orient_gui_msg.data = True
+                self.orient_gui.publish(orient_gui_msg)
+                # From this time the tablet orienting procedure has started
+                print("Tablet extracted, waiting for person id")
+
+                person_id_recieved = False
+
+                while not person_id_recieved and not rospy.is_shutdown():
+                    id_patient = rospy.wait_for_message("/id", Int64 )
+
+                    already_person_id_recived = False
+                    for patient in self.person_id:
+                        if patient == id_patient:
+                            already_person_id_recived = True
+
+                    if not already_person_id_recived:
+                        self.person_id.append(id_patient.data)
+                        person_id_recieved = True
+                        patient_name_msg = String()
+                        print("new person added")
+
+                        if self.person_id[count] == 1:
+                            self.name.append(self.DataName[0])
+                            patient_name_msg.data = self.DataName[0]
+                            self.patient_name.publish(patient_name_msg)
+                        elif self.person_id[count] == 3:
+                            self.name.append(self.DataName[1])
+                            patient_name_msg.data = self.DataName[1]
+                            self.patient_name.publish(patient_name_msg)
+                        elif self.person_id[count] == 5:
+                            self.name.append(self.DataName[2])
+                            patient_name_msg.data = self.DataName[2]
+                            self.patient_name.publish(patient_name_msg)
+                        elif self.person_id[count] == 7:
+                            self.name.append(self.DataName[3])
+                            patient_name_msg.data = self.DataName[3]
+                            self.patient_name.publish(patient_name_msg)
+                        else: 
+                            self.name.append("None")
+
+                        if self.person_id[count] == self.blood_bag[count]+1:
+                            self.match_id.append(True)
+                            print("bag and person matched")
+                        else:
+                            self.match_id.append(False)
+                while not self.END:
+                    time.sleep(0.5)
+                    
+                
+                count = count +1
+                print("end of cycle")
+                self.END = False
                 
             
-            count = count +1
-            print("end of cycle")
-            self.END = False
-            
-        
-        first_line = ["Letto", "Nome", "Id Paziente", "Id Sacca", "Match", "Temp Paziente", "Assistenza"]
-        # folder = rospkg.RosPack().get_path('paquitop')
-        # folder = folder + '/../../../result/patient_result.csv'
-        folder = os.path.normpath(os.path.expanduser("~/Desktop"))
-        folder = folder + "/result/patient_result.csv"
-        f = open(folder,'w')
-        writer = csv.writer(f)
-        writer.writerow(first_line)
+            first_line = ["Letto", "Nome", "Id Paziente", "Id Sacca", "Match", "Temp Paziente", "Assistenza"]
+            # folder = rospkg.RosPack().get_path('paquitop')
+            # folder = folder + '/../../../result/patient_result.csv'
+            folder = os.path.normpath(os.path.expanduser("~/Desktop"))
+            folder = folder + "/result/patient_result.csv"
+            f = open(folder,'w')
+            writer = csv.writer(f)
+            writer.writerow(first_line)
 
-        i = 0
-        while i<count:
-            line = [self.patient_list[i], self.name[i], self.person_id[i], self.blood_bag[i], self.match_id[i], self.temp_patient[i], self.assistance_patient[i] ]
-            writer.writerow(line)
-            i = i+1
-        f.close()
+            i = 0
+            while i<count:
+                line = [self.patient_list[i], self.name[i], self.person_id[i], self.blood_bag[i], self.match_id[i], self.temp_patient[i], self.assistance_patient[i] ]
+                writer.writerow(line)
+                i = i+1
+            f.close()
 
 if __name__ == '__main__':
     
