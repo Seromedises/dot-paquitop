@@ -23,7 +23,7 @@ import rospkg
 from geometry_msgs.msg import PoseWithCovarianceStamped
 from geometry_msgs.msg import Twist
 from move_base_msgs.msg import MoveBaseActionResult
-from gui_interface.msg import patient_assistance
+from gui_interface.msg import patient_assistance, face_detection
 import random
 
 Config.set('graphics', 'width', '1920')
@@ -39,19 +39,34 @@ class DOT_PAQUITOP_GUI(MDApp):
     def __init__(self, **kwargs):
         rospy.init_node('paquitop_gui')
         super().__init__(**kwargs)
+
+        # Init interface
         self.layout = Builder.load_file('dot_paquitop_GUI.kv')
+
+        # Init camera
         self.pipeline = rs.pipeline()
         config = rs.config()
         config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
         profile = self.pipeline.start(config)
         align_to = rs.stream.color
         self.align = rs.align(align_to)
+        
+        # Init topic
         self.patient_data = patient_assistance()
         self.patient_data.temperature = -1
         self.patient_data.need_help = False
         self.id = rospy.Publisher("/id", Int64, queue_size=1)
+        self.face_publisher = rospy.Publisher("/faces", face_detection, queue_size=1 )
         self.patient_publisher = rospy.Publisher("/patient_data", patient_assistance, queue_size=1)
         rospy.Subscriber("/patient_name", String, self.NameReceiver)
+
+         # Create the haar cascade
+        self.rospack = rospkg.RosPack()
+        self.directoryPath = self.rospack.get_path('gui_interface')
+        self.subdirectory = "scripts"
+        self.cascName = "haarcascade_frontalface_default.xml"
+        self.faceCascade = cv2.CascadeClassifier(self.directoryPath+"/"+self.subdirectory+"/"+self.cascName)
+        test = self.faceCascade.load('haarcascade_frontalface_default.xml')
         
     def build(self):
         
@@ -73,10 +88,17 @@ class DOT_PAQUITOP_GUI(MDApp):
         color_frame = aligned_frames.get_color_frame()
         color_image = np.asanyarray(color_frame.get_data())
 
-        images = color_image
-
-        (corners, ids, rejected) = cv2.aruco.detectMarkers(images, arucoDict, parameters=arucoParams)
+        (corners, ids, rejected) = cv2.aruco.detectMarkers(color_image, arucoDict, parameters=arucoParams)
         
+        # Face detect:
+        frame = cv2.flip(color_image,1)
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        faces = self.faceCascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=10, minSize=(40, 40), flags = cv2.CASCADE_SCALE_IMAGE)
+        face_data = face_detection()
+        face_data.num_faces = len(faces)
+        face_data.face = faces[0]
+        self.face_publisher.publish(face_data)
+
         if len(corners) > 0:
             # flatten the ArUco IDs list         
             ids = ids.flatten()             
@@ -92,25 +114,25 @@ class DOT_PAQUITOP_GUI(MDApp):
                 bottomLeft = (int(bottomLeft[0]), int(bottomLeft[1]))
                 topLeft = (int(topLeft[0]), int(topLeft[1]))
 
-                cv2.line(images, topLeft, topRight, (0, 255, 0), 2)
-                cv2.line(images, topRight, bottomRight, (0, 255, 0), 2)
-                cv2.line(images, bottomRight, bottomLeft, (0, 255, 0), 2)
-                cv2.line(images, bottomLeft, topLeft, (0, 255, 0), 2)
+                cv2.line(color_image, topLeft, topRight, (0, 255, 0), 2)
+                cv2.line(color_image, topRight, bottomRight, (0, 255, 0), 2)
+                cv2.line(color_image, bottomRight, bottomLeft, (0, 255, 0), 2)
+                cv2.line(color_image, bottomLeft, topLeft, (0, 255, 0), 2)
                 # compute and draw the center (x, y)-coordinates of the ArUco
                 # marker
                 cX = int((topLeft[0] + bottomRight[0]) / 2.0)
                 cY = int((topLeft[1] + bottomRight[1]) / 2.0)
-                cv2.circle(images, (cX, cY), 4, (0, 0, 255), -1)
+                cv2.circle(color_image, (cX, cY), 4, (0, 0, 255), -1)
                 # draw the ArUco marker ID on the image
-                cv2.putText(images, str(markerID),(topLeft[0] - 15, topLeft[1] - 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+                cv2.putText(color_image, str(markerID),(topLeft[0] - 15, topLeft[1] - 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
 
                 id = Int64()
                 id.data = markerID
                 self.id.publish(id)
                 
                         
-        frame = cv2.resize(images, None, fx=1.0, fy=1.0, interpolation=cv2.INTER_AREA)
-        buffer = cv2.flip(frame, 0).tobytes()
+        frame = cv2.resize(color_image, None, fx=1.0, fy=1.0, interpolation=cv2.INTER_AREA)
+        buffer = cv2.flip(frame, 1).tobytes()
         texture = Texture.create(size=(frame.shape[1], frame.shape[0]), colorfmt='bgr')
         texture.blit_buffer(buffer, colorfmt = 'bgr', bufferfmt = 'ubyte')
         self.image.texture = texture
@@ -124,13 +146,11 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.layout.ids.noNeedHelp.md_bg_color = (220/255,20/255,60/255,.6)
     
     def helpPlease(self, *args):
-        # Aggiungere codice per salvataggio richiesta
         self.layout.ids.bodyTemp_text.text_color = (0,0,0,1)
         self.layout.ids.acquireTemp.md_bg_color = (52/255,168/255,235/255,.6)
         self.patient_data.need_help = False
 
     def noHelpThanks(self, *args):
-        # Aggiungere codice per salvataggio richiesta
         self.layout.ids.bodyTemp_text.text_color = (0,0,0,1)
         self.layout.ids.acquireTemp.md_bg_color = (52/255,168/255,235/255,.6)
         self.patient_data.need_help = True

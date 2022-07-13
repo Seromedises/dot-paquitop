@@ -55,6 +55,7 @@ find_package(catkin REQUIRED COMPONENTS
 add_message_files(
   FILES
   patient_assistance.msg
+  face_detection.msg
  )
 
 ## Generate services in the 'srv' folder
