@@ -242,7 +242,7 @@ class PAQUITOP_MAIN:
                         else:
                             self.match_id.append(False)
 
-                p_data = rospy.wait_for_message("/patient_data", String)
+                p_data = rospy.wait_for_message("/patient_data", patient_assistance)
                 finishd = self.patient_data(p_data)
                 if finishd:
                     self.goON()
