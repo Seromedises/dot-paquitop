@@ -110,7 +110,6 @@ class PAQUITOP_MAIN:
             while count < 3:
                 count = count +1
                 Start = Empty()
-                
                 self.path_ready_publisher.publish(Start)
 
     def move_base_goal_reached(self, data):
@@ -149,9 +148,13 @@ class PAQUITOP_MAIN:
         self.assistance_patient.append(data.need_help)  
         self.temp_patient.append(data.temperature)
         
+
         orient_gui_msg = Bool()
         orient_gui_msg.data = False
-        self.orient_gui.publish(orient_gui_msg)
+        count = 0
+        while count < 3:
+            count += 1
+            self.orient_gui.publish(orient_gui_msg)
         time.sleep(5)
 
         self.goON()
