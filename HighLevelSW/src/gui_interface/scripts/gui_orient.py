@@ -122,11 +122,10 @@ class faceFollowing():
                     self.example.publish_joint_velocity(joint_vel)
                 
             else:
-                if self.pipelineActive:
-                    scanning_counter = 0
-                    joint_vel = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
-                    self.example.publish_joint_velocity(joint_vel)
-                    time.sleep(1)
+                scanning_counter = 0
+                joint_vel = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
+                self.example.publish_joint_velocity(joint_vel)
+                time.sleep(1)
                 break
             
             time.sleep(0.4)    
