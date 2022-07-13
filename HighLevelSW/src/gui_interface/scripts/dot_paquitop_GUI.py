@@ -51,6 +51,7 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.patient_data.need_help = False
         self.id = rospy.Publisher("/id", Int64, queue_size=1)
         self.patient_publisher = rospy.Publisher("/patient_data", patient_assistance, queue_size=1)
+        rospy.Subscriber("/patient_name", String, NameReceiver)
         
     def build(self):
         
@@ -167,12 +168,11 @@ class DOT_PAQUITOP_GUI(MDApp):
         #     retrain.publish(retrain_msg)
 
 def NameReceiver(data):
-    global gui
     name = data.data
     gui.identificationOK(name)
 
 if __name__ == '__main__':
-    global gui
+    
     gui = DOT_PAQUITOP_GUI()
 
     # initialize Publisher topic extract/retrain table    
@@ -185,6 +185,6 @@ if __name__ == '__main__':
     # gui.tab_ret.publish(tab_ext_msg)
 
     # initialize Subscriber topic
-    rospy.Subscriber("/patient_name", String, NameReceiver)
+    
     gui.run()
     
