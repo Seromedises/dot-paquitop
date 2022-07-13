@@ -247,7 +247,7 @@ class PAQUITOP_MAIN:
                             print("bag and person matched")
                         else:
                             self.match_id.append(False)
-                while not self.END:
+                while not self.END and not rospy.is_shutdown():
                     time.sleep(0.5)
                     
                 
