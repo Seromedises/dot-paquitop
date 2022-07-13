@@ -95,10 +95,12 @@ class DOT_PAQUITOP_GUI(MDApp):
         frame = cv2.flip(color_image,1)
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         faces = self.faceCascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=10, minSize=(40, 40), flags = cv2.CASCADE_SCALE_IMAGE)
-        # face_data = face_detection()
-        # face_data.num_faces = len(faces)
-        # face_data.face = faces[0]
-        # self.face_publisher.publish(face_data)
+        face_data = face_detection()
+        face_data.num_faces = len(faces)
+        face_data.face = np.zeros(4)
+        if face_data.num_faces != 0:
+            face_data.face = faces[0]
+        self.face_publisher.publish(face_data)
 
         if len(corners) > 0:
             # flatten the ArUco IDs list         
