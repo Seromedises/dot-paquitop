@@ -44,7 +44,7 @@ class PAQUITOP_MAIN:
 
         # output topics
         self.patient_name = rospy.Publisher("/patient_name", String, queue_size=1)
-        self.orient_gui = rospy.Publisher("/orient_gui", Bool,queue_size=1)
+        self.orient_gui = rospy.Publisher("/orient_gui", Bool,queue_size=10)
         self.retrain = rospy.Publisher("/retrain_tablet", Bool, queue_size=1)
         self.pose_publisher = rospy.Publisher("/addpose", PoseWithCovarianceStamped, queue_size=10)
         self.path_ready_publisher = rospy.Publisher('/path_ready', Empty, queue_size=1)
@@ -133,7 +133,6 @@ class PAQUITOP_MAIN:
               
         self.assistance_patient.append(data.need_help)  
         self.temp_patient.append(data.temperature)
-        
 
         orient_gui_msg = Bool()
         orient_gui_msg.data = False
