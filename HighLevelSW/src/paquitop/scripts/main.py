@@ -34,12 +34,12 @@ class PAQUITOP_MAIN:
         self.GOAL_REACHED = False
         self.ARM_UP = False
         self.ALL_POINT_PUBLISHED = False 
-        self.END = False  
+        
 
         # topics to subscribe to
         rospy.Subscriber("/move_base/result", MoveBaseActionResult, self.move_base_goal_reached)
-        rospy.Subscriber("/patient_data", patient_assistance, self.patient_data )
-        rospy.Subscriber("/tablet_stored", Bool, self.start)
+        # rospy.Subscriber("/patient_data", patient_assistance, self.patient_data )
+        #rospy.Subscriber("/tablet_stored", Bool, self.start)
         rospy.Subscriber("/pub_pose",String, self.pub_pose)
 
         # output topics
@@ -103,7 +103,6 @@ class PAQUITOP_MAIN:
             
     def start(self, data):
         self.GOAL_REACHED = False
-        self.END = True
         if data.data and self.ALL_POINT_PUBLISHED and not self.ARM_UP:
             self.ALL_POINT_PUBLISHED = False
             count = 0
@@ -129,7 +128,17 @@ class PAQUITOP_MAIN:
             self.tab_ext.publish(tab_ext_msg)
         # Update status
         self.ARM_UP = True    
-            
+
+    def patient_data(self, data):
+              
+        self.assistance_patient.append(data.need_help)  
+        self.temp_patient.append(data.temperature)
+        
+
+        orient_gui_msg = Bool()
+        orient_gui_msg.data = False
+        self.orient_gui.publish(orient_gui_msg)
+
     def goON(self):
         wait = rospy.wait_for_message("/orient_gui", Bool)
         time.sleep(0.5)
@@ -143,22 +152,6 @@ class PAQUITOP_MAIN:
             self.retrain.publish(retrain_msg)
         # Update status
         self.ARM_UP = False
-
-    def patient_data(self, data):
-              
-        self.assistance_patient.append(data.need_help)  
-        self.temp_patient.append(data.temperature)
-        
-
-        orient_gui_msg = Bool()
-        orient_gui_msg.data = False
-        count = 0
-        while count < 3:
-            count += 1
-            self.orient_gui.publish(orient_gui_msg)
-        
-
-        self.goON()
 
     def main(self):
         count = 0
@@ -248,13 +241,16 @@ class PAQUITOP_MAIN:
                             print("bag and person matched")
                         else:
                             self.match_id.append(False)
-                while not self.END and not rospy.is_shutdown():
-                    time.sleep(0.5)
-                    
+
+                p_data = rospy.wait_for_message("/patient_data", String)
+                self.patient_data(p_data)
+                self.goON()
+                rospy.wait_for_message("/tablet_stored", Bool)
+                self.start()                   
                 
                 count = count +1
                 print("end of cycle")
-                self.END = False
+                
                 
             
             first_line = ["Letto", "Nome", "Id Paziente", "Id Sacca", "Match", "Temp Paziente", "Assistenza"]
