@@ -155,6 +155,7 @@ class PAQUITOP_MAIN:
         while count < 3:
             count += 1
             self.orient_gui.publish(orient_gui_msg)
+            print(orient_gui_msg)
         time.sleep(5)
 
         self.goON()
