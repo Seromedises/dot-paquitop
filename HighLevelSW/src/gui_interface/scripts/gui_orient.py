@@ -30,10 +30,6 @@ class faceFollowing():
         self.face = np.zeros(4)
 
     def main(self):
-        
-        if not self.pipelineActive:
-            self.profile = self.pipeline.start(self.config)
-            self.pipelineActive = True
 
         # Define the desired position for the detected face inside the frame:
         x_g = 640/2
