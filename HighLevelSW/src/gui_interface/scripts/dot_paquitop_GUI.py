@@ -51,7 +51,7 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.patient_data.need_help = False
         self.id = rospy.Publisher("/id", Int64, queue_size=1)
         self.patient_publisher = rospy.Publisher("/patient_data", patient_assistance, queue_size=1)
-        rospy.Subscriber("/patient_name", String, self.NameReceiver)
+        # rospy.Subscriber("/patient_name", String, self.NameReceiver)
 
     def build(self):
         
