@@ -101,9 +101,9 @@ class PAQUITOP_MAIN:
 
             self.ALL_POINT_PUBLISHED = True
             
-    def start(self, data):
+    def start(self):#, data):
         self.GOAL_REACHED = False
-        if data.data and self.ALL_POINT_PUBLISHED and not self.ARM_UP:
+        if self.ALL_POINT_PUBLISHED and not self.ARM_UP:
             self.ALL_POINT_PUBLISHED = False
             count = 0
             while count < 3:
