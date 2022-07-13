@@ -66,7 +66,8 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.subdirectory = "scripts"
         self.cascName = "haarcascade_frontalface_default.xml"
         self.faceCascade = cv2.CascadeClassifier(self.directoryPath+"/"+self.subdirectory+"/"+self.cascName)
-        # test = self.faceCascade.load('haarcascade_frontalface_default.xml')
+        test = self.faceCascade.load('haarcascade_frontalface_default.xml')
+        print(test)
         
     def build(self):
         
