@@ -173,7 +173,7 @@ class DOT_PAQUITOP_GUI(MDApp):
 
 if __name__ == '__main__':
     
-    gui = DOT_PAQUITOP_GUI()
+    DOT_PAQUITOP_GUI.run()
 
     # initialize Publisher topic extract/retrain table    
     # gui.tab_ext = rospy.Publisher("/extract_tablet", Bool, queue_size=1)
@@ -186,5 +186,5 @@ if __name__ == '__main__':
 
     # initialize Subscriber topic
     
-    gui.run()
+    # gui.run()
     
