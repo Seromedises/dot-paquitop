@@ -132,7 +132,8 @@ class DOT_PAQUITOP_GUI(MDApp):
                 
                         
         frame = cv2.resize(color_image, None, fx=1.0, fy=1.0, interpolation=cv2.INTER_AREA)
-        buffer = cv2.flip(frame, 1).tobytes()
+        frame = cv2.flip(frame, 1)
+        buffer = cv2.flip(frame, 0).tobytes()
         texture = Texture.create(size=(frame.shape[1], frame.shape[0]), colorfmt='bgr')
         texture.blit_buffer(buffer, colorfmt = 'bgr', bufferfmt = 'ubyte')
         self.image.texture = texture
