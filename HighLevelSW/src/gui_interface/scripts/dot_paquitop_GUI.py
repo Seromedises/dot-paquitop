@@ -10,7 +10,7 @@ import sys
 import pyrealsense2 as rs
 from kivy.lang import Builder
 from kivy.clock import Clock
-#from kivy.graphics.texture import Texture
+from kivy.graphics.texture import Texture
 from kivy.uix.image import Image 
 from kivy.uix.video import Video 
 from kivy.config import Config
