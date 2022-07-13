@@ -123,8 +123,10 @@ class faceFollowing():
             time.sleep(0.4)    
 
 def activateRutine(data):  
+    print(data)
     FF.controlFlag = data.data
     FF.main()
+    
 
 def loadFaces(data):  
     FF.numfaces = data.num_faces
