@@ -10,13 +10,13 @@ import sys
 import pyrealsense2 as rs
 from kivy.lang import Builder
 from kivy.clock import Clock
-from kivy.graphics.texture import Texture
+#from kivy.graphics.texture import Texture
 from kivy.uix.image import Image 
 from kivy.uix.video import Video 
 from kivy.config import Config
-from kivymd.app import MDApp
-from kivymd.uix.boxlayout import MDBoxLayout 
-from kivymd.uix.menu import MDDropdownMenu 
+#from kivymd.app import MDApp
+#from kivymd.uix.boxlayout import MDBoxLayout 
+#from kivymd.uix.menu import MDDropdownMenu 
 import rospy
 from std_msgs.msg import Empty, Bool, Int64, String
 import rospkg
@@ -167,7 +167,7 @@ class DOT_PAQUITOP_GUI(MDApp):
         #     retrain_msg.data = True
         #     retrain.publish(retrain_msg)
 
-    def NameReceiver(self,data):
+    def NameReceiver(self, data):
         name = data.data
         self.identificationOK(name)
 
