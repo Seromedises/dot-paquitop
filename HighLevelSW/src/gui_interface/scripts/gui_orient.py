@@ -112,7 +112,7 @@ class faceFollowing():
                             publisher.publish(msg)
         
                 else: 
-                    # Multiple self.faces detected: wait
+                    # Multiple faces detected: wait
                     scanning_counter = 0
                     joint_vel = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
                     self.example.publish_joint_velocity(joint_vel)
@@ -121,7 +121,7 @@ class faceFollowing():
                 scanning_counter = 0
                 joint_vel = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
                 self.example.publish_joint_velocity(joint_vel)
-                time.sleep(1)
+                time.sleep(5)
                 break
             
             time.sleep(0.4)    
@@ -131,11 +131,9 @@ class faceFollowing():
         self.main()
 
     def loadFaces(self, data):  
-        
         self.numfaces = data.num_faces
         self.face = data.face
 
 if __name__ == '__main__':
 
     faceFollowing(False)
-    rospy.spin()
