@@ -139,7 +139,7 @@ class PAQUITOP_MAIN:
         self.orient_gui.publish(orient_gui_msg)
 
     def goON(self):
-        wait = rospy.wait_for_message("/orient_gui", Bool)
+        # wait = rospy.wait_for_message("/orient_gui", Bool)
         time.sleep(0.5)
         # Tablet store
         count = 0
