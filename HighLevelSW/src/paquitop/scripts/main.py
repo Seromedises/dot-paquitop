@@ -152,7 +152,7 @@ class PAQUITOP_MAIN:
         orient_gui_msg = Bool()
         orient_gui_msg.data = False
         self.orient_gui.publish(orient_gui_msg)
-        time.sleep(3)
+        time.sleep(5)
 
         self.goON()
 
