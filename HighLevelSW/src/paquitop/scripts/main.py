@@ -134,9 +134,9 @@ class PAQUITOP_MAIN:
         self.assistance_patient.append(data.need_help)  
         self.temp_patient.append(data.temperature)
 
-        orient_gui_msg = Bool()
-        orient_gui_msg.data = False
-        self.orient_gui.publish(orient_gui_msg)
+        # orient_gui_msg = Bool()
+        # orient_gui_msg.data = False
+        # self.orient_gui.publish(orient_gui_msg)
         
 
     def goON(self):

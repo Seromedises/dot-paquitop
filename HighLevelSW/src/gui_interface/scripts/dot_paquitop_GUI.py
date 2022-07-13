@@ -56,6 +56,7 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.patient_data.temperature = -1
         self.patient_data.need_help = False
         self.id = rospy.Publisher("/id", Int64, queue_size=1)
+        self.orient_gui = rospy.Publisher("/orient_gui", Bool,queue_size=10)
         self.face_publisher = rospy.Publisher("/faces", face_detection, queue_size=1)
         self.patient_publisher = rospy.Publisher("/patient_data", patient_assistance, queue_size=1)
         rospy.Subscriber("/patient_name", String, self.NameReceiver)
@@ -183,6 +184,10 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.patient_publisher.publish(self.patient_data)
         self.patient_data.temperature = -1
         self.patient_data.need_help = False
+
+        orient_gui_msg = Bool()
+        orient_gui_msg.data = False
+        self.orient_gui.publish(orient_gui_msg)
         
         # Tablet store
         # count = 0
