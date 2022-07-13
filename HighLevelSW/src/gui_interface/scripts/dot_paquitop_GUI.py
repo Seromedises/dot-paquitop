@@ -24,6 +24,7 @@ from geometry_msgs.msg import PoseWithCovarianceStamped
 from geometry_msgs.msg import Twist
 from move_base_msgs.msg import MoveBaseActionResult
 from gui_interface.msg import patient_assistance
+import random
 
 Config.set('graphics', 'width', '1920')
 Config.set('graphics', 'height', '1080')
