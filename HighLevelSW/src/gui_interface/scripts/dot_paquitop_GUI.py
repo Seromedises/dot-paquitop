@@ -138,7 +138,8 @@ class DOT_PAQUITOP_GUI(MDApp):
     def acqTemp(self, *args):
         self.layout.ids.goOn_text.text_color = (0,0,0,1)
         self.layout.ids.moveOn.md_bg_color = (20/255,180/255,10/255,.6)
-        delta = random.randint(-10,5)/5
+        delta = random.randint(-10,5)
+        delta = delta/5
         self.patient_data.temperature = 38 + delta
 
 
