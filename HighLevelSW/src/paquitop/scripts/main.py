@@ -1,15 +1,14 @@
 #!/usr/bin/env python
 
 import csv
-import rospkg
-
-from matplotlib.pyplot import cla
-import rospy
-import numpy as np
-from std_msgs.msg import Empty, Bool, Int64, String
-import rospkg
-from geometry_msgs.msg import PoseWithCovarianceStamped
+import os
 import time
+import numpy as np
+
+import rospy
+import rospkg
+from std_msgs.msg import Empty, Bool, Int64, String
+from geometry_msgs.msg import PoseWithCovarianceStamped
 from move_base_msgs.msg import MoveBaseActionResult
 from gui_interface.msg import patient_assistance
 
@@ -248,9 +247,11 @@ class PAQUITOP_MAIN:
             self.END = False
             
         
-        first_line = ["Letto", "Nome", "Id Paziente", "Id Sacca", "Id Match", "Temp Paziente", "Assistenza"]
-        folder = rospkg.RosPack().get_path('paquitop')
-        folder = folder + '/../../../result/patient_result.csv'
+        first_line = ["Letto", "Nome", "Id Paziente", "Id Sacca", "Match", "Temp Paziente", "Assistenza"]
+        # folder = rospkg.RosPack().get_path('paquitop')
+        # folder = folder + '/../../../result/patient_result.csv'
+        folder = os.path.normpath(os.path.expanduser("~/Desktop"))
+        folder = folder + "/result/patient_result.csv"
         f = open(folder,'w')
         writer = csv.writer(f)
         writer.writerow(first_line)
