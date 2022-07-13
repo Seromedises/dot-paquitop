@@ -3,7 +3,7 @@
 from cgitb import text
 from glob import glob
 from turtle import color
-# from kivy.core.window import Window
+from kivy.core.window import Window
 import numpy as np
 import cv2
 import sys
