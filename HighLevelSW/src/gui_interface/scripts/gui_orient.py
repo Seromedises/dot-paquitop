@@ -18,10 +18,6 @@ class faceFollowing():
 
     def __init__(self, controlFlag):
 
-        rospy.init_node("gui_orient")
-        rospy.Subscriber("/orient_gui", Bool, self.activateRutine)
-        rospy.Subscriber("/faces", face_detection, self.loadFaces)
-
         # Initialize comunicaiton with kinova:
         self.example = ExampleFullArmMovement() 
         notif = self.example.example_subscribe_to_a_robot_notification()
@@ -126,14 +122,18 @@ class faceFollowing():
             
             time.sleep(0.4)    
 
-    def activateRutine(self, data):  
-        self.controlFlag = data.data
-        self.main()
+def activateRutine(data):  
+    FF.controlFlag = data.data
+    FF.main()
 
-    def loadFaces(self, data):  
-        self.numfaces = data.num_faces
-        self.face = data.face
+def loadFaces(data):  
+    FF.numfaces = data.num_faces
+    FF.face = data.face
 
 if __name__ == '__main__':
 
-    faceFollowing(False)
+    FF = faceFollowing(False)
+    rospy.init_node("gui_orient")
+    rospy.Subscriber("/orient_gui", Bool, activateRutine)
+    rospy.Subscriber("/faces", face_detection, loadFaces)
+    rospy.spin()
