@@ -137,19 +137,14 @@ class PAQUITOP_MAIN:
         orient_gui_msg = Bool()
         orient_gui_msg.data = False
         self.orient_gui.publish(orient_gui_msg)
-        return True
 
     def goON(self):
         # wait = rospy.wait_for_message("/orient_gui", Bool)
         time.sleep(0.5)
         # Tablet store
-        count = 0
-        while count < 3:
-            count = count +1
-            print(True)
-            retrain_msg = Bool()
-            retrain_msg.data = True
-            self.retrain.publish(retrain_msg)
+        retrain_msg = Bool()
+        retrain_msg.data = True
+        self.retrain.publish(retrain_msg)
         # Update status
         self.ARM_UP = False
 
@@ -243,9 +238,8 @@ class PAQUITOP_MAIN:
                             self.match_id.append(False)
 
                 p_data = rospy.wait_for_message("/patient_data", patient_assistance)
-                finishd = self.patient_data(p_data)
-                if finishd:
-                    self.goON()
+                self.patient_data(p_data)
+                self.goON()
                 rospy.wait_for_message("/tablet_stored", Bool)
                 self.start()                   
                 
