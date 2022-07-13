@@ -123,7 +123,7 @@ class faceFollowing():
             time.sleep(0.4)    
 
 def activateRutine(data):  
-    print(data)
+    # print(data)
     FF.controlFlag = data.data
     FF.main()
     
