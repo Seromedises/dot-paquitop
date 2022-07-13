@@ -56,8 +56,8 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.patient_data.temperature = -1
         self.patient_data.need_help = False
         self.id = rospy.Publisher("/id", Int64, queue_size=1)
+        self.orient_gui = rospy.Publisher("/orient_gui", Bool,queue_size=10)
         self.face_publisher = rospy.Publisher("/faces", face_detection, queue_size=1)
-        self.orient_gui = rospy.Publisher("/orient_gui", Bool,queue_size=1)
         self.patient_publisher = rospy.Publisher("/patient_data", patient_assistance, queue_size=1)
         rospy.Subscriber("/patient_name", String, self.NameReceiver)
 
@@ -180,13 +180,14 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.layout.ids.goOn_text.text_color = (.8, .8, .8, 1)
         self.layout.ids.moveOn.md_bg_color = (20/255,180/255,10/255,.1)
 
-        orient_gui_msg = Bool()
-        orient_gui_msg.data = False
-        self.orient_gui.publish(orient_gui_msg)
-
+        
         self.patient_publisher.publish(self.patient_data)
         self.patient_data.temperature = -1
         self.patient_data.need_help = False
+
+        orient_gui_msg = Bool()
+        orient_gui_msg.data = False
+        self.orient_gui.publish(orient_gui_msg)
         
         # Tablet store
         # count = 0
@@ -204,6 +205,7 @@ class DOT_PAQUITOP_GUI(MDApp):
 if __name__ == '__main__':
     
     DOT_PAQUITOP_GUI().run()
+
     DOT_PAQUITOP_GUI().pipeline.stop()
     # initialize Publisher topic extract/retrain table    
     # gui.tab_ext = rospy.Publisher("/extract_tablet", Bool, queue_size=1)
