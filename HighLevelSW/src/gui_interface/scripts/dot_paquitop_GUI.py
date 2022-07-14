@@ -185,9 +185,9 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.patient_data.temperature = -1
         self.patient_data.need_help = False
 
-        orient_gui_msg = Bool()
-        orient_gui_msg.data = False
-        self.orient_gui.publish(orient_gui_msg)
+        # orient_gui_msg = Bool()
+        # orient_gui_msg.data = False
+        # self.orient_gui.publish(orient_gui_msg)
         
         # Tablet store
         # count = 0

@@ -20,14 +20,7 @@ class PAQUITOP_MAIN:
         # number of patients
         self.num_el = len(self.patient_list)
 
-        # database variables
-        self.blood_bag = []
-        self.person_id = []
-        self.name = []
-        self.match_id = []
-        self.temp_patient = []
-        self.assistance_patient = []
-        self.published_pose = []
+        
         self.DataName = ["Lorenzo", "Luigi", "Giovanni", "Giulia"]
 
         # definition of global variables
@@ -53,9 +46,9 @@ class PAQUITOP_MAIN:
         
         
         
-    def pub_pose(self, data, start=False):
+    def pub_pose(self, data, start):
         
-        goal = data.data
+        goal = data
         
         self.NOT_YET_PUBLISHED = True
         for element in self.published_pose:
@@ -103,7 +96,7 @@ class PAQUITOP_MAIN:
 
         if start:
             time.sleep(0.5)
-            self.start
+            self.start()
 
             
     def start(self):#, data):
@@ -159,24 +152,38 @@ class PAQUITOP_MAIN:
         
         while not rospy.is_shutdown():
 
+            # database variables
+            self.blood_bag = []
+            self.person_id = []
+            self.name = []
+            self.match_id = []
+            self.temp_patient = []
+            self.assistance_patient = []
+            self.published_pose = []
+
             self.pose_goal = rospy.wait_for_message("/pub_pose",String)
+            self.pose_goal = self.pose_goal.data
             self.pub_pose(self.pose_goal,start=True)
             count = 0
             while count < self.num_el and not rospy.is_shutdown():
-                next_goal = String()
+                # next_goal = String()
                 if count != self.num_el-1:
-                    next_goal.data = self.patient_list[count+1]
+                    next_goal = self.patient_list[count+1]
                 else:
-                    next_goal.data = self.last_bed_to_home
+                    next_goal = self.last_bed_to_home
                 
                 
                 while not self.ARM_UP and not rospy.is_shutdown():
                     
                     if self.GOAL_REACHED:
-                        self.pub_pose(next_goal)
+                        self.pub_pose(next_goal,start=False)
                         print("Waiting for blood id bag")
                                             
                         id_bag = rospy.wait_for_message("/id", Int64 )
+                        # Stop orient gui
+                        orient_gui_msg = Bool()
+                        orient_gui_msg.data = False
+                        self.orient_gui.publish(orient_gui_msg)
 
                         if float(id_bag.data) % 2 == 0:
                             ALREADY_RECIVED_BAG = False
