@@ -101,6 +101,10 @@ class DOT_PAQUITOP_GUI(MDApp):
         # ROS INIT
         rospy.init_node('gui_interface')
         self.pose_pub = rospy.Publisher("/pub_pose",String, queue_size=1)
+        self.extract = rospy.Publisher("/extract_tablet", Bool, queue_size=1)
+        self.retrain = rospy.Publisher("/retrain_tablet", Bool, queue_size=1)
+        self.reset = rospy.Publisher('/path_reset', Empty, queue_size=1)
+        self.home = rospy.Publisher('/start_journey', Empty, queue_size=1)
         # Interface init
         self.url = "http://172.21.15.100:8080/stream?topic=/rviz_stream/camera_rviz/Image"
         self.cap = cv2.VideoCapture(self.url)
@@ -135,16 +139,13 @@ class DOT_PAQUITOP_GUI(MDApp):
             width_mult=4,
         )
 
-
     def build(self):
-        
         self.image = Image(pos_hint={"center_x": .25, "center_y":0.375},size_hint=(.4,.5),keep_ratio=True)
         self.screen.add_widget(self.image)
         Clock.schedule_interval(self.rviz_stream,1.0/20.0)
         return self.screen
     
     def rviz_stream(self, *args):
-
         ret, frame = self.cap.read()
         frame = cv2.resize(frame, None, fx=1.0, fy=1.0, interpolation=cv2.INTER_AREA)
         buffer = cv2.flip(frame, 0).tobytes()
@@ -152,7 +153,6 @@ class DOT_PAQUITOP_GUI(MDApp):
         texture.blit_buffer(buffer, colorfmt = 'bgr', bufferfmt = 'ubyte')
         self.image.texture = texture
         
-
     def startPAQUITOP(self,*args):
         print("Avvio PAQUITOP")
         self.screen.ids.statusFB._set_text("DEMO avviata")
@@ -173,8 +173,6 @@ class DOT_PAQUITOP_GUI(MDApp):
         stop_pub.publish(message_stop)
         """
             
-        
-
     def stopPAQUITOP(self,*args):
         print("Fermo PAQUITOP")
         self.screen.ids.statusFB._set_text("DEMO fermata")
@@ -182,73 +180,23 @@ class DOT_PAQUITOP_GUI(MDApp):
         cancel_msg = GoalID()
         cancel_pub.publish(cancel_msg)
 
-        stop_kinova = rospy.Publisher("/stop_arm")#, Bool, queque_size=1)
+        stop_kinova = rospy.Publisher("/stop_arm", Bool, queque_size=1)
         message_stop = Bool()
         message_stop.data = True
         print(message_stop)
-        #stop_pub.publish(message_stop)
-        
-        
+        #stop_pub.publish(message_stop)        
 
     def go2(self,goal):
         print("Naviga fino a " + goal)
         goal_pose = String()
         goal_pose.data = goal
-
-        self.pose_pub.publish(goal_pose)        
-
-        # rospack = rospkg.RosPack()
-        # folder = rospack.get_path('navstack_pub')
-        # folder = folder + "/trajectory_point/" + goal + ".txt"
-
-        # f = open(folder,'r')
-
-        # # rospy.init_node('waypoints_publisher')
-        # publisher = rospy.Publisher("/addpose", PoseWithCovarianceStamped, queue_size=20)
-        # rate = rospy.Rate(0.5)
-
-        # pose = PoseWithCovarianceStamped()
-
-        # pose.header.frame_id = 'map'
-        # pose.pose.covariance = numpy.zeros(36)
-
-        # values = numpy.zeros(7)
-        # end = False
-        # while not rospy.is_shutdown() and not end: 		
-        #     count = 0
-        #     while count < 7 and not end:
-        #         line = f.readline()
-        #         if line:
-        #             # print(line)
-        #             values[count] = float(line.strip())
-        #             # [float(x.strip('-')) for x in range(7) ]
-        #             count = count+1
-        #         else:
-        #             end = True
-            
-        #     line = f.readline()
-
-        #     pose.pose.pose.position.x = values[0]
-        #     pose.pose.pose.position.y = values[1]
-        #     pose.pose.pose.position.z = values[2]
-
-        #     pose.pose.pose.orientation.x = values[3]
-        #     pose.pose.pose.orientation.y = values[4]
-        #     pose.pose.pose.orientation.z = values[5]
-        #     pose.pose.pose.orientation.w = values[6]  
-        #     rate.sleep()
-        #     publisher.publish(pose)
-
-        # self.screen.ids.statusFB._set_text("Pose " + goal + " pubblicate")
-        # f.close()
-        
+        self.pose_pub.publish(goal_pose)                
 
     def clear(self,goal):
         print("Pulisco tutte le pose in " + goal)
         self.screen.ids.statusFB._set_text("Pulisco pose  in " + goal)
         clean_pose(goal)
         self.screen.ids.statusFB._set_text("Pose  in " + goal + " pulite")
-        
 
     def save(self,goal):
         print("Aggiungo posa a " + goal)
@@ -256,7 +204,6 @@ class DOT_PAQUITOP_GUI(MDApp):
         save_pose(goal)
         self.screen.ids.statusFB._set_text("Posa a " + goal + " aggiunta")
         
-
     def VSMeasure(self,*args):
         print("Misura de parametri vitali")
         self.screen.ids.statusFB._set_text("Parametri vitali acquisiti")
@@ -264,27 +211,22 @@ class DOT_PAQUITOP_GUI(MDApp):
     def TabletLift(self,*args):
         print("Alzo il tablet")
         self.screen.ids.statusFB._set_text("Alzo il tablet")
-        extract = rospy.Publisher("/extract_tablet", Bool, queue_size=1)
         extract_msg = Bool()
         extract_msg.data = True
-        extract.publish(extract_msg)
+        self.extract.publish(extract_msg)
 
     def TabletStore(self,*args):
         print("Ripongo il tablet")
         self.screen.ids.statusFB._set_text("Ripongo il tablet")
-        retrain = rospy.Publisher("/retrain_tablet", Bool, queue_size=1)
         retrain_msg = Bool()
         retrain_msg.data = True
-        retrain.publish(retrain_msg)
+        self.retrain.publish(retrain_msg)
 
     def ResetPath(self,*args):
         print("Reset path")
         self.screen.ids.statusFB._set_text("Reset path")
         Reset = Empty()
-        # rospy.init_node('start_interface', anonymous=True)
-        publisher = rospy.Publisher('/path_reset', Empty, queue_size=1)
-        #time.sleep(1.0)
-        publisher.publish(Reset)
+        self.reset.publish(Reset)
     
     def home(self, *args):
         input_file_path = rospkg.RosPack().get_path('follow_waypoints')+"/saved_path/pose.csv"
@@ -321,8 +263,7 @@ class DOT_PAQUITOP_GUI(MDApp):
             writer.writerow(row)
         
         Start = Empty()
-        publisher = rospy.Publisher('/start_journey', Empty, queue_size=1)
-        publisher.publish(Start)
+        self.home.publish(Start)
 
 if __name__ == '__main__':
     
