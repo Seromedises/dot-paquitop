@@ -40,7 +40,7 @@ class PAQUITOP_MAIN:
         rospy.Subscriber("/move_base/result", MoveBaseActionResult, self.move_base_goal_reached)
         # rospy.Subscriber("/patient_data", patient_assistance, self.patient_data )
         #rospy.Subscriber("/tablet_stored", Bool, self.start)
-        rospy.Subscriber("/pub_pose",String, self.pub_pose)
+        # rospy.Subscriber("/pub_pose",String, self.pub_pose)
 
         # output topics
         self.patient_name = rospy.Publisher("/patient_name", String, queue_size=1)
@@ -53,7 +53,7 @@ class PAQUITOP_MAIN:
         
         
         
-    def pub_pose(self, data):
+    def pub_pose(self, data, start=False):
         
         goal = data.data
         
@@ -100,6 +100,11 @@ class PAQUITOP_MAIN:
                 self.pose_publisher.publish(pose)
 
             self.ALL_POINT_PUBLISHED = True
+
+        if start:
+            time.sleep(0.5)
+            self.start
+
             
     def start(self):#, data):
         self.GOAL_REACHED = False
@@ -150,13 +155,13 @@ class PAQUITOP_MAIN:
         self.ARM_UP = False
 
     def main(self):
-        count = 0
+        
         
         while not rospy.is_shutdown():
 
             self.pose_goal = rospy.wait_for_message("/pub_pose",String)
-            self.pub_pose(self.pose_goal)
-
+            self.pub_pose(self.pose_goal,start=True)
+            count = 0
             while count < self.num_el and not rospy.is_shutdown():
                 next_goal = String()
                 if count != self.num_el-1:

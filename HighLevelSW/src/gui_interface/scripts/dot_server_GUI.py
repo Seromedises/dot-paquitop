@@ -94,6 +94,42 @@ def clean_pose(goal):
     f = open(folder,'w')
     f.close()
 
+def home():
+    input_file_path = rospkg.RosPack().get_path('follow_waypoints')+"/saved_path/pose.csv"
+    output_file_path = rospkg.RosPack().get_path('follow_waypoints')+"/saved_path/pose_back.csv"
+    quaternion180 = numpy.array([0, 0, 0, -1])
+    data = []
+    with open(input_file_path, 'r') as file:
+        reader = csv.reader(file, delimiter = ',')
+            
+        for row in reader:
+            x = float(row[3])
+            y = float(row[4])
+            z = float(row[5])
+            w = float(row[6])
+        
+            row_quaternion = numpy.array([w,x,y,z])
+            rotated_quat = quaternion_multiply(quaternion180,row_quaternion)
+
+            row[3] = str(rotated_quat[1])
+            row[4] = str(rotated_quat[2])
+            row[5] = str(rotated_quat[3])
+            row[6] = str(rotated_quat[0])
+
+            data.append(row)
+
+            
+    with open(output_file_path, 'w') as file:
+        writer = csv.writer(file, delimiter = ',')
+        value = len(data)
+        while value > 0:
+            value = value -1
+            writer.writerow(data[value])
+        row = ['0','0','0','0','0','0','1']
+        writer.writerow(row)
+
+    return True
+
 class DOT_PAQUITOP_GUI(MDApp):
 
     def __init__(self, **kwargs):
@@ -104,11 +140,16 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.extract = rospy.Publisher("/extract_tablet", Bool, queue_size=1)
         self.retrain = rospy.Publisher("/retrain_tablet", Bool, queue_size=1)
         self.reset = rospy.Publisher('/path_reset', Empty, queue_size=1)
-        self.home = rospy.Publisher('/start_journey', Empty, queue_size=1)
+        self.home_topic = rospy.Publisher('/start_journey', Empty, queue_size=1)
+        self.cancel_pub = rospy.Publisher("/move_base/cancel", GoalID, queue_size=1)
+
         # Interface init
         self.url = "http://172.21.15.100:8080/stream?topic=/rviz_stream/camera_rviz/Image"
         self.cap = cv2.VideoCapture(self.url)
         self.screen = Builder.load_file('dot_first_GUI.kv')
+
+        # Variable Init
+        self.StartReady = False
 
         places_items = [
             {
@@ -156,16 +197,20 @@ class DOT_PAQUITOP_GUI(MDApp):
     def startPAQUITOP(self,*args):
         print("Avvio PAQUITOP")
         self.screen.ids.statusFB._set_text("DEMO avviata")
-        count = 0
-        while count < 2:
-            count = count +1
-            Start = Empty()
-            publisher = rospy.Publisher('/path_ready', Empty, queue_size=1)
-            publisher.publish(Start)
+
+        if self.StartReady:
+            self.pose_pub.publish(self.goal_pose)
+            input_file_path = rospkg.RosPack().get_path('follow_waypoints')+"/saved_path/pose.csv"
+            f = open(input_file_path, 'w')
+            f.close()
+        # count = 0
+        # while count < 2:
+        #     count = count +1
+        #     Start = Empty()
+        #     publisher = rospy.Publisher('/path_ready', Empty, queue_size=1)
+        #     publisher.publish(Start)
         
-        input_file_path = rospkg.RosPack().get_path('follow_waypoints')+"/saved_path/pose.csv"
-        f = open(input_file_path, 'w')
-        f.close()
+        
         """
         stop_pub = rospy.Publisher('/stop_arm', Bool, queque_size=1)
         message_stop = Bool()
@@ -176,21 +221,21 @@ class DOT_PAQUITOP_GUI(MDApp):
     def stopPAQUITOP(self,*args):
         print("Fermo PAQUITOP")
         self.screen.ids.statusFB._set_text("DEMO fermata")
-        cancel_pub = rospy.Publisher("/move_base/cancel", GoalID, queue_size=1)
         cancel_msg = GoalID()
-        cancel_pub.publish(cancel_msg)
+        self.cancel_pub.publish(cancel_msg)
 
-        stop_kinova = rospy.Publisher("/stop_arm", Bool, queque_size=1)
-        message_stop = Bool()
-        message_stop.data = True
-        print(message_stop)
-        #stop_pub.publish(message_stop)        
+        # stop_kinova = rospy.Publisher("/stop_arm", Bool, queque_size=1)
+        # message_stop = Bool()
+        # message_stop.data = True
+        # print(message_stop)
+        # stop_pub.publish(message_stop)        
 
     def go2(self,goal):
         print("Naviga fino a " + goal)
-        goal_pose = String()
-        goal_pose.data = goal
-        self.pose_pub.publish(goal_pose)                
+        self.goal_pose = String()
+        self.goal_pose.data = goal
+        self.StartReady = True
+        # self.pose_pub.publish(goal_pose)                
 
     def clear(self,goal):
         print("Pulisco tutte le pose in " + goal)
@@ -229,41 +274,13 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.reset.publish(Reset)
     
     def home(self, *args):
-        input_file_path = rospkg.RosPack().get_path('follow_waypoints')+"/saved_path/pose.csv"
-        output_file_path = rospkg.RosPack().get_path('follow_waypoints')+"/saved_path/pose_back.csv"
-        quaternion180 = numpy.array([0, 0, 0, -1])
-        data = []
-        with open(input_file_path, 'r') as file:
-            reader = csv.reader(file, delimiter = ',')
-                
-            for row in reader:
-                x = float(row[3])
-                y = float(row[4])
-                z = float(row[5])
-                w = float(row[6])
-            
-                row_quaternion = numpy.array([w,x,y,z])
-                rotated_quat = quaternion_multiply(quaternion180,row_quaternion)
-
-                row[3] = str(rotated_quat[1])
-                row[4] = str(rotated_quat[2])
-                row[5] = str(rotated_quat[3])
-                row[6] = str(rotated_quat[0])
-
-                data.append(row)
-
-             
-        with open(output_file_path, 'w') as file:
-            writer = csv.writer(file, delimiter = ',')
-            value = len(data)
-            while value > 0:
-                value = value -1
-                writer.writerow(data[value])
-            row = ['0','0','0','0','0','0','1']
-            writer.writerow(row)
-        
-        Start = Empty()
-        self.home.publish(Start)
+        print("Return Home")
+        self.screen.ids.statusFB._set_text("Return Home")
+        wait = False
+        wait = home()
+        if wait:
+            Start = Empty()
+            self.home_topic.publish(Start)
 
 if __name__ == '__main__':
     
