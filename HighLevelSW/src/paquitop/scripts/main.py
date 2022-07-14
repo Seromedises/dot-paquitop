@@ -180,10 +180,7 @@ class PAQUITOP_MAIN:
                         print("Waiting for blood id bag")
                                             
                         id_bag = rospy.wait_for_message("/id", Int64 )
-                        # Stop orient gui
-                        orient_gui_msg = Bool()
-                        orient_gui_msg.data = False
-                        self.orient_gui.publish(orient_gui_msg)
+                        # 
 
                         if float(id_bag.data) % 2 == 0:
                             ALREADY_RECIVED_BAG = False
@@ -213,6 +210,11 @@ class PAQUITOP_MAIN:
 
                 while not person_id_recieved and not rospy.is_shutdown():
                     id_patient = rospy.wait_for_message("/id", Int64 )
+
+                    # Stop orient gui
+                    orient_gui_msg = Bool()
+                    orient_gui_msg.data = False
+                    self.orient_gui.publish(orient_gui_msg)
 
                     already_person_id_recived = False
                     for patient in self.person_id:

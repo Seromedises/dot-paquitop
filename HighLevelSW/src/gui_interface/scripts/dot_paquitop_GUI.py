@@ -143,6 +143,10 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.image.texture = texture
 
     def identificationOK(self, name):
+        orient_gui_msg = Bool()
+        orient_gui_msg.data = False
+        self.orient_gui.publish(orient_gui_msg)
+
         self.layout.ids.identification.md_bg_color = (20/255,180/255,10/255,.6)
         self.layout.ids.identification.text = "Hi " + name + "!"
 
@@ -154,7 +158,7 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.layout.ids.bodyTemp_text.text_color = (0,0,0,1)
         self.layout.ids.acquireTemp.md_bg_color = (52/255,168/255,235/255,.6)
         self.patient_data.need_help = True
-
+        
     def noHelpThanks(self, *args):
         self.layout.ids.bodyTemp_text.text_color = (0,0,0,1)
         self.layout.ids.acquireTemp.md_bg_color = (52/255,168/255,235/255,.6)
@@ -185,9 +189,7 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.patient_data.temperature = -1
         self.patient_data.need_help = False
 
-        # orient_gui_msg = Bool()
-        # orient_gui_msg.data = False
-        # self.orient_gui.publish(orient_gui_msg)
+        
         
         # Tablet store
         # count = 0
