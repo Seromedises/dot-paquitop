@@ -1,11 +1,12 @@
 <?xml version="1.0"?>
 
 <launch>
-
+  
   <group ns="camera_rviz">
-    <node machine="server" pkg="tf" type="static_transform_publisher" name="camera_broadcaster"
+    
+    <node machine="server" pkg="tf" type="static_transform_publisher" name="camera_rviz_broadcaster"
         args="0.0 0.0 5.0.707 0 0.707 0 0 base_footprint rviz_cam 10" />
-    <node machine="server" name="camera_info" pkg="rostopic" type="rostopic"
+    <node machine="server" name="camera_info" pkg="rostopic" type="rostopic" 
         args="pub camera_info sensor_msgs/CameraInfo
         '{header: {seq: 0, stamp: {secs: 0, nsecs: 0}, frame_id: 'rviz_cam'},
         height: 480, width: 640, distortion_model: 'plumb_bob',
@@ -15,10 +16,10 @@
         P: [500.0, 0.0, 320, 0.0, 0.0, 500, 240, 0.0, 0.0, 0.0, 1.0, 0.0],
         binning_x: 0, binning_y: 0,
         roi: {x_offset: 0, y_offset: 0, height: 480, width: 640, do_rectify: false}}' -r 2"
-        output="screen"/>
+        output="screen" respawn="true"/>
   </group>
 
-  <node machine="server" name="web_video_server" pkg="web_video_server" type="web_video_server" output="screen"/>
+  <node machine="server" name="web_video_server" pkg="web_video_server" type="web_video_server" output="screen" respawn="true"/>
 
   <!-- In this way a camera stream of Rviz should be avaiable at the local address: http://172.21.15.100:8080/stream_viewer?topic=/rviz_stream/camera_rviz/Image&type=ros_compressed -->
 

@@ -2,8 +2,8 @@
 
 <launch>
 
-	<machine name="server" address="192.168.8.219" env-loader="~/dot-paquitop/HighLevelSW/server-loader.sh" default = "true" user="lorenzo"/>
-	<machine name="client" address="192.168.8.229" env-loader="~/dot-paquitop/HighLevelSW/env-loader.sh" default = "true" user = "paquitop" timeout="20"/>
+	<machine name="server" address="172.21.15.100" env-loader="~/dot-paquitop/HighLevelSW/server-loader.sh" default = "true" user="lorenzo"/>
+	<machine name="client" address="172.21.15.99" env-loader="~/dot-paquitop/HighLevelSW/env-loader.sh" default = "true" user = "paquitop" timeout="20"/>
 
 	<!-- Transformation Relationship -->
 	<include file="$(find paquitop)/launch/tf.launch" >
@@ -39,11 +39,12 @@
 	<include file="$(find paquitop)/launch/rviz_camera.launch"/> 
 <!-- urdf launcher -->
 	<!--<include file="$(find paquitop)/launch/urdf.launch" />-->
-<!--		
+		
 	<node machine="server" name="main" pkg="paquitop" type="main.py" output="screen"/>
 
-	<node machine="server" name="dot_first_GUI" pkg="gui_interface" type="dot_first_GUI.py" />
--->	
+	<arg name="node_start_delay_gui" default="5.0" />
+	<node machine="server" name="dot_server_GUI" pkg="gui_interface" type="dot_server_GUI.py" launch-prefix="bash -c 'sleep $(arg node_start_delay_gui); $0 $@' "/>
+
 	
 
 <!--///////////////////////////////////////////////////// CLIIENT LAUNCH ///////////////////////////////////////////////////////////////////-->
@@ -80,11 +81,11 @@
   <!-- Subscribe: /map /scan and /tf -->
   <!-- Publish: /amcl_pose and /map->/odom -->
 	<!--<include file="$(find navstack_pub)/launch/amcl.launch"/>-->
-<!--
+
 	<node machine="client" name="dot_paquitop_GUI" pkg="gui_interface" type="dot_paquitop_GUI.py" />
--->
+
 <!--///////////////////////////////////////////////////// KINOVA LAUNCH ///////////////////////////////////////////////////////////////////-->
-<!--
+
 	<arg name="arm" default="gen3_lite"/>
 	<arg name="robot_name" default="my_$(arg arm)"/>
   <node machine="client" name="kinova_teleop" pkg="kortex_movement" type="kinova_teleop.py" ns="$(arg robot_name)" respawn="true" output="screen"/>
@@ -101,5 +102,5 @@
 		<param name="start_rviz" value="false"/>
 		<param name="start_moveit" value="false"/>
 	</include>
--->
+
 </launch>

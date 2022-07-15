@@ -8,7 +8,7 @@ if [ "$my_ip" == 172.21.15.100 ]; then
 	export ROS_IP=$my_ip
 	export ROS_MASTER_URI=$my_ip:11311
 fi
-if [ "$my_ip" == 192.168.8.229 ]; then
+if [ "$my_ip" == 192.168.8.219 ]; then
 	export ROS_IP=$my_ip
 	export ROS_MASTER_URI=$my_ip:11311	
 fi
