@@ -144,7 +144,8 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.cancel_pub = rospy.Publisher("/move_base/cancel", GoalID, queue_size=1)
 
         # Interface init
-        self.url = "http://172.21.15.100:8080/stream?topic=/rviz_stream/camera_rviz/Image"
+        master_uri = rospy.get_node_uri()
+        self.url = master_uri + "/stream?topic=/rviz_stream/camera_rviz/Image"# "http://172.21.15.100:8080/stream?topic=/rviz_stream/camera_rviz/Image"
         self.cap = cv2.VideoCapture(self.url)
         self.screen = Builder.load_file('dot_first_GUI.kv')
 
