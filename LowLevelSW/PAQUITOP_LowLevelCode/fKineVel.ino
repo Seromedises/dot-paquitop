@@ -1,11 +1,11 @@
-float dkineVel(float dr, float thdr, float dl, float thdl){
+float fkineVel(float dr, float thdr, float dl, float thdl){
   
   // Da aggiungere alle variabili globali: 
   // float odom_vx, odom_vy, odom_wz;
   // float thetadr_tol = 5.0, thetadl_tol = 5.0;
 
   // Da aggiungere al ciclo di FB:
-  // ikineVel(deltar, thetadr, deltal, thetadl);
+  // fkineVel(deltar, thetadr, deltal, thetadl);
   // sprintf(str_fb_q, "%f %f %f", odom_vx, odom_vy, odom_wz);
   
   if (abs(thdr) <= thetadr_tol){
