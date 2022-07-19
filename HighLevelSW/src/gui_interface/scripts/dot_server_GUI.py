@@ -150,7 +150,7 @@ class DOT_PAQUITOP_GUI(MDApp):
         ip = os.environ["ROS_IP"]
         self.url = "http://" + ip + ":8080/stream?topic=/rviz_stream/camera_rviz/Image"# "http://172.21.15.100:8080/stream?topic=/rviz_stream/camera_rviz/Image"
         self.cap = cv2.VideoCapture(self.url)
-        self.screen = Builder.load_file('dot_first_GUI.kv')
+        self.screen = Builder.load_file('dot_server_GUI.kv')
 
         # Variable Init
         self.StartReady = False
