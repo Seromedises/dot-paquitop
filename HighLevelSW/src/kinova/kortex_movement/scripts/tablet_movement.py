@@ -451,6 +451,17 @@ def extract_tablet(data):
         joint[5] = -116.43
             
         reach = example.example_send_joint_angles(joint)
+
+        # tablet deliver 2
+        
+        joint[0] = 254.11
+        joint[1] = 24.01
+        joint[2] = 27.13
+        joint[3] = 37.36
+        joint[4] = 281.91
+        joint[5] = 260.13
+            
+        reach = example.example_send_joint_angles(joint)
         rest_position = False
         count = 0
         while count < 3:

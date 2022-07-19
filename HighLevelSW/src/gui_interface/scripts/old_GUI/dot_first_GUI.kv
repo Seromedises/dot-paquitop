@@ -68,7 +68,8 @@ FloatLayout:
         on_release: app.home(*args)
 
     MDRaisedButton:
-        text: "Vital Sign Measure"
+        # text: "Vital Sign Measure"
+        text: "Reset path"
         size_hint: .175, .1
         pos_hint: {"center_x": .85, "center_y": .45}
         on_release: app.VSMeasure(*args)
@@ -86,10 +87,13 @@ FloatLayout:
         on_release: app.TabletStore(*args)
 
     MDRaisedButton:
-        text: "Reset path"
-        size_hint: .175, .1
-        pos_hint: {"center_x": .725, "center_y": .15}
-        on_release: app.ResetPath(*args)
+        id: patientFB
+        text: "Patient Feedback"
+        md_bg_color: (20/255,180/255,10/255,.6)
+        size_hint: .370, .1
+        pos_hint: {"center_x": .75, "center_y": .15}
+        on_release: app.RestoreFB(*args)
+        # on_release: app.ResetPath(*args)
     
     MDLabel:
         id: statusFB
