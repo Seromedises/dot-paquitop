@@ -143,6 +143,8 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.reset = rospy.Publisher('/path_reset', Empty, queue_size=1)
         self.home_topic = rospy.Publisher('/start_journey', Empty, queue_size=1)
         self.cancel_pub = rospy.Publisher("/move_base/cancel", GoalID, queue_size=1)
+        rospy.Subscriber("/patientHelp",Bool, self.PatientHelp)
+        rospy.Subscriber("/current_bed", String, self.paquitop_bed)
 
         # Interface init
         ip = os.environ["ROS_IP"]
@@ -152,6 +154,7 @@ class DOT_PAQUITOP_GUI(MDApp):
 
         # Variable Init
         self.StartReady = False
+        self.bed = ""
 
         places_items = [
             {
@@ -283,6 +286,19 @@ class DOT_PAQUITOP_GUI(MDApp):
         if wait:
             Start = Empty()
             self.home_topic.publish(Start)
+    
+    def PatientHelp(self, data):
+        if data.data:
+            self.screen.ids.patientFB.text = "Assistenza al " + self.bed
+            self.screen.ids.patientFB.md_bg_color = (220/255,20/255,60/255,.6)
+    
+    def RestoreFB(self, *args):
+        self.screen.ids.patientFB.text = "Patient Feedback"
+        self.screen.ids.patientFB.md_bg_color = (20/255,180/255,10/255,.6)
+
+    def paquitop_bed(self, data):
+        self.bed = data.data
+
 
 if __name__ == '__main__':
     

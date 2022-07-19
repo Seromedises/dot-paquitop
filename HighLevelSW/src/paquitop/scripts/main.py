@@ -42,6 +42,7 @@ class PAQUITOP_MAIN:
         self.pose_publisher = rospy.Publisher("/addpose", PoseWithCovarianceStamped, queue_size=10)
         self.path_ready_publisher = rospy.Publisher('/path_ready', Empty, queue_size=1)
         self.tab_ext = rospy.Publisher("/extract_tablet", Bool, queue_size=1)
+        self.current_bed = rospy.Publisher("/current_bed", String, queue_size=1)
 
         
         
@@ -196,17 +197,21 @@ class PAQUITOP_MAIN:
                     else:
                         print("Waiting for Goal Reached")
                         time.sleep(0.5)
-                
-                wait = rospy.wait_for_message("/tablet_extracted", Bool)
+                        
+                if self.ARM_UP:
+                    current_bed = String()
+                    current_bed.data = self.patient_list[count]
+                    self.current_bed.publish(current_bed)
+                    wait = rospy.wait_for_message("/tablet_extracted", Bool)
 
-                # Start gui orienting 
-                orient_gui_msg = Bool()
-                orient_gui_msg.data = True
-                self.orient_gui.publish(orient_gui_msg)
-                # From this time the tablet orienting procedure has started
-                print("Tablet extracted, waiting for person id")
+                    # Start gui orienting 
+                    orient_gui_msg = Bool()
+                    orient_gui_msg.data = True
+                    self.orient_gui.publish(orient_gui_msg)
+                    # From this time the tablet orienting procedure has started
+                    print("Tablet extracted, waiting for person id")
 
-                person_id_recieved = False
+                    person_id_recieved = False
 
                 while not person_id_recieved and not rospy.is_shutdown():
                     id_patient = rospy.wait_for_message("/id", Int64 )
@@ -252,14 +257,16 @@ class PAQUITOP_MAIN:
                         else:
                             self.match_id.append(False)
 
-                p_data = rospy.wait_for_message("/patient_data", patient_assistance)
-                self.patient_data(p_data)
-                self.goON()
-                rospy.wait_for_message("/tablet_stored", Bool)
-                self.start()                   
-                
-                count = count +1
-                print("end of cycle")
+                if self.ARM_UP:
+
+                    p_data = rospy.wait_for_message("/patient_data", patient_assistance)
+                    self.patient_data(p_data)
+                    self.goON()
+                    rospy.wait_for_message("/tablet_stored", Bool)
+                    self.start()                   
+                    
+                    count = count +1
+                    print("end of cycle")
                 
                 
             
