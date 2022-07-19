@@ -1,0 +1,123 @@
+FloatLayout:   
+    
+    MDToolbar:
+        id: menu
+        title: ""
+        elevation: 20
+        icon: "git"
+        type: "top"
+        size_hint: 1, 0.1
+        pos_hint: {"center_x": .5, "center_y":.95}
+        
+
+    MDLabel:
+        text: "Ciao, sono PAQUITOP!"
+        halign: "left"
+        valign: "top"
+        theme_text_color: "Custom"
+        font_size: 60
+        text_color: 1, 1, 1, 1
+        size_hint: .95, 0.1
+        pos_hint: {"center_x": .5, "center_y":0.95}
+
+    Image:
+        id: logoPaquitopDOT
+        keep_ratio: True
+        size_hint: .2, .1
+        pos_hint: {"center_x": .95, "center_y":0.95}
+        source: '../images/renderDOTPAQUITOP.png'
+    
+    Image:
+        id: logoPoli
+        keep_ratio: True
+        size_hint: .2, .1
+        pos_hint: {"center_x": .80, "center_y":0.95}
+        source: '../images/Poli_Pic4Ser.png'
+
+    MDLabel:
+        text: "1.  Mostrami il tuo braccialetto per favore"
+        halign: "left"
+        valign: "top"
+        theme_text_color: "Custom"
+        font_size: 50
+        text_color: 0, 0, 0, 1
+        size_hint: .5, .5
+        pos_hint: {"center_x": .275, "center_y":0.8}
+
+    MDRaisedButton:
+        id: identification
+        text: "Inquadra il braccialetto"
+        font_size: 45
+        md_bg_color: (200/255,200/255,200/255,1)
+        size_hint: .35, .1
+        pos_hint: {"center_x": .25, "center_y": .675}
+        
+    
+    MDLabel:
+        id: bodyTemp_text
+        text: "2.  Premi per misurare la temperatura"
+        halign: "left"
+        valign: "top"
+        theme_text_color: "Custom"
+        font_size: 50
+        text_color: .95, .95, .95, 1
+        size_hint: .5, .1
+        pos_hint: {"center_x": .275, "center_y":0.525}
+
+    MDRaisedButton:
+        id: acquireTemp
+        text: "Misura temperatura"
+        md_bg_color: (255/255,255/255,255/255,.5)
+        font_size: 45
+        size_hint: .3, .1
+        pos_hint: {"center_x": .25, "center_y": .4}
+        on_release: app.acqTemp(*args)
+
+    MDLabel:
+        id: goOn_text
+        text: "3.  Posso passare al prossimo paziente?"
+        halign: "left"
+        valign: "top"
+        theme_text_color: "Custom"
+        font_size: 50
+        text_color:.95, .95, .95, 1
+        size_hint: .5, .1
+        pos_hint: {"center_x": .275, "center_y":0.25}
+
+    MDLabel:
+        text: "Punto di vista di PAQUITOP"
+        halign: "right"
+        valign: "top"
+        theme_text_color: "Custom"
+        font_size: 25
+        text_color: 0, 0, 0, 1
+        size_hint: .2, .1
+        pos_hint: {"center_x": .85, "center_y":0.32}
+
+    MDRaisedButton:
+        id: moveOn
+        text: "Procedi"
+        font_size: 45
+        md_bg_color: (255/255,255/255,255/255,.5)
+        size_hint: .2, .1
+        pos_hint: {"center_x": .25, "center_y": .125}
+        on_release: app.goON(*args)
+
+    MDLabel:
+        id: help_text
+        text: "Vuoi chiamare un infermiere?"
+        halign: "center"
+        valign: "top"
+        theme_text_color: "Custom"
+        font_size: 50
+        text_color: 0, 0, 0, 1
+        size_hint: .5, .1
+        pos_hint: {"center_x": .75, "center_y":0.25}
+
+    MDIconButton:
+        icon: "../images/campanello.png"
+        icon_size: "100sp"
+        user_font_size: "120sp"
+        md_bg_color: (220/255,20/255,60/255,.6)
+        pos_hint: {"center_x": .75, "center_y": .125}
+        on_release: app.helpPlease(*args)

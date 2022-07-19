@@ -462,7 +462,7 @@ void loop()
   		}
     }
 
-    if ((abs(vx) <= 0.05 && abs(vy) <= 0.05 && abs(gammad) <= 0.05) && (abs(dnR) <= dNsoglia && abs(dnL) <= dNsoglia)){tHidle += dt;}
+    if ((abs(vx) <= 0.05 && abs(vy) <= 0.05 && abs(gammad) <= 0.05) && (abs(dnR) <= 10*dNsoglia && abs(dnL) <= 10*dNsoglia)){tHidle += dt;}
     else {tHidle = 0;}
     
     if ((channels[4] == 1811) || (tHidle >= 1e6))

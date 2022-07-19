@@ -1,8 +1,14 @@
 #!/usr/bin/env python3
 
+# Per evitare problemi di risoluzione con diversi schermi:
 from cgitb import text
 from glob import glob
+
+# from ctypes import windll, c_int64
 from turtle import color
+# windll.user32.SetProcessDpiAwarenessContext(c_int64(-4))
+
+# Per aprire l'interfaccia a schermo intero:
 from kivy.core.window import Window
 import numpy as np
 import cv2
@@ -23,8 +29,6 @@ import rospkg
 from geometry_msgs.msg import PoseWithCovarianceStamped
 from geometry_msgs.msg import Twist
 from move_base_msgs.msg import MoveBaseActionResult
-from gui_interface.msg import patient_assistance
-import random
 
 Config.set('graphics', 'width', '1920')
 Config.set('graphics', 'height', '1080')
@@ -34,24 +38,53 @@ Config.set('graphics', 'fullscreen', 1)
 Config.set('graphics', 'window_state', 'maximized')
 Config.write()
 
+# def TabletExtracetd(data):
+#     global TABLET_EXTRACTED
+#     TABLET_EXTRACTED = True
+
+def NameReceiver(data):
+    name = data.data
+    DOT_PAQUITOP_GUI.identificationOK(name)
+
+
 class DOT_PAQUITOP_GUI(MDApp):
 
     def __init__(self, **kwargs):
         rospy.init_node('paquitop_gui')
         super().__init__(**kwargs)
-        self.layout = Builder.load_file('dot_paquitop_GUI.kv')
+        self.layout = Builder.load_file('old_dot_paquitop_GUI.kv')
         self.pipeline = rs.pipeline()
         config = rs.config()
         config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
         profile = self.pipeline.start(config)
         align_to = rs.stream.color
         self.align = rs.align(align_to)
-        self.patient_data = patient_assistance()
-        self.patient_data.temperature = -1
-        self.patient_data.need_help = False
+
+        # initialize Publisher topic extract/retrain table    
+        self.tab_ext = rospy.Publisher("/extract_tablet", Bool, queue_size=1)
+        self.tab_ret = rospy.Publisher("/retrain_tablet", Bool, queue_size=1)
+        # self.blood_id = rospy.Publisher("/id_blood_bag", Int64, queue_size=1)
         self.id = rospy.Publisher("/id", Int64, queue_size=1)
-        self.patient_publisher = rospy.Publisher("/patient_data", patient_assistance, queue_size=1)
-        rospy.Subscriber("/patient_name", String, self.NameReceiver)
+        tab_ext_msg = Bool()
+        tab_ext_msg.data = False
+        self.tab_ext.publish(tab_ext_msg)
+        self.tab_ret.publish(tab_ext_msg)
+
+        # initialize Subscriber topic
+        # rospy.Subscriber("/tablet_extracted", Bool, TabletExtracetd)
+        rospy.Subscriber("/patient_name", String, NameReceiver)
+        
+
+        # initialize variables
+        # global TABLET_EXTRACTED
+        # TABLET_EXTRACTED = False
+        # self.path_counter = 0
+        # self.paziente = -1
+        # self.sacca = -1
+        # self.last = -1
+        # self.seat1 = False
+        # self.seat2 = False
+        
         
     def build(self):
         
@@ -118,74 +151,52 @@ class DOT_PAQUITOP_GUI(MDApp):
     def identificationOK(self, name):
         self.layout.ids.identification.md_bg_color = (20/255,180/255,10/255,.6)
         self.layout.ids.identification.text = "Hi " + name + "!"
-
-        self.layout.ids.help_text.text_color = (0,0,0,1)
-        self.layout.ids.needHelp.md_bg_color = (20/255,180/255,10/255,.6)
-        self.layout.ids.noNeedHelp.md_bg_color = (220/255,20/255,60/255,.6)
-    
-    def helpPlease(self, *args):
-        # Aggiungere codice per salvataggio richiesta
-        self.layout.ids.bodyTemp_text.text_color = (0,0,0,1)
-        self.layout.ids.acquireTemp.md_bg_color = (52/255,168/255,235/255,.6)
-        self.patient_data.need_help = False
-
-    def noHelpThanks(self, *args):
-        # Aggiungere codice per salvataggio richiesta
-        self.layout.ids.bodyTemp_text.text_color = (0,0,0,1)
-        self.layout.ids.acquireTemp.md_bg_color = (52/255,168/255,235/255,.6)
-        self.patient_data.need_help = True
-
-    def acqTemp(self, *args):
-        self.layout.ids.goOn_text.text_color = (0,0,0,1)
-        self.layout.ids.moveOn.md_bg_color = (20/255,180/255,10/255,.6)
-        delta = random.randint(-10,5)
-        delta = delta/5
-        self.patient_data.temperature = 38 + delta
-
+        
 
     def goON(self, *args):
         self.layout.ids.identification.md_bg_color = (200/255,200/255,200/255,1)
         self.layout.ids.identification.text = "Waiting for identifier"
-        
-        self.layout.ids.help_text.text_color = (.8, .8, .8, 1)
-        self.layout.ids.needHelp.md_bg_color = (20/255,180/255,10/255,.1)
-        self.layout.ids.noNeedHelp.md_bg_color = (220/255,20/255,60/255,.1)
-        self.layout.ids.bodyTemp_text.text_color = (.8, .8, .8, 1)
-        self.layout.ids.acquireTemp.md_bg_color = (52/255,168/255,235/255,.1)
-        self.layout.ids.goOn_text.text_color = (.8, .8, .8, 1)
-        self.layout.ids.moveOn.md_bg_color = (20/255,180/255,10/255,.1)
-
-        self.patient_publisher.publish(self.patient_data)
-        self.patient_data.temperature = -1
-        self.patient_data.need_help = False
-        
         # Tablet store
-        # count = 0
-        # while count < 3:
-        #     count = count +1
-        #     retrain = rospy.Publisher("/retrain_tablet", Bool, queue_size=1)
-        #     retrain_msg = Bool()
-        #     retrain_msg.data = True
-        #     retrain.publish(retrain_msg)
+        count = 0
+        while count < 3:
+            count = count +1
+            retrain = rospy.Publisher("/retrain_tablet", Bool, queue_size=1)
+            retrain_msg = Bool()
+            retrain_msg.data = True
+            retrain.publish(retrain_msg)
+      
+    
+    # def goUP(self, *args):
+        
+    #     count = 0
+    #     while count < 3:
+    #         count = count +1
+    #         tab_ext = rospy.Publisher("/extract_tablet", Bool, queue_size=1)
+    #         tab_ext_msg = Bool()
+    #         tab_ext_msg.data = True
+    #         tab_ext.publish(tab_ext_msg)
+    #     # Update status
+    #     self.arm_up = True    
+    #     self.last = self.markerID
+    
+# def is_in_movement(movePAQUITOP):
+#     global PAQUITOP_STOP
+    
+#     if movePAQUITOP.linear.x < 0.05 and movePAQUITOP.linear.y < 0.05 and movePAQUITOP.angular.z <0.1:
+#         PAQUITOP_STOP = True
+#     else:
+#         PAQUITOP_STOP = False
 
-    def NameReceiver(self, data):
-        name = data.data
-        self.identificationOK(name)
+# def move_base_goal_reached(data):
+#     global GOAL_REACHED
+     
+#     print(data.status.status)
+#     if data.status.status == 3:
+#         GOAL_REACHED = True
+#     else:
+#         GOAL_REACHED = False
 
 if __name__ == '__main__':
     
     DOT_PAQUITOP_GUI().run()
-
-    # initialize Publisher topic extract/retrain table    
-    # gui.tab_ext = rospy.Publisher("/extract_tablet", Bool, queue_size=1)
-    # gui.tab_ret = rospy.Publisher("/retrain_tablet", Bool, queue_size=1)
-    # gui.id = rospy.Publisher("/id", Int64, queue_size=1)
-    # tab_ext_msg = Bool()
-    # tab_ext_msg.data = False
-    # gui.tab_ext.publish(tab_ext_msg)
-    # gui.tab_ret.publish(tab_ext_msg)
-
-    # initialize Subscriber topic
-    
-    # gui.run()
     
