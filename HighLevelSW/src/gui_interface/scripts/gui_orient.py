@@ -51,7 +51,8 @@ class faceFollowing():
                     #     self.example.publish_joint_velocity(joint_vel)
                     #     self.first = False
                     # elif not self.first:
-                    joint_vel = [scanning_vel, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
+                    joint_vel = [-scanning_vel, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
+                    self.example.publish_joint_velocity(joint_vel)
                     #     self.example.publish_joint_velocity(joint_vel)
                     # else: 
                     #     joint_vel = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
