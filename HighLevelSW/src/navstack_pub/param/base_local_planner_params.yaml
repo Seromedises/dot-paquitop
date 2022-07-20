@@ -1,4 +1,4 @@
-controller_frequency: 20.0
+controller_frequency: 10.0
 DWAPlannerROS:
 
 # Robot Configuration Parameters
@@ -25,8 +25,8 @@ DWAPlannerROS:
   latch_xy_goal_tolerance: false #controllare
 
 # Forward Simulation Parameters
-  sim_time: 1.4 #1.7 
-  sim_granularity: 0.1 # 0.025
+  sim_time: 1.4 #1.7
+  sim_granularity: 0.2 # 0.025
 
   vx_samples: 20
   vy_samples: 0

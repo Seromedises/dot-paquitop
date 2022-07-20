@@ -82,7 +82,7 @@
   <!-- Publish: /amcl_pose and /map->/odom -->
 	<!--<include file="$(find navstack_pub)/launch/amcl.launch"/>-->
 
-	<node machine="client" name="dot_paquitop_GUI_ITA" pkg="gui_interface" type="dot_paquitop_GUI_ITA.py" />
+	<node machine="client" name="dot_paquitop_GUI_ITA" pkg="gui_interface" type="dot_paquitop_GUI_ITA.py" output="screen" />
 
 <!--///////////////////////////////////////////////////// KINOVA LAUNCH ///////////////////////////////////////////////////////////////////-->
 

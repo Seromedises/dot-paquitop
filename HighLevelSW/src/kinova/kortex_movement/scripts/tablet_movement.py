@@ -454,7 +454,7 @@ def extract_tablet(data):
         joint[1] = 23.67
         joint[2] = 18.81
         joint[3] = 35.89
-        joint[4] = 284.67
+        joint[4] = 292.00 # 284.67
         joint[5] = 271.50
             
         reach = example.example_send_joint_angles(joint)
@@ -464,7 +464,7 @@ def extract_tablet(data):
             count = count +1
             tablet_extracted = rospy.Publisher("/tablet_extracted", Bool, queue_size=20)
             tablet_extracted_msg = Bool()
-            tablet_extracted.data = True
+            tablet_extracted_msg.data = True
             tablet_extracted.publish(tablet_extracted_msg)
         
 
