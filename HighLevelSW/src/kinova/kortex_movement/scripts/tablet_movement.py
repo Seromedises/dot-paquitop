@@ -483,8 +483,10 @@ def retrain_tablet(data):
         joint[3] = 38.44
         joint[4] = 309.02
         joint[5] = 307.62
-            
-        reach = example.example_send_joint_angles(joint)
+        
+        while not reach:                
+            reach = example.example_send_joint_angles(joint)
+        reach = False
         
         # tablet lift 2 of 2
         joint[0] = 53.69
@@ -494,7 +496,9 @@ def retrain_tablet(data):
         joint[4] = -102.714
         joint[5] = 80.438
             
-        reach = example.example_send_joint_angles(joint)
+        while not reach:                
+            reach = example.example_send_joint_angles(joint)
+        reach = False
 
         # lift pose 
         pose = PlayCartesianTrajectoryRequest()
@@ -507,6 +511,7 @@ def retrain_tablet(data):
         reach = False
         while not reach: 
             reach = example.example_send_cartesian_pose(pose)
+        reach = False
 
         # tablet 
         joint[0] = 58.75
@@ -530,7 +535,9 @@ def retrain_tablet(data):
         joint[4] = -108.603
         joint[5] = 82.363
             
-        reach = example.example_send_joint_angles(joint)
+        while not reach:                
+            reach = example.example_send_joint_angles(joint)
+        reach = False
 
         # reconfigure position
         joint[0] = 65.459
@@ -540,7 +547,9 @@ def retrain_tablet(data):
         joint[4] = -120
         joint[5] = 10.311
             
-        reach = example.example_send_joint_angles(joint)
+        while not reach:                
+            reach = example.example_send_joint_angles(joint)
+        reach = False
 
         # rest position
         joint[0] = 0.0
@@ -550,7 +559,9 @@ def retrain_tablet(data):
         joint[4] = 45.0
         joint[5] = 90.0
             
-        reach = example.example_send_joint_angles(joint)
+        while not reach:                
+            reach = example.example_send_joint_angles(joint)
+        reach = False
         rest_position = True 
 
         count = 0
