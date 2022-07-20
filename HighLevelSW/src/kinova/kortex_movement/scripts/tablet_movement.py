@@ -489,12 +489,12 @@ def retrain_tablet(data):
         reach = False
         
         # tablet lift 2 of 2
-        joint[0] = 53.69
-        joint[1] = 33.71
-        joint[2] = -130.425
-        joint[3] = 52.569
-        joint[4] = -102.714
-        joint[5] = 80.438
+        joint[0] = -42.83
+        joint[1] = -27.89
+        joint[2] = -41.85
+        joint[3] = 130.37
+        joint[4] = 80.46
+        joint[5] = 99.57
             
         while not reach:                
             reach = example.example_send_joint_angles(joint)
