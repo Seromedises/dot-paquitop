@@ -117,8 +117,9 @@ class DOT_PAQUITOP_GUI(MDApp):
                 face_data.face = np.zeros(4)
                 if face_data.num_faces != 0:
                     face_data.face = faces[0]
-                    for (x,y,w,h) in face_data.face:
-                        cv2.rectangle(color_image, (x,y), (x+w,y+h), (255,0,0), 2)
+                    #for (x,y,w,h) in face_data.face:
+                    d = face_data.face
+                    cv2.rectangle(color_image, (d[0],d[1]), (d[0]+d[2],d[1]+d[3]), (255,0,0), 2)
                 self.face_publisher.publish(face_data)
 
 
