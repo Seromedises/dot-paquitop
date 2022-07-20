@@ -71,11 +71,11 @@ class faceFollowing():
                     
                     if abs(int(x+w/2)-x_g) > x_tol:
                         if int(x+w/2) < x_g:
-                            joint_vel = [-orient_vel, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
+                            joint_vel = [orient_vel, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
                             self.example.publish_joint_velocity(joint_vel)
                             scanning_sign = -1
                         else:
-                            joint_vel = [orient_vel, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
+                            joint_vel = [-orient_vel, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
                             self.example.publish_joint_velocity(joint_vel)
                             scanning_sign = +1
                     else: 
