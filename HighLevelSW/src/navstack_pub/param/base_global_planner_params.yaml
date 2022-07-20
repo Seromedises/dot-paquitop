@@ -1,4 +1,5 @@
 controller_frequency: 3.0 #10.0
+
 GlobalPlanner:
 #NavfnROS:
  allow_unknown: true
@@ -9,7 +10,7 @@ GlobalPlanner:
 
  use_dijkstra: false
  use_quadratic: true
- use_grid_path: false
+ use_grid_path: true
  old_navfn_behavior: false
 
 # Global path desiderable with these values:
@@ -18,7 +19,7 @@ GlobalPlanner:
  cost_factor: 1 #0.55
 
  publish_potential: false
- orientation_mode: 3 #0 
+ orientation_mode: 0 #0 
  orientation_window_size: 1
  outline_map: false
 
