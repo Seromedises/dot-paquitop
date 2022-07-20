@@ -173,7 +173,7 @@ class PAQUITOP_MAIN:
                 else:
                     next_goal = self.last_bed_to_home
                 
-                
+                print("Waiting for Goal Reached")
                 while not self.ARM_UP and not rospy.is_shutdown():
                     
                     if self.GOAL_REACHED:
@@ -195,8 +195,8 @@ class PAQUITOP_MAIN:
                                 self.goUP()
                         
                     else:
-                        print("Waiting for Goal Reached")
-                        time.sleep(0.5)
+                        
+                        time.sleep(0.1)
                         
                 if self.ARM_UP:
                     current_bed = String()

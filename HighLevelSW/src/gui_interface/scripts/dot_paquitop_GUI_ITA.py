@@ -58,9 +58,7 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.patient_data.temperature = -1
         self.patient_data.need_help = False
         self.Help = Bool()
-        # self.controlFlag = Bool()
         self.controlFlag = False
-        # self.faceFlag = Bool()
         self.faceFlag = False
         self.id = rospy.Publisher("/id", Int64, queue_size=1)
         self.needHelp = rospy.Publisher("/patientHelp", Bool,queue_size=1)
@@ -107,7 +105,8 @@ class DOT_PAQUITOP_GUI(MDApp):
             
             
             # Face detect:
-            gray = cv2.cvtColor(color_image, cv2.COLOR_BGR2GRAY)
+            frame = cv2.flip(color_frame,1)
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             faces = self.faceCascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=10, minSize=(100, 100), flags = cv2.CASCADE_SCALE_IMAGE)
             
             if self.faceFlag:
@@ -115,10 +114,7 @@ class DOT_PAQUITOP_GUI(MDApp):
                 face_data.num_faces = len(faces)
                 face_data.face = np.zeros(4)
                 if face_data.num_faces != 0:
-                    face_data.face = faces[0]
-                    d = face_data.face
-                    cv2.rectangle(color_image, (d[0],d[1]), (d[0]+d[2],d[1]+d[3]), (255,0,0), 2)
-                
+                    face_data.face = faces[0]                    
                 self.face_publisher.publish(face_data)
 
             if len(corners) > 0:

@@ -45,7 +45,7 @@ class faceFollowing():
 
                 if self.numfaces == 0:
                     # No self.faces detected: scan for sameone
-                    if scanning_counter <=5:
+                    if scanning_counter <=10:
                         if scanning_sign == 1:
                             jd0 = scanning_vel
                         elif scanning_sign == -1:
@@ -53,7 +53,7 @@ class faceFollowing():
                         joint_vel = [jd0, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
                         self.example.publish_joint_velocity(joint_vel)
                         scanning_counter += 1
-                    elif scanning_counter <= 20:
+                    elif scanning_counter <= 40:
                         jd0 = -jd0
                         joint_vel = [jd0, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
                         self.example.publish_joint_velocity(joint_vel)
@@ -71,11 +71,11 @@ class faceFollowing():
                     
                     if abs(int(x+w/2)-x_g) > x_tol:
                         if int(x+w/2) < x_g:
-                            joint_vel = [orient_vel, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
+                            joint_vel = [-orient_vel, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
                             self.example.publish_joint_velocity(joint_vel)
                             scanning_sign = -1
                         else:
-                            joint_vel = [-orient_vel, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
+                            joint_vel = [orient_vel, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
                             self.example.publish_joint_velocity(joint_vel)
                             scanning_sign = +1
                     else: 
