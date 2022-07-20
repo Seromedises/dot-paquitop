@@ -58,9 +58,9 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.patient_data.temperature = -1
         self.patient_data.need_help = False
         self.Help = Bool()
-        self.controlFlag = Bool()
+        # self.controlFlag = Bool()
         self.controlFlag = False
-        self.faceFlag = Bool()
+        # self.faceFlag = Bool()
         self.faceFlag = False
         self.id = rospy.Publisher("/id", Int64, queue_size=1)
         self.needHelp = rospy.Publisher("/patientHelp", Bool,queue_size=1)
