@@ -19,10 +19,10 @@
 
   <!-- Move Base Node -->
   <!-- Subscribe: /move_base_simple/goal -->
-  <!-- Publish: /cmd_vel
+  <!-- Publish: /cmd_vel-->
 	<include file="$(find navstack_pub)/launch/move_base.launch" > 
 	</include>
-	-->
+	
 	<!-- Follow Waypoints Node -->
   <!-- Subscribe: /addpose /waypoints -->
   <!-- Publish: /move_base_simple/goal-->
