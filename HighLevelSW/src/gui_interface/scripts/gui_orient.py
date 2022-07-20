@@ -127,7 +127,6 @@ def activateRutine(data):
     FF.controlFlag = data.data
     FF.main()
     
-
 def loadFaces(data):  
     FF.numfaces = data.num_faces
     FF.face = data.face
