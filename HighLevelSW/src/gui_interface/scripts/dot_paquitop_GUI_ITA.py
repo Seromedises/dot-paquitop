@@ -65,7 +65,7 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.id = rospy.Publisher("/id", Int64, queue_size=1)
         self.needHelp = rospy.Publisher("/patientHelp", Bool,queue_size=1)
         self.orient_gui = rospy.Publisher("/orient_gui", Bool,queue_size=10)
-        self.face_publisher = rospy.Publisher("/faces", face_detection, queue_size=1)
+        self.face_publisher = rospy.Publisher("/faces", face_detection, queue_size=5)
         self.patient_publisher = rospy.Publisher("/patient_data", patient_assistance, queue_size=1)
         rospy.Subscriber("/patient_name", String, self.NameReceiver)
         rospy.Subscriber("/move_base/result", MoveBaseActionResult, self.move_base_goal_reached)
@@ -116,11 +116,10 @@ class DOT_PAQUITOP_GUI(MDApp):
                 face_data.face = np.zeros(4)
                 if face_data.num_faces != 0:
                     face_data.face = faces[0]
-                    #for (x,y,w,h) in face_data.face:
                     d = face_data.face
                     cv2.rectangle(color_image, (d[0],d[1]), (d[0]+d[2],d[1]+d[3]), (255,0,0), 2)
+                
                 self.face_publisher.publish(face_data)
-
 
             if len(corners) > 0:
                 # flatten the ArUco IDs list         

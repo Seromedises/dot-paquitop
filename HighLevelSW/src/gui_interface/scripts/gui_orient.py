@@ -9,7 +9,7 @@ import rospkg
 from kortex_driver.srv import *
 from kortex_driver.msg import *
 from std_srvs.srv import Empty
-from std_msgs.msg import Empty, Bool, String
+from std_msgs.msg import Empty, Bool
 from geometry_msgs.msg import Twist
 from ExampleFullArmMovement import *
 from gui_interface.msg import face_detection
@@ -24,14 +24,13 @@ class faceFollowing():
         self.example.example_clear_faults()
         self.numfaces = 2
         self.face = np.zeros(4)
-        self.bed = String()
 
     def main(self):
 
         # Define the desired position for the detected face inside the frame:
         x_g = 640/2
         y_g = 480/3
-        x_tol = 640/7
+        x_tol = 640/10
         y_tol = 480/10
 
         # Define variables for kinova movements:
@@ -47,11 +46,9 @@ class faceFollowing():
                 if self.numfaces == 0:
                     # No self.faces detected: scan for sameone
                     if scanning_counter <=5:
-                        if self.bed.data == "Letto 1":
-                            print(self.bed.data)
+                        if scanning_sign == 1:
                             jd0 = scanning_vel
-                        elif self.bed.data == "Letto 2":
-                            print(self.bed.data)
+                        elif scanning_sign == -1:
                             jd0 = -scanning_vel
                         joint_vel = [jd0, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
                         self.example.publish_joint_velocity(joint_vel)
@@ -74,11 +71,11 @@ class faceFollowing():
                     
                     if abs(int(x+w/2)-x_g) > x_tol:
                         if int(x+w/2) < x_g:
-                            joint_vel = [orient_vel, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
+                            joint_vel = [-orient_vel, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
                             self.example.publish_joint_velocity(joint_vel)
                             scanning_sign = -1
                         else:
-                            joint_vel = [-orient_vel, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
+                            joint_vel = [orient_vel, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
                             self.example.publish_joint_velocity(joint_vel)
                             scanning_sign = +1
                     else: 
@@ -127,7 +124,6 @@ class faceFollowing():
 
 def activateRutine(data):  
     print(data)
-    FF.bed = rospy.wait_for_message("/current_bed", String)
     FF.controlFlag = data.data
     FF.main()
     
