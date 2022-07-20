@@ -105,11 +105,11 @@ class DOT_PAQUITOP_GUI(MDApp):
             
             
             # Face detect:
-            frame = cv2.flip(color_frame,1)
-            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-            faces = self.faceCascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=10, minSize=(100, 100), flags = cv2.CASCADE_SCALE_IMAGE)
-            
             if self.faceFlag:
+                frame = cv2.flip(color_image,1)
+                gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+                faces = self.faceCascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=10, minSize=(100, 100), flags = cv2.CASCADE_SCALE_IMAGE)
+            
                 face_data = face_detection()
                 face_data.num_faces = len(faces)
                 face_data.face = np.zeros(4)
