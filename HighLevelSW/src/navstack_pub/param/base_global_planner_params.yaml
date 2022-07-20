@@ -1,4 +1,4 @@
-controller_frequency: 10.0
+controller_frequency: 3.0 #10.0
 GlobalPlanner:
 #NavfnROS:
  allow_unknown: true
