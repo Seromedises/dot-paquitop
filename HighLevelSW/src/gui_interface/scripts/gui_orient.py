@@ -9,7 +9,7 @@ import rospkg
 from kortex_driver.srv import *
 from kortex_driver.msg import *
 from std_srvs.srv import Empty
-from std_msgs.msg import Empty, Bool
+from std_msgs.msg import Empty, Bool, String
 from geometry_msgs.msg import Twist
 from ExampleFullArmMovement import *
 from gui_interface.msg import face_detection
@@ -20,6 +20,7 @@ class faceFollowing():
 
         # Initialize comunicaiton with kinova:
         self.example = ExampleFullArmMovement() 
+        self.first = True
         notif = self.example.example_subscribe_to_a_robot_notification()
         self.example.example_clear_faults()
         self.numfaces = 2
@@ -45,25 +46,36 @@ class faceFollowing():
 
                 if self.numfaces == 0:
                     # No self.faces detected: scan for sameone
-                    if scanning_counter <=10:
-                        if scanning_sign == 1:
-                            jd0 = scanning_vel
-                        elif scanning_sign == -1:
-                            jd0 = -scanning_vel
-                        joint_vel = [jd0, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
+                    if self.first:
+                        joint_vel = [-scanning_vel, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
                         self.example.publish_joint_velocity(joint_vel)
-                        scanning_counter += 1
-                    elif scanning_counter <= 40:
-                        jd0 = -jd0
-                        joint_vel = [jd0, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
+                        self.first = False
+                    elif not self.first:
+                        joint_vel = [scanning_vel, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
                         self.example.publish_joint_velocity(joint_vel)
-                        scanning_counter += 1
-                    else:
-                        scanning_counter = 0
+                    else: 
+                        joint_vel = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
+                        self.example.publish_joint_velocity(joint_vel)
+
+                    # if scanning_counter <=10:
+                    #     if scanning_sign == 1:
+                    #         jd0 = scanning_vel
+                    #     elif scanning_sign == -1:
+                    #         jd0 = -scanning_vel
+                    #     joint_vel = [jd0, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
+                    #     self.example.publish_joint_velocity(joint_vel)
+                    #     scanning_counter += 1
+                    # elif scanning_counter <= 40:
+                    #     jd0 = -jd0
+                    #     joint_vel = [jd0, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
+                    #     self.example.publish_joint_velocity(joint_vel)
+                    #     scanning_counter += 1
+                    # else:
+                    #     scanning_counter = 0
 
                 elif self.numfaces == 1:
                     # One face detected: follow it
-                    scanning_counter = 0
+                    #scanning_counter = 0
                     x = self.face[0]
                     y = self.face[1]
                     w = self.face[2]
@@ -109,12 +121,12 @@ class faceFollowing():
         
                 else: 
                     # Multiple faces detected: wait
-                    scanning_counter = 0
+                    #scanning_counter = 0
                     joint_vel = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
                     self.example.publish_joint_velocity(joint_vel)
                 
             else:
-                scanning_counter = 0
+                #scanning_counter = 0
                 joint_vel = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
                 self.example.publish_joint_velocity(joint_vel)
                 time.sleep(5)
@@ -131,10 +143,14 @@ def loadFaces(data):
     FF.numfaces = data.num_faces
     FF.face = data.face
 
+def changeBed(data):  
+    FF.bed = data.data
+
 if __name__ == '__main__':
 
     FF = faceFollowing(False)
     rospy.init_node("gui_orient")
     rospy.Subscriber("/orient_gui", Bool, activateRutine)
     rospy.Subscriber("/faces", face_detection, loadFaces)
+    # rospy.Subscriber("/current_bed", String, changeBed)
     rospy.spin()
