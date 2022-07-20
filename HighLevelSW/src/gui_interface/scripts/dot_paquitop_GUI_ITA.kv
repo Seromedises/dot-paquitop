@@ -114,10 +114,16 @@ FloatLayout:
         size_hint: .5, .1
         pos_hint: {"center_x": .75, "center_y":0.25}
 
+    MDFillRoundFlatButton:
+        text: ""
+        md_bg_color: (200/255,200/255,200/255,.4)
+        size_hint: .1, .15
+        pos_hint: {"center_x": .75, "center_y":0.125}
+
     MDIconButton:
         icon: "../images/campanello.png"
         icon_size: "100sp"
         user_font_size: "120sp"
-        md_bg_color: (220/255,20/255,60/255,.6)
+        md_bg_color: (220/255,20/255,60/255,1)
         pos_hint: {"center_x": .75, "center_y": .125}
         on_release: app.helpPlease(*args)

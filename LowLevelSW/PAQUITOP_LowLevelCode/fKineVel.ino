@@ -9,10 +9,10 @@ float fkineVel(float dr, float thdr, float dl, float thdl){
   // sprintf(str_fb_q, "%f %f %f", odom_vx, odom_vy, odom_wz);
   
   if (abs(thdr) <= thetadr_tol){
-    thdr = 0.0
+    thdr = 0.0;
   }
   if (abs(thdl) <= thetadl_tol){
-    thdl = 0.0
+    thdl = 0.0;
   }
 
   odom_vx = rw/2*(thdr*cos(dr) + thdl*cos(dl));

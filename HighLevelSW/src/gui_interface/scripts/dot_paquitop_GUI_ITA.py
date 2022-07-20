@@ -43,6 +43,8 @@ class DOT_PAQUITOP_GUI(MDApp):
         # Init interface
         self.layout = Builder.load_file('dot_paquitop_GUI_ITA.kv')
 
+        
+
         # Init camera
         self.pipeline = rs.pipeline()
         config = rs.config()
@@ -56,12 +58,18 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.patient_data.temperature = -1
         self.patient_data.need_help = False
         self.Help = Bool()
+        self.controlFlag = Bool()
+        self.controlFlag = False
+        self.faceFlag = Bool()
+        self.faceFlag = False
         self.id = rospy.Publisher("/id", Int64, queue_size=1)
         self.needHelp = rospy.Publisher("/patientHelp", Bool,queue_size=1)
         self.orient_gui = rospy.Publisher("/orient_gui", Bool,queue_size=10)
         self.face_publisher = rospy.Publisher("/faces", face_detection, queue_size=1)
         self.patient_publisher = rospy.Publisher("/patient_data", patient_assistance, queue_size=1)
         rospy.Subscriber("/patient_name", String, self.NameReceiver)
+        rospy.Subscriber("/move_base/result", MoveBaseActionResult, self.move_base_goal_reached)
+        rospy.Subscriber("/tablet_extracted", Bool, self.faceActivation)
 
          # Create the haar cascade
         self.rospack = rospkg.RosPack()
@@ -81,60 +89,66 @@ class DOT_PAQUITOP_GUI(MDApp):
 
     def load_video(self, *args):
         
-        default = cv2.aruco.DICT_5X5_100
-        arucoDict = cv2.aruco.Dictionary_get(default)
-        arucoParams = cv2.aruco.DetectorParameters_create()
-
+        
         # Get frameset of color and depth
         frames = self.pipeline.wait_for_frames()
         aligned_frames = self.align.process(frames)
         color_frame = aligned_frames.get_color_frame()
         color_image = np.asanyarray(color_frame.get_data())
 
-        (corners, ids, rejected) = cv2.aruco.detectMarkers(color_image, arucoDict, parameters=arucoParams)
-        
-        
-        # Face detect:
-        frame = cv2.flip(color_image,1)
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        faces = self.faceCascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=10, minSize=(40, 40), flags = cv2.CASCADE_SCALE_IMAGE)
-        face_data = face_detection()
-        face_data.num_faces = len(faces)
-        face_data.face = np.zeros(4)
-        if face_data.num_faces != 0:
-            face_data.face = faces[0]
-        self.face_publisher.publish(face_data)
+        # OpenCV activates when the robot reaches the goal position:
+        if self.controlFlag:
 
-        if len(corners) > 0:
-            # flatten the ArUco IDs list         
-            ids = ids.flatten()             
+            default = cv2.aruco.DICT_5X5_100
+            arucoDict = cv2.aruco.Dictionary_get(default)
+            arucoParams = cv2.aruco.DetectorParameters_create()
 
-            for (markerCorner, markerID) in zip(corners, ids):
-                # extract the marker corners (which are always returned in
-                # top-left, top-right, bottom-right, and bottom-left order)
-                corners = markerCorner.reshape((4, 2))
-                (topLeft, topRight, bottomRight, bottomLeft) = corners
-                # convert each of the (x, y)-coordinate pairs to integers
-                topRight = (int(topRight[0]), int(topRight[1]))
-                bottomRight = (int(bottomRight[0]), int(bottomRight[1]))
-                bottomLeft = (int(bottomLeft[0]), int(bottomLeft[1]))
-                topLeft = (int(topLeft[0]), int(topLeft[1]))
+            (corners, ids, rejected) = cv2.aruco.detectMarkers(color_image, arucoDict, parameters=arucoParams)
+            
+            
+            # Face detect:
+            frame = cv2.flip(color_image,1)
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            faces = self.faceCascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=10, minSize=(40, 40), flags = cv2.CASCADE_SCALE_IMAGE)
+            
+            if self.faceFlag:
+                face_data = face_detection()
+                face_data.num_faces = len(faces)
+                face_data.face = np.zeros(4)
+                if face_data.num_faces != 0:
+                    face_data.face = faces[0]
+                self.face_publisher.publish(face_data)
 
-                cv2.line(color_image, topLeft, topRight, (0, 255, 0), 2)
-                cv2.line(color_image, topRight, bottomRight, (0, 255, 0), 2)
-                cv2.line(color_image, bottomRight, bottomLeft, (0, 255, 0), 2)
-                cv2.line(color_image, bottomLeft, topLeft, (0, 255, 0), 2)
-                # compute and draw the center (x, y)-coordinates of the ArUco
-                # marker
-                cX = int((topLeft[0] + bottomRight[0]) / 2.0)
-                cY = int((topLeft[1] + bottomRight[1]) / 2.0)
-                cv2.circle(color_image, (cX, cY), 4, (0, 0, 255), -1)
-                # draw the ArUco marker ID on the image
-                cv2.putText(color_image, str(markerID),(topLeft[0] - 15, topLeft[1] - 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+            if len(corners) > 0:
+                # flatten the ArUco IDs list         
+                ids = ids.flatten()             
 
-                id = Int64()
-                id.data = markerID
-                self.id.publish(id)
+                for (markerCorner, markerID) in zip(corners, ids):
+                    # extract the marker corners (which are always returned in
+                    # top-left, top-right, bottom-right, and bottom-left order)
+                    corners = markerCorner.reshape((4, 2))
+                    (topLeft, topRight, bottomRight, bottomLeft) = corners
+                    # convert each of the (x, y)-coordinate pairs to integers
+                    topRight = (int(topRight[0]), int(topRight[1]))
+                    bottomRight = (int(bottomRight[0]), int(bottomRight[1]))
+                    bottomLeft = (int(bottomLeft[0]), int(bottomLeft[1]))
+                    topLeft = (int(topLeft[0]), int(topLeft[1]))
+
+                    cv2.line(color_image, topLeft, topRight, (0, 255, 0), 2)
+                    cv2.line(color_image, topRight, bottomRight, (0, 255, 0), 2)
+                    cv2.line(color_image, bottomRight, bottomLeft, (0, 255, 0), 2)
+                    cv2.line(color_image, bottomLeft, topLeft, (0, 255, 0), 2)
+                    # compute and draw the center (x, y)-coordinates of the ArUco
+                    # marker
+                    cX = int((topLeft[0] + bottomRight[0]) / 2.0)
+                    cY = int((topLeft[1] + bottomRight[1]) / 2.0)
+                    cv2.circle(color_image, (cX, cY), 4, (0, 0, 255), -1)
+                    # draw the ArUco marker ID on the image
+                    cv2.putText(color_image, str(markerID),(topLeft[0] - 15, topLeft[1] - 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+
+                    id = Int64()
+                    id.data = markerID
+                    self.id.publish(id)
                 
                         
         frame = cv2.resize(color_image, None, fx=1.2, fy=1.2, interpolation=cv2.INTER_AREA)
@@ -152,13 +166,19 @@ class DOT_PAQUITOP_GUI(MDApp):
         orient_gui_msg.data = False
         self.orient_gui.publish(orient_gui_msg)
 
+        self.controlFlag = False
+        self.faceFlag = False
+
         self.layout.ids.bodyTemp_text.text_color = (0,0,0,1)
         self.layout.ids.acquireTemp.md_bg_color = (52/255,168/255,235/255,.6)
         
     def helpPlease(self, *args):
         self.patient_data.need_help = True
+
+        self.layout.ids.help_text.text = "Chiamata effettuata!"
         self.Help.data = True
         self.needHelp.publish(self.Help)
+
 
     def acqTemp(self, *args):
         self.layout.ids.goOn_text.text_color = (0,0,0,1)
@@ -176,6 +196,8 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.layout.ids.acquireTemp.md_bg_color = (255/255,255/255,255/255,.5)
         self.layout.ids.goOn_text.text_color = (.95, .95, .95, 1)
         self.layout.ids.moveOn.md_bg_color = (255/255,255/255,255/255,.5)
+
+        self.layout.ids.help_text.text = "Vuoi chiamare un infermiere?"
 
         
         self.patient_publisher.publish(self.patient_data)
@@ -198,6 +220,15 @@ class DOT_PAQUITOP_GUI(MDApp):
     def NameReceiver(self, data):
         name = data.data
         self.identificationOK(name)
+
+    def move_base_goal_reached(self, data):
+        if data.status.status == 3:
+            self.controlFlag = True
+        else:
+            self.controlFlag = False
+    
+    def faceActivation(self, data):
+        self.faceFlag = data.data
 
 if __name__ == '__main__':
     

@@ -82,6 +82,7 @@ unsigned long t, t0, t_old, t_old1, t_old2, t_old3, t_old4, t_new, dt, dt1, dt2,
 // Variabili velocità spazio operativo:
 float vx, vy, gammad, vx_s, vy_s, gammad_s;;                                              //velocità lineari (m/s) e angolare (rad/s) piattaforma rf {c}
 float v_max = 1.0, w_max = pi/2;                                                          //velocità massime piattaforma (m/s), (rad/s)
+float odom_vx, odom_vy, odom_wz;
 int modOp = 1, modOp_old = 1;                                                             //mod 1: moto generico; mod 2: sterzatura differenziale; mod 3: bici 1 ruota; mod 4: bici 2 ruote
 float vxArm = 0.0, vyArm = 0.0, vzArm = 0.0, wxArm = 0.0, wyArm = 0.0, wzArm = 0.0;       //velocità lineari (m/s) e angolare (rad/s) braccio robotico rf {??}
 float vArm_max = 0.15, wArm_max = pi/6;                                                   //velocità massime braccio robotico (m/s), (rad/s)
@@ -89,6 +90,7 @@ float vArm_max = 0.15, wArm_max = pi/6;                                         
 // Variabili motori trazione:
 float thetadr_REF, thetadl_REF;                                                           //velocità ruote REF (rpm)
 float thetadr, thetadl;                                                                   //velocità ruote FB (rpm)
+float thetadr_tol = 10.0, thetadl_tol = 10.0;
 float thetadr_old, thetadl_old;                                                           //velocità ruote FB_old (rpm)
 float thdr1, thdr2, thdl1, thdl2;
 float Ir_REF,Il_REF, Itot_REF;                                                                      //correnti motori trazione REF (A)
@@ -582,7 +584,8 @@ void loop()
     delayMicroseconds(5);
     deltal = read_EMS22A(ENC_L_CS1_PIN, deltal); //rad
     
-    sprintf(str_fb_q, "%f %f %f %f", deltar, deltal, thetadr, thetadl);
+    fkineVel(deltar, thetadr*pi/30, deltal, thetadl*pi/30);
+    sprintf(str_fb_q, "%f %f %f", odom_vx, odom_vy, odom_wz);
     //sprintf(str_fb_q, "%f %f %f %f", Ir, Il, Ir_REF, Il_REF);
     //sprintf(str_fb_q, "%f %f %f %f", deltar, deltal, deltar_REF, deltal_REF);
     //sprintf(str_fb_q, "%f %f", thetadr_REF, thetadl_REF);
