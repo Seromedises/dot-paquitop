@@ -35,8 +35,6 @@ class faceFollowing():
         y_tol = 480/10
 
         # Define variables for kinova movements:
-        scanning_counter = 0
-        scanning_sign = 1
         scanning_vel = 0.1
         orient_vel = 0.2
 
@@ -46,17 +44,16 @@ class faceFollowing():
 
                 if self.numfaces == 0:
                     # No self.faces detected: scan for sameone
-                    # if self.first:
-                    #     joint_vel = [-scanning_vel, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
-                    #     self.example.publish_joint_velocity(joint_vel)
-                    #     self.first = False
-                    # elif not self.first:
-                    joint_vel = [-scanning_vel, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
-                    self.example.publish_joint_velocity(joint_vel)
-                    #     self.example.publish_joint_velocity(joint_vel)
-                    # else: 
-                    #     joint_vel = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
-                    #     self.example.publish_joint_velocity(joint_vel)
+                    if self.first:
+                        joint_vel = [-scanning_vel, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
+                        self.example.publish_joint_velocity(joint_vel)
+                        self.first = False
+                    elif not self.first:
+                        joint_vel = [scanning_vel, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
+                        self.example.publish_joint_velocity(joint_vel)
+                    else: 
+                        joint_vel = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
+                        self.example.publish_joint_velocity(joint_vel)
 
                     # if scanning_counter <=10:
                     #     if scanning_sign == 1:
