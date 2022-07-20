@@ -258,7 +258,7 @@ class ExampleFullArmMovement:
             joint_speeds.append(msg)
             joint_idx += 1
         base_msg.joint_speeds = joint_speeds
-        base_msg.duration = 5.0
+        base_msg.duration = 1.0
         
         publisher = rospy.Publisher('/my_gen3_lite/in/joint_velocity',Base_JointSpeeds, queue_size=1)
         publisher.publish(base_msg)
