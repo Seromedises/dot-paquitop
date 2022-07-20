@@ -117,7 +117,10 @@ class DOT_PAQUITOP_GUI(MDApp):
                 face_data.face = np.zeros(4)
                 if face_data.num_faces != 0:
                     face_data.face = faces[0]
+                    for (x,y,w,h) in face_data.face:
+                        cv2.rectangle(color_image, (x,y), (x+w,y+h), (255,0,0), 2)
                 self.face_publisher.publish(face_data)
+
 
             if len(corners) > 0:
                 # flatten the ArUco IDs list         
@@ -228,6 +231,7 @@ class DOT_PAQUITOP_GUI(MDApp):
             self.controlFlag = False
     
     def faceActivation(self, data):
+        
         self.faceFlag = data.data
 
 if __name__ == '__main__':

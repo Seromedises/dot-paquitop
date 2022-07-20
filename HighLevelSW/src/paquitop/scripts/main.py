@@ -177,7 +177,7 @@ class PAQUITOP_MAIN:
                 while not self.ARM_UP and not rospy.is_shutdown():
                     
                     if self.GOAL_REACHED:
-                        self.pub_pose(next_goal,start=False)
+                        self.pub_pose(next_goal,False)
                         print("Waiting for blood id bag")
                                             
                         id_bag = rospy.wait_for_message("/id", Int64 )
@@ -201,13 +201,13 @@ class PAQUITOP_MAIN:
                 if self.ARM_UP:
                     current_bed = String()
                     current_bed.data = self.patient_list[count]
-                    self.current_bed.publish(current_bed)
                     wait = rospy.wait_for_message("/tablet_extracted", Bool)
-
+                    
                     # Start gui orienting 
                     orient_gui_msg = Bool()
                     orient_gui_msg.data = True
                     self.orient_gui.publish(orient_gui_msg)
+                    self.current_bed.publish(current_bed)
                     # From this time the tablet orienting procedure has started
                     print("Tablet extracted, waiting for person id")
 
@@ -217,9 +217,9 @@ class PAQUITOP_MAIN:
                     id_patient = rospy.wait_for_message("/id", Int64 )
 
                     # Stop orient gui
-                    orient_gui_msg = Bool()
-                    orient_gui_msg.data = False
-                    self.orient_gui.publish(orient_gui_msg)
+                    # orient_gui_msg = Bool()
+                    # orient_gui_msg.data = False
+                    # self.orient_gui.publish(orient_gui_msg)
 
                     already_person_id_recived = False
                     for patient in self.person_id:

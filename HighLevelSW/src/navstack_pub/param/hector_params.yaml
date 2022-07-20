@@ -2,8 +2,8 @@ map_resolutioon: 0.02 # resolution in [m]
 map_size: 2048 # [number of cell per axis] of the map
 map_start_x: 0.5 # location of the origin from 0.0 to 1.0 and 0.5 is in the middle
 map_start_y: 0.5
-map_update_distance_thresh: 0.01 #Threshold for performing map updates [m]. The platform has to travel this far in meters or experience an angular change as described by the map_update_angle_thresh parameter since the last update before a map update happens.
-map_update_angle_thresh: 0.01 #Threshold for performing map updates [rad]. The platform has to experience an angular change as described by this parameter of travel as far as specified by the map_update_distance_thresh parameter since the last update before a map update happens.
+map_update_distance_thresh: 0.0 #Threshold for performing map updates [m]. The platform has to travel this far in meters or experience an angular change as described by the map_update_angle_thresh parameter since the last update before a map update happens.
+map_update_angle_thresh: 0.0 #Threshold for performing map updates [rad]. The platform has to experience an angular change as described by this parameter of travel as far as specified by the map_update_distance_thresh parameter since the last update before a map update happens.
 map_pub_period: 0.2 # [s]
 map_multi_res_levels: 3 # The number of map multi-resolution grid levels.
 update_factor_free: 0.4 # The map update modifier for updates of free cells in the range [0.0, 1.0]. A value of 0.5 means no change.
