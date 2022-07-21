@@ -22,6 +22,7 @@ class faceFollowing():
         self.example = ExampleFullArmMovement() 
         self.first = True
         notif = self.example.example_subscribe_to_a_robot_notification()
+        self.bed = ""
         self.example.example_clear_faults()
         self.numfaces = 2
         self.face = np.zeros(4)
@@ -41,35 +42,18 @@ class faceFollowing():
         while (not rospy.is_shutdown()):
 
             if self.controlFlag:
-
+                print(self.bed)
                 if self.numfaces == 0:
                     # No self.faces detected: scan for sameone
                     if self.first:
-                        joint_vel = [-scanning_vel, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
-                        self.example.publish_joint_velocity(joint_vel)
-                        self.first = False
-                    elif not self.first:
                         joint_vel = [scanning_vel, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
+                        self.example.publish_joint_velocity(joint_vel)
+                    elif not self.first:
+                        joint_vel = [-scanning_vel, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
                         self.example.publish_joint_velocity(joint_vel)
                     else: 
                         joint_vel = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
                         self.example.publish_joint_velocity(joint_vel)
-
-                    # if scanning_counter <=10:
-                    #     if scanning_sign == 1:
-                    #         jd0 = scanning_vel
-                    #     elif scanning_sign == -1:
-                    #         jd0 = -scanning_vel
-                    #     joint_vel = [jd0, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
-                    #     self.example.publish_joint_velocity(joint_vel)
-                    #     scanning_counter += 1
-                    # elif scanning_counter <= 40:
-                    #     jd0 = -jd0
-                    #     joint_vel = [jd0, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
-                    #     self.example.publish_joint_velocity(joint_vel)
-                    #     scanning_counter += 1
-                    # else:
-                    #     scanning_counter = 0
 
                 elif self.numfaces == 1:
                     # One face detected: follow it
@@ -83,11 +67,9 @@ class faceFollowing():
                         if int(x+w/2) < x_g:
                             joint_vel = [-orient_vel, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
                             self.example.publish_joint_velocity(joint_vel)
-                            scanning_sign = -1
                         else:
                             joint_vel = [orient_vel, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
                             self.example.publish_joint_velocity(joint_vel)
-                            scanning_sign = +1
                     else: 
                         joint_vel = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0] # rad/s
                         self.example.publish_joint_velocity(joint_vel)
@@ -133,7 +115,6 @@ class faceFollowing():
             time.sleep(0.4)    
 
 def activateRutine(data):  
-    print(data)
     FF.controlFlag = data.data
     FF.main()
     
@@ -143,6 +124,10 @@ def loadFaces(data):
 
 def changeBed(data):  
     FF.bed = data.data
+    if data.data == "Letto 1":
+        FF.first = True
+    elif data.data == "Letto 2":
+        FF.first = False
 
 if __name__ == '__main__':
 
@@ -150,5 +135,5 @@ if __name__ == '__main__':
     rospy.init_node("gui_orient")
     rospy.Subscriber("/orient_gui", Bool, activateRutine)
     rospy.Subscriber("/faces", face_detection, loadFaces)
-    # rospy.Subscriber("/current_bed", String, changeBed)
+    rospy.Subscriber("/current_bed", String, changeBed)
     rospy.spin()

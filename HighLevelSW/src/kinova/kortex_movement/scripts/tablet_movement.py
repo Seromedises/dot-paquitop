@@ -430,7 +430,7 @@ def extract_tablet(data):
         # lift pose 2
         pose = PlayCartesianTrajectoryRequest()
         pose.input.target_pose.x = -0.18 
-        pose.input.target_pose.y = -0.05
+        pose.input.target_pose.y = 0.0
         pose.input.target_pose.z = 0.25
         pose.input.target_pose.theta_x = -90
         pose.input.target_pose.theta_y = 0
@@ -440,7 +440,13 @@ def extract_tablet(data):
             reach = example.example_send_cartesian_pose(pose)
         
         # tablet deliver 1 of 2
-        joint[0] = 217.40
+        # joint[0] = 217.40
+        # joint[1] = 299.28
+        # joint[2] = 253.64
+        # joint[3] = 38.44
+        # joint[4] = 309.02
+        # joint[5] = 307.62
+        joint[0] = 337.26
         joint[1] = 299.28
         joint[2] = 253.64
         joint[3] = 38.44
@@ -477,7 +483,7 @@ def retrain_tablet(data):
         joint = np.zeros(6)
 
         # tablet lift 1 of 2
-        joint[0] = 217.40
+        joint[0] = 337.26
         joint[1] = 299.28
         joint[2] = 253.64
         joint[3] = 38.44
@@ -488,7 +494,7 @@ def retrain_tablet(data):
             reach = example.example_send_joint_angles(joint)
         reach = False
         
-        # tablet lift 2 of 2
+        # tablet store approach
         joint[0] = 53.69
         joint[1] = 33.71
         joint[2] = -130.425
@@ -522,9 +528,11 @@ def retrain_tablet(data):
         joint[5] = 91.737
             
         reach = example.example_send_joint_angles(joint)
+        reach = False
         
         # open gripper
         reach = example.example_send_gripper_command(gripper_open)
+        reach = False
         rospy.loginfo('gripper opened') 
         
         # tablet approach position
