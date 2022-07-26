@@ -213,8 +213,8 @@ class MoveGroupPythonIntefaceTutorial(object):
 		# joint_goal[5] = 90*pi/180
 
 		joint_goal[0] = 0.0*pi/180
-		joint_goal[1] = 105.0*pi/180 - 10*pi/180
-		joint_goal[2] = 148.0*pi/180 + 10*pi/180
+		joint_goal[1] = 75.9*pi/180 
+		joint_goal[2] = 118.67*pi/180 
 		joint_goal[3] = 90.0*pi/180 
 		joint_goal[4] = 45.0*pi/180 
 		joint_goal[5] = 90.0*pi/180
