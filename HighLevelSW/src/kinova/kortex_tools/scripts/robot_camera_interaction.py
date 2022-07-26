@@ -16,6 +16,7 @@ from kortex_tools.srv import *
 import pyrealsense2 as rs
 import cv2
 import matlab.engine
+import rospkg
 
 # from std_srvs.srv import Empty
 # from std_msgs.msg import String
@@ -209,7 +210,7 @@ class MoveGroupPythonIntefaceTutorial(object):
 		joint_goal[2] = 145*pi/180
 		joint_goal[3] = 92*pi/180 #-88+180
 		joint_goal[4] = -33*pi/180
-		joint_goal[5] = -90*pi/180
+		joint_goal[5] = 90*pi/180
 
 		self.arm_group.set_joint_value_target(joint_goal)
 		return self.arm_group.go(wait=True)
@@ -318,7 +319,8 @@ def save_file(Matrix):
 		while j<Col:
 			line = line+str(Matrix[i][j])+" "
 			j = j+1
-		f = open("../cw_kinova/src/kortex_tools/calibration_tools/Robot_fb.txt", "a")
+		file_path = rospkg.RosPack().get_path('kortex_tools')+"/calibration_tools/Robot_fb.txt"
+		f = open(file_path, "a")
 		f.write(line)
 		f.write("\n")
 		i = i+1
@@ -350,7 +352,8 @@ def main():
 		step_pos = step_pos+ pi*np.ones(step_pos.shape) # deg
 	
 	global f
-	f = open("../cw_kinova/src/kortex_tools/calibration_tools/Robot_fb.txt", "w")
+	file_path = rospkg.RosPack().get_path('kortex_tools')+"/calibration_tools/Robot_fb.txt"
+	f = open(file_path, "w")
 	actual_pose = example.get_cartesian_pose()
 
 	# close gripper to measure better
@@ -448,7 +451,8 @@ def main():
 	# Running matlab calibration code
 	print("\nMatlab searching for calibration matrix with acquired data...")
 	eng = matlab.engine.start_matlab()
-	s = '../cw_kinova/src/kortex_tools/calibration_tools'
+	s = rospkg.RosPack().get_path('kortex_tools')+"/calibration_tools"
+	# s = '../cw_kinova/src/kortex_tools/calibration_tools'
 	eng.cd(s, nargout=0)
 	eng.Calibration_matirx_finder()
 	eng.quit

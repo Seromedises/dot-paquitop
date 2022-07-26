@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import imp
 import sys
 # from threading import active_count, get_ident
 import time
@@ -18,6 +19,7 @@ import cv2
 import matlab.engine
 from rospy.client import spin
 import copy
+import rospkg
 
 # from std_srvs.srv import Empty
 # from std_msgs.msg import String
@@ -501,8 +503,8 @@ def main():
 
 					
 				else:
-				
-					Cal_matr = np.loadtxt("../cw_kinova/src/kortex_tools/calibration_tools/Calib_Matrix.txt", delimiter=",")
+					file = rospkg.RosPack().get_path('kortex_tools')+"/calibration_tools/Calib_Matrix.txt"
+					Cal_matr = np.loadtxt(file, delimiter=",")
 					feed_matr = example.ValidateMatrix(6) #metti 5 o 6 a seconda del giunto in cui e' posta la camera
 					
 					Robot_matr = np.matmul(Cal_matr,Cam_matr)

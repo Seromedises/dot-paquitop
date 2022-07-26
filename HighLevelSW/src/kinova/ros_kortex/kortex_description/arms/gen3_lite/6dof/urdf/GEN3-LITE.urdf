@@ -185,4 +185,24 @@
     <dynamics damping="0" friction="0" />
     <safety_controller soft_upper="0" soft_lower="0" k_position="0" k_velocity="0" />
   </joint>
+  <!--Add Camera 
+  <link name="CAMERA">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size="6 13 25"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.06 0.13 0.25"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="CAMERA_CASE" type="fixed">
+    <origin xyz="-0.105 0 0.0285" rpy="0 -1.5708 0" />
+    <parent link="UPPER_WRIST" />
+    <child link="CAMERA" />
+  </joint> -->
 </robot>

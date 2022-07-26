@@ -7,6 +7,7 @@ import numpy as np
 import math
 from kortex_tools.srv import SaveData, SaveDataResponse
 import rospy
+import rospkg
 
 # from imutils.video import VideoStream
 # import argparse
@@ -128,7 +129,8 @@ def save_file(Matrix):
         while j<Col:
             line = line+str(Matrix[i][j])+" "
             j = j+1
-        f = open("../cw_kinova/src/kortex_tools/calibration_tools/Camera_fb.txt", "a")
+        file_path = rospkg.RosPack().get_path('kortex_tools')+"/calibration_tools/Camera_fb.txt"
+        f = open(file_path, "a")
         f.write(line)
         f.write("\n")
         i = i+1
@@ -137,7 +139,8 @@ def save_file(Matrix):
 
 def main():
     global f
-    f = open("../cw_kinova/src/kortex_tools/calibration_tools/Camera_fb.txt", "w")
+    file_path = rospkg.RosPack().get_path('kortex_tools')+"/calibration_tools/Camera_fb.txt"
+    f = open(file_path, "w")
     rospy.init_node('camera_data_save')
     rospy.Service("/my_gen3_lite/camera_server", SaveData, save_data)
     default = cv2.aruco.DICT_5X5_100

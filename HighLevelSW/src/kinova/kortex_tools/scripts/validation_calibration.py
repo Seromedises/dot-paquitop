@@ -15,13 +15,14 @@ from math import pi
 from moveit_commander.conversions import pose_to_list
 import pyrealsense2 as rs
 import cv2
+import rospkg
 
 global first_joint_pos #at 30 cm from object
-first_joint_pos = [-0.4190,-0.5174, 1.5178, 1.0017, -0.8191, 0.5066-pi/2]
+first_joint_pos = [-0.4190,-0.5174, 1.5178, 1.0017, -0.8191, 0.5066-pi/2+pi]
 global second_joint_pos #at 40 cm from object
-second_joint_pos = [-0.5676, -0.2391, 1.9228, 0.9022, -0.9966, 0.5462-pi/2]
+second_joint_pos = [-0.5676, -0.2391, 1.9228, 0.9022, -0.9966, 0.5462-pi/2+pi]
 global third_joint_pos #at 50 cm from object
-third_joint_pos = [-0.8342, 0.0492, 2.2100, 0.6677, -1.1528, 0.7247-pi/2]
+third_joint_pos = [-0.8342, 0.0492, 2.2100, 0.6677, -1.1528, 0.7247-pi/2+pi]
 
 def TransformMatrix(joint_number,joint_values):
 	# Denavit-Hartenberg Modified parameters
@@ -162,7 +163,7 @@ class MoveGroupPythonIntefaceTutorial(object):
         joint_goal[2] = 145*pi/180
         joint_goal[3] = 92*pi/180 #-88+180
         joint_goal[4] = -33*pi/180
-        joint_goal[5] = -90*pi/180
+        joint_goal[5] = 90*pi/180
 
         self.arm_group.set_joint_value_target(joint_goal)
         return self.arm_group.go(wait=True)
@@ -205,8 +206,8 @@ def convert_depth_pixel_to_metric_coordinate(depth, pixel_x, pixel_y, camera_int
 
 def main():
     # Data for 
-    
-    Cal_matr = np.loadtxt("../cw_kinova/src/kortex_tools/calibration_tools/Calib_Matrix.txt", delimiter=",")
+    file = rospkg.RosPack().get_path('kortex_tools')+"/calibration_tools/Calib_Matrix.txt"
+    Cal_matr = np.loadtxt(file, delimiter=",")
 
     # Declaring variable of interest for robot
     example = MoveGroupPythonIntefaceTutorial()
@@ -254,7 +255,7 @@ def main():
     intrd = profile.get_stream(rs.stream.color).as_video_stream_profile().get_intrinsics()
     
     #declare save variable
-    save = FALSE
+    save = False
     acquisition=0
     # print variable
     X30 = np.zeros((9,10))
@@ -274,7 +275,8 @@ def main():
         # f = open("../cw_kinova/src/kortex_tools/calibration_tools/30cm/Mat_0-c.txt", "w")
         mat_0c = np.matmul(feedback_robot,Cal_matr)
         # f.write(mat_0c)
-        np.savetxt('../cw_kinova/src/kortex_tools/calibration_tools/30cm/Mat_0-c.txt', mat_0c, delimiter=" ") 
+        file = rospkg.RosPack().get_path('kortex_tools')+"/calibration_tools/"
+        np.savetxt(file + '30cm/Mat_0-c.txt', mat_0c, delimiter=" ") 
 
         print('stop the camera acquisition with "Q" or "esc" when all aruco marker are detected')
         print_data = [(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0)]
@@ -314,7 +316,7 @@ def main():
                 # for (markerCorner, markerID) in zip(corners, ids):# (corners, ids): 
                 if len(ids) == 9:
                     # control to save the center of Aruko markers
-                    save = TRUE
+                    save = True
                     # f = open("../cw_kinova/src/kortex_tools/calibration_tools/Validation_experiment30cm.txt", "w")
                     # f.write("X\t\tY\t\tZ\n")
 
@@ -353,7 +355,7 @@ def main():
                 
                 if save:
                     print(str(print_data)+"\n\n")
-                    save = 0  
+                    save = False
                 """    
                 i=0
                 while i<len(print_data) and len(ids) == 9:
@@ -381,7 +383,8 @@ def main():
         # f = open("../cw_kinova/src/kortex_tools/calibration_tools/40cm/Mat_0-c.txt", "w")
         mat_0c = np.matmul(feedback_robot,Cal_matr)
         # f.write(mat_0c)
-        np.savetxt('../cw_kinova/src/kortex_tools/calibration_tools/40cm/Mat_0-c.txt', mat_0c, delimiter=" ") 
+        file = rospkg.RosPack().get_path('kortex_tools')+"/calibration_tools/"
+        np.savetxt(file + '40cm/Mat_0-c.txt', mat_0c, delimiter=" ") 
         
         print('stop the camera acquisition with "Q" or "esc" when all aruco marker are detected')
         print_data = [(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0)]
@@ -421,7 +424,7 @@ def main():
                 # for (markerCorner, markerID) in zip(corners, ids):# (corners, ids): 
                 if len(ids) == 9:
                     # control to save the center of Aruko markers
-                    save = TRUE
+                    save = True
                     # f = open("../cw_kinova/src/kortex_tools/calibration_tools/Validation_experiment40cm.txt", "w")
                     # f.write("X\t\tY\t\tZ\n")
 
@@ -460,7 +463,7 @@ def main():
                 
                 if save:
                     print(str(print_data)+"\n\n")
-                    save = 0  
+                    save = False 
                 """  
                 i=0
                 while i<len(print_data) and len(ids) == 9:
@@ -488,7 +491,8 @@ def main():
         # f = open("../cw_kinova/src/kortex_tools/calibration_tools/50cm/Mat_0-c.txt", "w")
         mat_0c = np.matmul(feedback_robot,Cal_matr)
         # f.write(mat_0c)
-        np.savetxt('../cw_kinova/src/kortex_tools/calibration_tools/50cm/Mat_0-c.txt', mat_0c, delimiter=" ") 
+        file = rospkg.RosPack().get_path('kortex_tools')+"/calibration_tools/"
+        np.savetxt(file + '50cm/Mat_0-c.txt', mat_0c, delimiter=" ") 
         
         print('stop the camera acquisition with "Q" or "esc" when all aruco marker are detected')
         print_data = [(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0),(0,0,0)]
@@ -528,7 +532,7 @@ def main():
                 # for (markerCorner, markerID) in zip(corners, ids):# (corners, ids): 
                 if len(ids) == 9:
                     # control to save the center of Aruko markers
-                    save = TRUE
+                    save = True
                     # f = open("../cw_kinova/src/kortex_tools/calibration_tools/Validation_experiment50cm.txt", "w")
                     # f.write("X\t\tY\t\tZ\n")
 
@@ -567,7 +571,7 @@ def main():
                 
                 if save:
                     print(str(print_data)+"\n\n")
-                    save = 0        
+                    save = False       
                 """    
                 i=0
                 while i<len(print_data) and len(ids) == 9:
@@ -592,18 +596,18 @@ def main():
         acquisition = acquisition+1
     
     # processing the savatage
+    file = rospkg.RosPack().get_path('kortex_tools')+"/calibration_tools/"
+    np.savetxt(file + '30cm/X30.txt', X30, delimiter=" ")
+    np.savetxt(file + '30cm/Y30.txt', Y30, delimiter=" ")
+    np.savetxt(file + '30cm/Z30.txt', Z30, delimiter=" ")
 
-    np.savetxt('../cw_kinova/src/kortex_tools/calibration_tools/30cm/X30.txt', X30, delimiter=" ")
-    np.savetxt('../cw_kinova/src/kortex_tools/calibration_tools/30cm/Y30.txt', Y30, delimiter=" ")
-    np.savetxt('../cw_kinova/src/kortex_tools/calibration_tools/30cm/Z30.txt', Z30, delimiter=" ")
+    np.savetxt(file + '40cm/X40.txt', X40, delimiter=" ")
+    np.savetxt(file + '40cm/Y40.txt', Y40, delimiter=" ")
+    np.savetxt(file + '40cm/Z40.txt', Z40, delimiter=" ")
 
-    np.savetxt('../cw_kinova/src/kortex_tools/calibration_tools/40cm/X40.txt', X40, delimiter=" ")
-    np.savetxt('../cw_kinova/src/kortex_tools/calibration_tools/40cm/Y40.txt', Y40, delimiter=" ")
-    np.savetxt('../cw_kinova/src/kortex_tools/calibration_tools/40cm/Z40.txt', Z40, delimiter=" ")
-
-    np.savetxt('../cw_kinova/src/kortex_tools/calibration_tools/50cm/X50.txt', X50, delimiter=" ")
-    np.savetxt('../cw_kinova/src/kortex_tools/calibration_tools/50cm/Y50.txt', Y50, delimiter=" ")
-    np.savetxt('../cw_kinova/src/kortex_tools/calibration_tools/50cm/Z50.txt', Z50, delimiter=" ")
+    np.savetxt(file + '50cm/X50.txt', X50, delimiter=" ")
+    np.savetxt(file + '50cm/Y50.txt', Y50, delimiter=" ")
+    np.savetxt(file + '50cm/Z50.txt', Z50, delimiter=" ")
 
 
 if __name__ == '__main__':

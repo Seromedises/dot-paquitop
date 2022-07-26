@@ -207,5 +207,32 @@
       <axis xyz="0 0 1" />
       <limit lower="0" upper="0" effort="0" velocity="0" />
     </joint>
+    <!-- Add Camera -->
+    <link name="CAMERA">
+      <visual>
+        <!-- with camera on 5th link <origin xyz="0 0.095 -0.02" rpy="0 0 0" />-->
+        <origin xyz="-0.0 0.10 -0.02" rpy="0 0 0" /><!-- with camera on 6th link-->
+        <geometry>
+          <box size="0.1 0.12 0.04"/>
+        </geometry>
+        <material name="white">
+          <color rgba="1 1 1 1"/>
+        </material>
+      </visual>
+      <collision>
+        <!-- with camera on 5th link <origin xyz="0 0.095 -0.02" rpy="0 0 0" />-->
+        <origin xyz="-0.0 0.10 0.02" rpy="0 0 0" /><!-- with camera on 6th link-->
+        <geometry>
+          <box size="0.1 0.12 0.04"/>
+        </geometry>
+	    </collision>
+   </link>
+   <joint name="CAMERA_CASE" type="fixed">
+      <!-- with camera on 5th link <origin xyz="-0.105 0 0.0285" rpy="0 -1.5708 0" />
+      <parent link="${prefix}upper_wrist_link" />-->
+      <origin xyz="-0.0 0.0 0.0" rpy="3.14 0 1.570" /> <!-- with camera on 6th link-->
+      <parent link="${prefix}end_effector_link"/>
+      <child link="CAMERA" />
+   </joint>
   </xacro:macro>
 </robot>
