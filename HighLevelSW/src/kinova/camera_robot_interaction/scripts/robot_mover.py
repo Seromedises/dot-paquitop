@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import imp
 import sys
 # from threading import active_count, get_ident
 import time
@@ -15,10 +14,10 @@ from math import pi
 from moveit_commander.conversions import pose_to_list
 from camera_robot_interaction.srv import *
 # import pyrealsense2 as rs
-import cv2
-import matlab.engine
-from rospy.client import spin
-import copy
+# import cv2
+# import matlab.engine
+# from rospy.client import spin
+# import copy
 import rospkg
 
 # from std_srvs.srv import Empty
