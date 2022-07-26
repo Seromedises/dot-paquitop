@@ -641,8 +641,8 @@ def main():
 			example.reach_cartesian_pose(pose=far_pose, tolerance=0.01, constraints=None)
 		"""	
 
-		for i in box_name:
-			scene.remove_world_object(i)
+		# for i in box_name:
+		# 	scene.remove_world_object(i)
 
 	
 
