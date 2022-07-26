@@ -71,8 +71,8 @@ def MatrixCAM(pixel_x, pixel_y, original_depth, intrd):
     dep = original_depth[pixel_y-top:pixel_y-low, pixel_x-1:pixel_x+1].astype(float)
     dist, _, _, _ = cv2.mean(dep)
     Low = np.array(convert_depth_pixel_to_metric_coordinate(dist, pixel_x, pixel_y-pix_space, intrd))
-    Xvector = Sx - Center
-    Yvector = Low - Center
+    Xvector = -(Sx - Center)
+    Yvector = -(Low - Center)
    
     # ricorda: vettore tra due punti e' finale-iniziale
     # vengono calcolati i 4 possibili sistemi di riferimento in modo da evitare
