@@ -14,7 +14,7 @@ import numpy as np
 from math import pi
 from moveit_commander.conversions import pose_to_list
 from camera_robot_interaction.srv import *
-import pyrealsense2 as rs
+# import pyrealsense2 as rs
 import cv2
 import matlab.engine
 from rospy.client import spin
