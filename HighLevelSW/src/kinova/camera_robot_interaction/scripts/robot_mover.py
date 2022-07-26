@@ -416,6 +416,7 @@ def main():
 
 	# open the gripper
 	example.reach_gripper_position(1)
+	example.rest_pos()
 
 	# adding box that is present in real world
 	"""
