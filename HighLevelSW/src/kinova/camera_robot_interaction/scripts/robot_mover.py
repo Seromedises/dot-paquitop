@@ -204,12 +204,21 @@ class MoveGroupPythonIntefaceTutorial(object):
 	def rest_pos(self):
 		self.arm_group.set_goal_joint_tolerance(0.01)
 		joint_goal = self.arm_group.get_current_joint_values()
-		joint_goal[0] = -3.0*pi/180
-		joint_goal[1] = 21*pi/180
-		joint_goal[2] = 145*pi/180
-		joint_goal[3] = 92*pi/180 #-88+180
-		joint_goal[4] = -33*pi/180
-		joint_goal[5] = 90*pi/180
+
+		# joint_goal[0] = -3.0*pi/180
+		# joint_goal[1] = 21*pi/180
+		# joint_goal[2] = 145*pi/180
+		# joint_goal[3] = 92*pi/180 #-88+180
+		# joint_goal[4] = -33*pi/180
+		# joint_goal[5] = 90*pi/180
+
+		joint_goal[0] = 0.0*pi/180
+		joint_goal[1] = 105.0*pi/180
+		joint_goal[2] = 148.0*pi/180
+		joint_goal[3] = 90.0*pi/180
+		joint_goal[4] = 45.0*pi/180
+		joint_goal[5] = 90.0*pi/180
+
 
 		self.arm_group.set_joint_value_target(joint_goal)
 		return self.arm_group.go(wait=True)
