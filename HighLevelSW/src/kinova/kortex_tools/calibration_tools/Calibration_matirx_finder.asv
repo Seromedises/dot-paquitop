@@ -18,8 +18,7 @@ CAM = readmatrix(path(1));
 GND = readmatrix(string(fullfile(listing(1).folder,'GND.txt')));
 
 % first iteration
-x0 = [0, -15*pi/180, 0, 0, 0.0, -0];
-
+x0 = [0, 0, 0, 0, 0.0, -0];
 % x0 = [0 0 0 0 0 0];
 
 % calibration matrix
