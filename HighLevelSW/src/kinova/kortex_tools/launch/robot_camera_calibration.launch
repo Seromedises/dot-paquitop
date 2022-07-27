@@ -11,7 +11,7 @@
 	<!-- Robot namespace -->
     <arg name="robot_name" default="my_gen3_lite"/>
     <arg name="start_delay_seconds" default="1.5"/>
-
+    
 	<node name="camera_server" pkg="kortex_tools" type="camera_server.py" output="screen" >
   	</node>
 

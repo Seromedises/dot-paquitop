@@ -13,7 +13,6 @@ from math import pi
 from moveit_commander.conversions import pose_to_list
 # from kortex_planner.srv import *
 from kortex_tools.srv import *
-import pyrealsense2 as rs
 import cv2
 import matlab.engine
 import rospkg
