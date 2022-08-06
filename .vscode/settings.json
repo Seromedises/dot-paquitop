@@ -1,4 +1,5 @@
 {
   "cmake.sourceDirectory": "${workspaceFolder}/HighLevelSW/src",
-  "cmake.buildDirectory": "${workspaceFolder}/HighLevelSW/build"
+  "cmake.buildDirectory": "${workspaceFolder}/HighLevelSW/build",
+  "cmake.configureOnOpen": true
 }
