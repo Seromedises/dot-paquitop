@@ -6,4 +6,5 @@ The folder [HighLevelSW/src](https://github.com/Seromedises/dot-paquitop/tree/ma
 
 The High Level is structured in Subfolder where each perform a particular task:
 
-- [follow_waypoints](src/follow_waypoints)
+- [follow_waypoints](src/follow_waypoints) contain the code that performs the periodically pubblication of the next waypoint when the actual waypoint is sufficient near to robot platform;
+- [gui_interface](src/gui_interface) contain the code that produce the two graphic user interfaces that allow to the amministrative user and to the patient to interact with the robot during his working.
