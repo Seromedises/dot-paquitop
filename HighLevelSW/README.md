@@ -15,4 +15,12 @@ The High Level is structured in Subfolder where each perform a particular task:
   - [kortex_movement](src/kinova/kortex_movement/) is the package that performs all the general purpose movements executed by the robotic arm.
 
   - [kortex_tools](src/kinova/kortex_tools/) is the package that performs all the tools useful for the calibration between RGB-D camera and robotic arm.
-  - []
+  
+  - [ros_kortex](src/kinova/ros_kortex/) contain all the [ROS packages developed by Kinova](https://github.com/Kinovarobotics/ros_kortex) that allow the initialization of Robotic Arm in ROS.
+
+- [navstack_pub](src/navstack_pub) contain all the launch files and the configuration parameters to correctly use the packages used by the autonomous navigation. The packages are:
+  - [Extended Kalman Filter](http://wiki.ros.org/robot_pose_ekf) used to have a better estimate of position of the robot;
+  - [Hector Maping](http://wiki.ros.org/hector_mapping) used to have the map of the enviroment;
+  - [Move Base](http://wiki.ros.org/move_base) used to plan the trajectory of the robot reading the obstacle occupancy from the map and the lidar;
+  - [Intel T265 Camera](http://wiki.ros.org/realsense2_camera) used for odometry node from camera;
+  - [Rplidar](http://wiki.ros.org/rplidar) used for start lidar node
