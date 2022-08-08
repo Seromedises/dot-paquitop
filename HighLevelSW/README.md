@@ -23,4 +23,6 @@ The High Level is structured in Subfolder where each perform a particular task:
   - [Hector Maping](http://wiki.ros.org/hector_mapping) used to have the map of the enviroment;
   - [Move Base](http://wiki.ros.org/move_base) used to plan the trajectory of the robot reading the obstacle occupancy from the map and the lidar;
   - [Intel T265 Camera](http://wiki.ros.org/realsense2_camera) used for odometry node from camera;
-  - [Rplidar](http://wiki.ros.org/rplidar) used for start lidar node
+  - [Rplidar](http://wiki.ros.org/rplidar) used for start lidar node.
+
+- [paquitop](src/paquitop)
