@@ -25,4 +25,41 @@ The High Level is structured in Subfolder where each perform a particular task:
   - [Intel T265 Camera](http://wiki.ros.org/realsense2_camera) used for odometry node from camera;
   - [Rplidar](http://wiki.ros.org/rplidar) used for start lidar node.
 
-- [paquitop](src/paquitop)
+- [paquitop](src/paquitop) this package contain the general launch for all the code that are required to use the platform. The most complete launch is [paquitop_twomachine.launch](src/paquitop/launch/paquitop_twomachine.launch), while the most complete without the use of the robotic arm is [paquitop_twomachine_kinovaless.launch](src/paquitop/launch/paquitop_twomachine_kinovaless.launch). The following packages launch specific node that are usefull for the overall functioning:
+
+  - [tf.launch](src/paquitop/launch/tf.launch) that launches all the static transform between the origins of the reference system of the elements that compose the system.
+  
+  - [rviz.launch](src/paquitop/launch/rviz.launch) that launches the visualizer of the ROS system.
+  
+  - [rviz_camera.launch](src/paquitop/launch/rviz_camera.launch) is a package that share the graphic visualization of RVIZ in the Graphic User Interface.
+
+## Installation instructions
+
+### ROS installation
+
+Follow these instruction yo install ROS on your PC:
+
+"""
+sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $ (lsb_release -sc) main" > /etc/apt/sources.list.d/roslatest.list'
+
+sudo apt install curl
+
+curl -s
+https://raw.githubusercontent.com/ros/rosdistro/master/ros.as c | sudo apt-key add -
+
+sudo apt update
+
+sudo apt install ros-melodic-desktop-full
+
+echo "source /opt/ros/melodic/setup.bash" >> ~/.bashrc
+
+source ~/.bashrc
+
+sudo apt install python-rosdep python-rosinstall pythonrosinstall-generator python-wstool build-essential
+
+sudo apt install python-rosdep
+
+sudo rosdep init
+
+rosdep update
+"""
