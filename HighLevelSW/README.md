@@ -2,6 +2,16 @@
 
 The folder [HighLevelSW/src](https://github.com/Seromedises/dot-paquitop/tree/main/HighLevelSW/src) collects all the file needed for the High Level funtioning of PAQUITOP platform.
 
+## Table of content
+
+- [High Level Software](#high-level-software)
+  - [Table of content](#table-of-content)
+  - [Subfolders Contained](#subfolders-contained)
+  - [Installation instructions](#installation-instructions)
+    - [ROS Installation](#ros-installation)
+    - [Catkin Make install](#catkin-make-install)
+    - [Conan Install](#conan-install)
+
 ## Subfolders Contained
 
 The High Level is structured in Subfolder where each perform a particular task:
@@ -35,17 +45,17 @@ The High Level is structured in Subfolder where each perform a particular task:
 
 ## Installation instructions
 
-### ROS installation
+### ROS Installation
 
 [ROS](http://wiki.ros.org/) is Robot Operating System, usefull to put in comunication all the components of the ropotic system.
 Follow these instruction yo install ROS on your PC:
 
-`
-sudo sh -c 'echo "deb <http://packages.ros.org/ros/ubuntu> $ (lsb_release -sc) main" > /etc/apt/sources.list.d/roslatest.list'
+```text
+sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $ (lsb_release -sc) main" > /etc/apt/sources.list.d/roslatest.list'
 
 sudo apt install curl
 
-curl -s <https://raw.githubusercontent.com/ros/rosdistro/master/ros.as> c | sudo apt-key add -
+curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.as c | sudo apt-key add -
 
 sudo apt update
 
@@ -62,7 +72,7 @@ sudo apt install python-rosdep
 sudo rosdep init
 
 rosdep update
-`
+```
 
 ### Catkin Make install
 
@@ -70,21 +80,21 @@ rosdep update
 
 The following instruction are usefull to install Catkin Make:
 
-`
+```text
 sudo apt-get install cmake python-catkin-pkg python-empy python-nose python-setuptools libgtest-dev build-essential
 
 sudo apt-get install ros-melodic-catkin
-`
+```
 
 If there are any problem to the compiler installation path, use this instructions:
 
-`
+```text
 sudo apt install ccache
 
 sudo /usr/sbin/update-ccache-symlinks
 
 export PATH="/usr/lib/ccache/:$PATH"
-`
+```
 
 ### Conan Install
 
