@@ -44,8 +44,7 @@ sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $ (lsb_release -sc) mai
 
 sudo apt install curl
 
-curl -s
-https://raw.githubusercontent.com/ros/rosdistro/master/ros.as c | sudo apt-key add -
+curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.as c | sudo apt-key add -
 
 sudo apt update
 
