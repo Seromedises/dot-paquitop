@@ -12,6 +12,9 @@ The folder [HighLevelSW/src](https://github.com/Seromedises/dot-paquitop/tree/ma
     - [Catkin Make install](#catkin-make-install)
     - [Conan Install](#conan-install)
     - [Matlab Engine](#matlab-engine)
+    - [OpenCV](#opencv)
+    - [Realsense](#realsense)
+    - [Compiling al the local ROS Code](#compiling-al-the-local-ros-code)
 
 ## Subfolders Contained
 
@@ -53,25 +56,15 @@ Follow these instruction yo install ROS on your PC:
 
 ```text
 sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $ (lsb_release -sc) main" > /etc/apt/sources.list.d/roslatest.list'
-
 sudo apt install curl
-
 curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.as c | sudo apt-key add -
-
 sudo apt update
-
 sudo apt install ros-melodic-desktop-full
-
 echo "source /opt/ros/melodic/setup.bash" >> ~/.bashrc
-
 source ~/.bashrc
-
 sudo apt install python-rosdep python-rosinstall pythonrosinstall-generator python-wstool build-essential
-
 sudo apt install python-rosdep
-
 sudo rosdep init
-
 rosdep update
 ```
 
@@ -83,7 +76,6 @@ The following instruction are usefull to install Catkin Make:
 
 ```text
 sudo apt-get install cmake python-catkin-pkg python-empy python-nose python-setuptools libgtest-dev build-essential
-
 sudo apt-get install ros-melodic-catkin
 ```
 
@@ -91,9 +83,7 @@ If there are any problem to the compiler installation path, use this instruction
 
 ```text
 sudo apt install ccache
-
 sudo /usr/sbin/update-ccache-symlinks
-
 export PATH="/usr/lib/ccache/:$PATH"
 ```
 
@@ -110,4 +100,78 @@ To install the Matlab engine write the following instructions in the **Matlab Co
 ```matlab
 cd (fullfile(matlabroot,'extern','engines','python'))
 system('sudo python setup.py install')
+```
+
+### OpenCV
+
+[OpenCV](https://opencv.org/) is a python library used to image and video manipulation. Is used in AI context to recognize the framed objects.
+To install the library use the following instruction: `sudo apt install python3-opencv`
+
+### Realsense
+
+[Realsense](https://github.com/IntelRealSense/realsense-ros) is a library usefull to interact with the camera developed by Intel, such as L515 and T265.
+
+The ROS package can be installed as follow:
+
+```text
+sudo apt install ros-melodic-ddynamic-reconfigure-* 
+sudo apt install ros-melodic-realsense2-*
+```
+
+The python library can be installed as follow:
+
+```text
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key F6E65AC044F831AC80A06380C8B3A55A6F3EFCDE || sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-key F6E65AC044F831AC80A06380C8B3A55A6F3EFCDE
+sudo add-apt-repository "deb https://librealsense.intel.com/Debian/apt-repo $(lsb_release -cs) main" -u
+sudo apt install librealsense2-dkms 
+sudo apt install librealsense2-utils 
+sudo apt install librealsense2-dev 
+sudo apt install librealsense2-dbg
+```
+
+### Compiling al the local ROS Code
+
+These are the instructions to run in a terminal to create the workspace, clone the paquitop repository and install the necessary ROS dependencies:
+
+```text
+sudo apt install python3 python3-pip
+sudo python3 -m pip install conan
+conan config set general.revisions_enabled=1
+conan profile new default --detect > /dev/null
+conan profile update settings.compiler.libcxx=libstdc++11 default
+mkdir -p catkin_workspace/src
+cd catkin_workspace/src
+git clone https://github.com/Seromedises/dot-paquitop.git
+cd ../
+rosdep install --from-paths src --ignore-src -y
+```
+
+Then, to build and source the workspace:
+
+```text
+catkin_make
+source devel/setup.bash
+```
+
+You can also build against one of the ARMv8 builds of the Kortex API with Conan if you specify the CONAN_TARGET_PLATFORM CMake argument when using catkin_make. The following platforms are supported:
+
+- Artik 710:
+
+```text
+catkin_make --cmake-args -DCONAN_TARGET_PLATFORM=artik710
+source devel/setup.bash
+```
+
+- IMX6:
+
+```text
+catkin_make --cmake-args -DCONAN_TARGET_PLATFORM=imx6
+source devel/setup.bash
+```
+
+- NVidia Jetson:
+
+```text
+catkin_make --cmake-args -DCONAN_TARGET_PLATFORM=jetson
+source devel/setup.bash
 ```
