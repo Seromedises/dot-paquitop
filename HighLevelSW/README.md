@@ -11,6 +11,7 @@ The folder [HighLevelSW/src](https://github.com/Seromedises/dot-paquitop/tree/ma
     - [ROS Installation](#ros-installation)
     - [Catkin Make install](#catkin-make-install)
     - [Conan Install](#conan-install)
+    - [Matlab Engine](#matlab-engine)
 
 ## Subfolders Contained
 
@@ -99,4 +100,14 @@ export PATH="/usr/lib/ccache/:$PATH"
 ### Conan Install
 
 [Conan](https://pypi.org/project/conan/) is a package that manage the execution of C and C++ code.
-The instruccion for
+The instruccion for install the package is `pip install conan`
+
+### Matlab Engine
+
+[Matlab engine](https://it.mathworks.com/help/matlab/matlab-engine-for-python.html) is a package that make possible the interaction between Matlab and Python. It makes possibile to execute Matlab scripts in a Python code.
+To install the Matlab engine write the following instructions in the **Matlab Command Window**:
+
+```matlab
+cd (fullfile(matlabroot,'extern','engines','python'))
+system('sudo python setup.py install')
+```
