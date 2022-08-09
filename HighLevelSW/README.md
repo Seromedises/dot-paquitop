@@ -40,12 +40,12 @@ The High Level is structured in Subfolder where each perform a particular task:
 [ROS](http://wiki.ros.org/) is Robot Operating System, usefull to put in comunication all the components of the ropotic system.
 Follow these instruction yo install ROS on your PC:
 
-```
-sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $ (lsb_release -sc) main" > /etc/apt/sources.list.d/roslatest.list'
+`
+sudo sh -c 'echo "deb <http://packages.ros.org/ros/ubuntu> $ (lsb_release -sc) main" > /etc/apt/sources.list.d/roslatest.list'
 
 sudo apt install curl
 
-curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.as c | sudo apt-key add -
+curl -s <https://raw.githubusercontent.com/ros/rosdistro/master/ros.as> c | sudo apt-key add -
 
 sudo apt update
 
@@ -62,7 +62,7 @@ sudo apt install python-rosdep
 sudo rosdep init
 
 rosdep update
-```
+`
 
 ### Catkin Make install
 
@@ -70,18 +70,23 @@ rosdep update
 
 The following instruction are usefull to install Catkin Make:
 
-```
+`
 sudo apt-get install cmake python-catkin-pkg python-empy python-nose python-setuptools libgtest-dev build-essential
 
 sudo apt-get install ros-melodic-catkin
-```
+`
 
 If there are any problem to the compiler installation path, use this instructions:
 
-```
+`
 sudo apt install ccache
 
-sudo /usr/sbin/update-ccache-symlinks 
+sudo /usr/sbin/update-ccache-symlinks
 
 export PATH="/usr/lib/ccache/:$PATH"
-```
+`
+
+### Conan Install
+
+[Conan](https://pypi.org/project/conan/) is a package that manage the execution of C and C++ code.
+The instruccion for
