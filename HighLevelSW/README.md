@@ -37,9 +37,10 @@ The High Level is structured in Subfolder where each perform a particular task:
 
 ### ROS installation
 
+[ROS](http://wiki.ros.org/) is Robot Operating System, usefull to put in comunication all the components of the ropotic system.
 Follow these instruction yo install ROS on your PC:
 
-```
+``` 
 sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $ (lsb_release -sc) main" > /etc/apt/sources.list.d/roslatest.list'
 
 sudo apt install curl
@@ -62,3 +63,7 @@ sudo rosdep init
 
 rosdep update
 ```
+
+### Catkin Make install
+
+[Catkin Make](wiki.ros.org/catkin) is usefull to compile local packages that are not downoladed from an online repository, using  `sudo apt`
