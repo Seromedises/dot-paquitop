@@ -43,9 +43,6 @@ class PAQUITOP_MAIN:
         self.path_ready_publisher = rospy.Publisher('/path_ready', Empty, queue_size=1)
         self.tab_ext = rospy.Publisher("/extract_tablet", Bool, queue_size=1)
         self.current_bed = rospy.Publisher("/current_bed", String, queue_size=1)
-
-        
-        
         
     def pub_pose(self, data, start):
         
