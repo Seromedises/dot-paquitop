@@ -173,7 +173,7 @@ class PAQUITOP_MAIN:
                 print("Waiting for Goal Reached")
                 while not self.ARM_UP and not rospy.is_shutdown():
                     move_base_pub = MoveBaseActionResult()
-                    move_base_pub.result = 3
+                    move_base_pub.status.status = 3
                     self.move_base_goal_publisher.publish(move_base_pub)
                     
                     if self.GOAL_REACHED:
