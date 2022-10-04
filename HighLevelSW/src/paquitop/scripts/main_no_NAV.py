@@ -174,7 +174,7 @@ class PAQUITOP_MAIN:
                 while not self.ARM_UP and not rospy.is_shutdown():
                     move_base_pub = MoveBaseActionResult()
                     move_base_pub.result = 3
-                    self.move_base_goal_publisher(move_base_pub)
+                    self.move_base_goal_publisher.publish(move_base_pub)
                     
                     if self.GOAL_REACHED:
                         # self.pub_pose(next_goal,False)
