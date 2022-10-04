@@ -65,6 +65,7 @@ class DOT_PAQUITOP_GUI(MDApp):
         self.orient_gui = rospy.Publisher("/orient_gui", Bool,queue_size=10)
         self.face_publisher = rospy.Publisher("/faces", face_detection, queue_size=5)
         self.patient_publisher = rospy.Publisher("/patient_data", patient_assistance, queue_size=1)
+        # self.camera_initialized = rospy.Publisher("/camera_initialized",Bool, queue_size=1)
         rospy.Subscriber("/patient_name", String, self.NameReceiver)
         rospy.Subscriber("/move_base/result", MoveBaseActionResult, self.move_base_goal_reached)
         rospy.Subscriber("/tablet_extracted", Bool, self.faceActivation)

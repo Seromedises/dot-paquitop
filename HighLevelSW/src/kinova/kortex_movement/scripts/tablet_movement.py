@@ -477,6 +477,12 @@ def extract_tablet(data):
 def retrain_tablet(data):
     global rest_position
     if data.data and not rest_position:
+        
+        msg = Bool()
+        msg.data = False
+        gui_orient_stop = rospy.Publisher("/orient_gui", Bool, queue_size=1)
+        gui_orient_stop.publish(msg)
+
         gripper_open = 0.0
         gripper_close = 1.0
         reach = False
