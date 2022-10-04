@@ -150,7 +150,6 @@ class PAQUITOP_MAIN:
 
     def main(self):
         
-        
         while not rospy.is_shutdown():
 
             # database variables
@@ -162,9 +161,9 @@ class PAQUITOP_MAIN:
             self.assistance_patient = []
             self.published_pose = []
 
-            self.pose_goal = rospy.wait_for_message("/pub_pose",String)
-            self.pose_goal = self.pose_goal.data
-            self.pub_pose(self.pose_goal,start=True)
+            # self.pose_goal = rospy.wait_for_message("/pub_pose",String)
+            # self.pose_goal = self.pose_goal.data
+            # self.pub_pose(self.pose_goal,start=True)
             count = 0
             while count < self.num_el and not rospy.is_shutdown():
                 # next_goal = String()
@@ -176,13 +175,13 @@ class PAQUITOP_MAIN:
                 print("Waiting for Goal Reached")
                 while not self.ARM_UP and not rospy.is_shutdown():
                     
+                    self.GOAL_REACHED = True
                     if self.GOAL_REACHED:
-                        self.pub_pose(next_goal,False)
+                        # self.pub_pose(next_goal,False)
                         print("Waiting for blood id bag")
                                             
                         id_bag = rospy.wait_for_message("/id", Int64 )
-                        # 
-
+                        
                         if float(id_bag.data) % 2 == 0:
                             ALREADY_RECIVED_BAG = False
                             for recived_bag in self.blood_bag:
@@ -263,7 +262,7 @@ class PAQUITOP_MAIN:
                     self.patient_data(p_data)
                     self.goON()
                     rospy.wait_for_message("/tablet_stored", Bool)
-                    self.start()                   
+                    # self.start()                   
                     
                     count = count +1
                     print("end of cycle")
@@ -271,8 +270,6 @@ class PAQUITOP_MAIN:
                 
             
             first_line = ["Letto", "Nome", "Id Paziente", "Id Sacca", "Match", "Temp Paziente", "Assistenza"]
-            # folder = rospkg.RosPack().get_path('paquitop')
-            # folder = folder + '/../../../result/patient_result.csv'
             folder = os.path.normpath(os.path.expanduser("~/Desktop"))
             folder = folder + "/result/patient_result.csv"
             f = open(folder,'w')
