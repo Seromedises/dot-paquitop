@@ -43,6 +43,7 @@ class PAQUITOP_MAIN:
         self.path_ready_publisher = rospy.Publisher('/path_ready', Empty, queue_size=1)
         self.tab_ext = rospy.Publisher("/extract_tablet", Bool, queue_size=1)
         self.current_bed = rospy.Publisher("/current_bed", String, queue_size=1)
+        self.move_base_goal_publisher = rospy.Publisher("/move_base/result", MoveBaseActionResult, queue_size=2)
         
     def pub_pose(self, data, start):
         
@@ -171,8 +172,10 @@ class PAQUITOP_MAIN:
                 
                 print("Waiting for Goal Reached")
                 while not self.ARM_UP and not rospy.is_shutdown():
+                    move_base_pub = MoveBaseActionResult()
+                    move_base_pub.result = 3
+                    self.move_base_goal_publisher(move_base_pub)
                     
-                    self.GOAL_REACHED = True
                     if self.GOAL_REACHED:
                         # self.pub_pose(next_goal,False)
                         print("Waiting for blood id bag")
