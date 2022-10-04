@@ -502,7 +502,7 @@ def retrain_tablet(data):
         
         # tablet store approach
         joint[0] = 53.69
-        joint[1] = 33.71
+        joint[1] = 23.71
         joint[2] = -130.425
         joint[3] = 52.569
         joint[4] = -102.714
