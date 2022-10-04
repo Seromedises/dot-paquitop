@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+
+<launch>
+
+	<machine name="server" address="192.168.8.219" env-loader="~/dot-paquitop/HighLevelSW/server-loader.sh" default = "true" user="lorenzo"/>
+	<machine name="client" address="192.168.8.229" env-loader="~/dot-paquitop/HighLevelSW/env-loader.sh" default = "true" user = "paquitop" timeout="20"/>
+
+	<!-- Transformation Relationship -->
+	<include file="$(find paquitop)/launch/tf.launch" >
+		<!-- <arg name="machine" value="server" /> -->
+	</include>
+      
+	<!-- Slam Node -->
+  <!-- Subscribe: /scan and /tf -->
+  <!-- Publish: /map, /poseupdate and /map->/odom -->
+	<include file="$(find navstack_pub)/launch/hector.launch" >
+   		<!-- <arg name="machine" value="server" /> -->
+	</include>
+
+  <!-- Move Base Node -->
+  <!-- Subscribe: /move_base_simple/goal -->
+  <!-- Publish: /cmd_vel-->
+	<include file="$(find navstack_pub)/launch/move_base.launch" > 
+	</include>
+	
+	<!-- Follow Waypoints Node -->
+  <!-- Subscribe: /addpose /waypoints -->
+  <!-- Publish: /move_base_simple/goal-->
+	<include file="$(find follow_waypoints)/launch/follow_waypoints.launch" >
+		<!--<arg name="machine" value="server" />-->
+	</include>
+
+	<!-- RVIZ launcher-->
+  <arg name="node_start_delay3" default="3.0" />
+	<node machine="server" type="rviz" name="rviz" pkg="rviz" args="-d $(find paquitop)/rviz/config.rviz" launch-prefix="bash -c 'sleep $(arg node_start_delay3); $0 $@' "/>
+
+	<!--Camera RVIZ -->
+	<include file="$(find paquitop)/launch/rviz_camera.launch"/> 
+<!-- urdf launcher -->
+	<!--<include file="$(find paquitop)/launch/urdf.launch" />-->
+		
+	<node machine="server" name="main_no_NAV" pkg="paquitop" type="main_no_NAV.py" output="screen"/>
+
+	<arg name="node_start_delay_gui" default="5.0" />
+	<node machine="server" name="dot_server_GUI" pkg="gui_interface" type="dot_server_GUI.py" launch-prefix="bash -c 'sleep $(arg node_start_delay_gui); $0 $@' "/>
+
+	
+
+<!--///////////////////////////////////////////////////// CLIIENT LAUNCH ///////////////////////////////////////////////////////////////////-->
+	<!-- Base Controller Using Arduino -->
+	<!-- -->
+	<include file="$(find paquitop)/launch/rosserial_python.launch"> 
+	<!--	<arg name="machine" value="client" />-->
+	</include>
+
+  <!-- Lidar Data Publisher Using RPLIDAR from rplidar_ros -->
+  <!-- Used for obstacle avoidance and can be used for mapping --> 
+  <!-- Publish: /scan -->
+	<include file="$(find navstack_pub)/launch/rplidar.launch" > 
+		<!--<arg name="machine" value="client" />-->
+	</include>
+
+	<!-- Stereocamera T265 node -->
+	<!-- Publish: /camera/accel/imu_info /camera/accel/metadata /camera/accel/sample /camera/fisheye1/camera_info
+				/camera/fisheye1/image_raw /camera/fisheye1/metadata /camera/fisheye2/camera_info /camera/fisheye2/image_raw
+				/camera/fisheye2/metadata /camera/gyro/imu_info /camera/gyro/metadata /camera/gyro/sample /camera/odom/metadata
+				/camera/odom/sample -->
+	<include file="$(find navstack_pub)/launch/t265.launch" > 
+		<!--<arg name="machine" value="client" />-->
+	</include>
+
+	<!-- robot pose EKF -->
+  <!-- subscribe to camera/odom camera/imu and /scanmather (odom of hector slam) -->
+  <!-- publish /odom->/base_footprint -->
+  <include file="$(find navstack_pub)/launch/ekf_template.launch"> 
+		<!--<arg name="machine" value="client" />-->
+	</include>
+
+  <!-- AMCL Node -->
+  <!-- Subscribe: /map /scan and /tf -->
+  <!-- Publish: /amcl_pose and /map->/odom -->
+	<!--<include file="$(find navstack_pub)/launch/amcl.launch"/>-->
+
+	<node machine="client" name="dot_paquitop_GUI_ITA" pkg="gui_interface" type="dot_paquitop_GUI_ITA.py" output="screen" />
+
+<!--///////////////////////////////////////////////////// KINOVA LAUNCH ///////////////////////////////////////////////////////////////////-->
+
+	<arg name="arm" default="gen3_lite"/>
+	<arg name="robot_name" default="my_$(arg arm)"/>
+  <node machine="client" name="kinova_teleop" pkg="kortex_movement" type="kinova_teleop.py" ns="$(arg robot_name)" respawn="true" output="screen"/>
+
+  <node machine="server" name="tablet_movement" pkg="kortex_movement" type="tablet_movement.py" ns="$(arg robot_name)" respawn="true" output="screen"/>
+
+	<node machine="server" name="rest_position" pkg="kortex_movement" type="rest_position.py" ns="$(arg robot_name)" respawn="true" output="screen"> 
+   	<param name="robot_name" value="$(arg robot_name)"/>
+  </node>
+
+	<node machine="client" name="gui_orient" pkg="gui_interface" type="gui_orient.py" ns="$(arg robot_name)" output="screen" respawn="true"/>
+
+	<include file="$(find paquitop)/launch/kortex_driver_2pc.launch"> 
+		<param name="start_rviz" value="false"/>
+		<param name="start_moveit" value="false"/>
+	</include>
+
+</launch>
