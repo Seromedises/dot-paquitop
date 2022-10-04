@@ -38,10 +38,10 @@
 	<include file="$(find paquitop)/launch/rviz_camera.launch"/> 
 <!-- urdf launcher -->
 	<!--<include file="$(find paquitop)/launch/urdf.launch" />-->
-		
-	<node machine="server" name="main_no_NAV" pkg="paquitop" type="main_no_NAV.py" output="screen"/>
-
+	
 	<arg name="node_start_delay_gui" default="5.0" />
+	<node machine="server" name="main_no_NAV" pkg="paquitop" type="main_no_NAV.py" output="screen" launch-prefix="bash -c 'sleep $(arg node_start_delay_gui); $0 $@' "/>
+
 	<node machine="server" name="dot_server_GUI" pkg="gui_interface" type="dot_server_GUI.py" launch-prefix="bash -c 'sleep $(arg node_start_delay_gui); $0 $@' "/>
 
 	
