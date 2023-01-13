@@ -4,9 +4,13 @@ import numpy as np
 import scipy.fftpack as fftpack
 import matplotlib.pyplot as plt
 import rospy
-from std_msgs.msg import Float64
+from kortex_driver.msg import BaseCyclic_Feedback
 
 def filtering_fct(raw_signal):
+  
+  """span = 150
+  raw_signal = raw_signal[-span:]"""
+
   dct = fftpack.dct(raw_signal, norm="ortho")
   dct[8:] = 0
   return fftpack.idct(dct, norm="ortho")
@@ -36,43 +40,53 @@ def plot_fct_raw(raw,filterd,time):
       else:
           plt.show()
 
-def plot_fdt(filterd):
+def plot_fct(filterd,title):
 
   
-  plt.plot(range(len(filterd)-1), filterd)
+  plt.plot(filterd)
+  plt.title(title)
+  plt.xlabel("numbers of acquisitions")
+  plt.ylabel("Force [N]")
+  plt.grid()
+  plt.ylim(ymax = 3, ymin = -3)
   plt.draw()
   plt.pause(0.00001)
   plt.clf()
-  """else:
-      plt.show()"""
+  
 
 
 def lenght_ctrl(variable, span = 100):
   
   if len(variable) > span:
-    variable = variable[-span]
+    variable = variable[-span:]
   
   return variable
 
 
 def main():
   rospy.init_node("impedance_control")
-  Fx, Fy, Fz, Tx, Ty, Tz = []
-
-  rospy.Subscriber("/my_gen3_lite/base_feedback/base/tool_external_wrench_force_x", Float64, Fx.append())
-  rospy.Subscriber("/my_gen3_lite/base_feedback/base/tool_external_wrench_force_y", Float64, Fy.append())
-  rospy.Subscriber("/my_gen3_lite/base_feedback/base/tool_external_wrench_force_z", Float64, Fz.append())
-  rospy.Subscriber("/my_gen3_lite/base_feedback/base/tool_external_wrench_torque_x", Float64, Tx.append())
-  rospy.Subscriber("/my_gen3_lite/base_feedback/base/tool_external_wrench_torque_y", Float64, Ty.append())
-  rospy.Subscriber("/my_gen3_lite/base_feedback/base/tool_external_wrench_torque_z", Float64, Tz.append())
-  
+  Fx, Fy, Fz, Tx, Ty, Tz = [], [], [], [], [], []
+    
   while not rospy.is_shutdown():
-    Fx = filtering_fct(lenght_ctrl(Fx))
-    Fy = filtering_fct(lenght_ctrl(Fy))
-    Fz = filtering_fct(lenght_ctrl(Fz))
-    Tx = filtering_fct(lenght_ctrl(Tx))
-    Ty = filtering_fct(lenght_ctrl(Ty))
-    Tz = filtering_fct(lenght_ctrl(Tz))
+    data = rospy.wait_for_message("/my_gen3_lite/base_feedback",BaseCyclic_Feedback)
+
+    Fx.append(data.base.tool_external_wrench_force_x)
+    Fy.append(data.base.tool_external_wrench_force_y)
+    Fz.append(data.base.tool_external_wrench_force_z)
+    Tx.append(data.base.tool_external_wrench_torque_x)
+    Ty.append(data.base.tool_external_wrench_torque_y)
+    Tz.append(data.base.tool_external_wrench_torque_z)
+
+    Fx = lenght_ctrl(Fx,span=250)
+    Fy = lenght_ctrl(Fx,span=250)
+    Fz = lenght_ctrl(Fx,span=250)
+    Tx = lenght_ctrl(Tx,span=250)
+    Ty = lenght_ctrl(Ty,span=250)
+    Tz = lenght_ctrl(Tz,span=250)
+
+    Fx_mean = filtering_fct(Fx)
+
+    plot_fct(Fx_mean,title="$F_x$ mean value")
 
 
 
