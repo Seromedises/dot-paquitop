@@ -284,12 +284,12 @@ def main():
     gripper_open = 0.0
     joint = np.zeros(6)
     # rest position
-    joint[0] = 0.0
-    joint[1] = 105.0
-    joint[2] = 148.0
-    joint[3] = 90.0
-    joint[4] = 45.0
-    joint[5] = 90.0
+    joint[0] = 0.0 #0.0
+    joint[1] = -30.0 #105.0
+    joint[2] = -60.0 #148.0
+    joint[3] = 90.0 #90.0
+    joint[4] = -60.0 #45.0
+    joint[5] = -90.0 #90.0
         
     example = ExampleFullArmMovement()
 

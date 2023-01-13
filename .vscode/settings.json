@@ -1,5 +1,5 @@
 {
-  "cmake.sourceDirectory": "${workspaceFolder}/HighLevelSW/src",
+  "cmake.sourceDirectory": "${workspaceFolder}/HighLevelSW/src/kinova/ros_kortex/kortex_driver",
   "cmake.buildDirectory": "${workspaceFolder}/HighLevelSW/build",
   "cmake.configureOnOpen": true
 }
