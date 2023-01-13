@@ -53,8 +53,6 @@ def plot_fct(filterd,title):
   plt.pause(0.00001)
   plt.clf()
   
-
-
 def lenght_ctrl(variable, span = 100):
   
   if len(variable) > span:
@@ -91,9 +89,8 @@ def main():
     Ty_mean = filtering_fct(Ty)
     Tz_mean = filtering_fct(Tz)
 
-    plot_fct(Fx_mean,title="$F_x$ mean value")
-
-
+    # plot_fct(Fx_mean,title="$F_x$ mean value")
+    
 
 if __name__ == "__main__":
   main()
