@@ -15,7 +15,7 @@ def filtering_fct(raw_signal):
   dct[8:] = 0
   return fftpack.idct(dct, norm="ortho")
 
-def plot_fct_raw(raw,filterd,time):
+"""def plot_fct_raw(raw,filterd,time):
 
   i = 0
   span = 40
@@ -38,7 +38,7 @@ def plot_fct_raw(raw,filterd,time):
       if i != len(raw) + 1:
           plt.clf()
       else:
-          plt.show()
+          plt.show()"""
 
 def plot_fct(filterd,title):
 
@@ -48,7 +48,7 @@ def plot_fct(filterd,title):
   plt.xlabel("numbers of acquisitions")
   plt.ylabel("Force [N]")
   plt.grid()
-  plt.ylim(ymax = 3, ymin = -3)
+  plt.ylim(ymax = 5, ymin = -5)
   plt.draw()
   plt.pause(0.00001)
   plt.clf()
@@ -89,7 +89,7 @@ def main():
     Ty_mean = filtering_fct(Ty)
     Tz_mean = filtering_fct(Tz)
 
-    # plot_fct(Fx_mean,title="$F_x$ mean value")
+    plot_fct(Fx_mean ,title="$F_x$ and $F_y$ mean value")
     
 
 if __name__ == "__main__":
