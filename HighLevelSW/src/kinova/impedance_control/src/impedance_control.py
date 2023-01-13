@@ -85,6 +85,11 @@ def main():
     Tz = lenght_ctrl(Tz,span=250)
 
     Fx_mean = filtering_fct(Fx)
+    Fy_mean = filtering_fct(Fy)
+    Fz_mean = filtering_fct(Fz)
+    Tx_mean = filtering_fct(Tx)
+    Ty_mean = filtering_fct(Ty)
+    Tz_mean = filtering_fct(Tz)
 
     plot_fct(Fx_mean,title="$F_x$ mean value")
 
