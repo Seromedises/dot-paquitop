@@ -36,26 +36,34 @@
 #define SPI1_SCK_PIN 27
 
 // Stepper Motor Driver (SMD)
-#define SMD_R_STEP_PIN 36 
-#define SMD_R_DIR_PIN 12
-#define SMD_R_SLEEP_PIN 34
+#define SMD_R_SCS_PIN 10 
+#define SMD_R_SDATI_PIN 11 
+#define SMD_R_SDATO_PIN 12 
+#define SMD_R_SCLK_PIN 13 
+#define SMD_R_STEP_PIN 7 
+#define SMD_R_DIR_PIN 8
+#define SMD_R_SLEEP_PIN 9
 
-#define SMD_L_STEP_PIN 11 
-#define SMD_L_DIR_PIN 10
-#define SMD_L_SLEEP_PIN 34
+#define SMD_L_SCS_PIN 28 
+#define SMD_L_SDATI_PIN 11 
+#define SMD_L_SDATO_PIN 12 
+#define SMD_L_SCLK_PIN 13 
+#define SMD_L_STEP_PIN 29 
+#define SMD_L_DIR_PIN 30
+#define SMD_L_SLEEP_PIN 31
 
 // ECframeless ESCON Driver (ECD)
-#define ECD_R_DIR_PIN 32 	//PIN 20 ESCON 
-#define ECD_R_ENB_PIN 31 	//PIN 21 ESCON 
-#define ECD_R_PWM_PIN 29 	//PIN 22 ESCON 
+#define ECD_R_DIR_PIN 1 	//PIN 20 ESCON 
+#define ECD_R_ENB_PIN 2 	//PIN 21 ESCON 
+#define ECD_R_PWM_PIN 3 	//PIN 22 ESCON 
 #define ECD_R_VRM_PIN 25 	//PIN 24 ESCON (Velocità reale media)
 #define ECD_R_IR_PIN 24 	//PIN 25 ESCON (Corrente reale media)
 
-#define ECD_L_DIR_PIN 30 	//PIN 20 ESCON 
-#define ECD_L_ENB_PIN 28 	//PIN 21 ESCON 
-#define ECD_L_PWM_PIN 33 	//PIN 22 ESCON 
-#define ECD_L_VRM_PIN 40 	//PIN 24 ESCON (Velocità reale media)
-#define ECD_L_IL_PIN 41 	//PIN 25 ESCON (Corrente reale media)
+#define ECD_L_DIR_PIN 4 	//PIN 20 ESCON 
+#define ECD_L_ENB_PIN 5 	//PIN 21 ESCON 
+#define ECD_L_PWM_PIN 6 	//PIN 22 ESCON 
+#define ECD_L_VRM_PIN 41 	//PIN 24 ESCON (Velocità reale media)
+#define ECD_L_IL_PIN 40 	//PIN 25 ESCON (Corrente reale media)
 
 // Encoder (ENC)
 #define ENC_R_CS1_PIN 38 	// SU SPI1 
@@ -66,7 +74,7 @@
 // DEFINIZIONE VARIABILI //
 ///////////////////////////
 
-SBUS padPAQ(Serial1);
+SBUS padPAQ(Serial8);
 
 // Variabili di tempo:
 unsigned long t, t0, t_old, t_old1, t_old2, t_old3, t_old4, t_new, dt, dt1, dt2, dt3, dt4, tHidle;//variabili di tempo globali (microsecondi)
@@ -89,7 +97,7 @@ float Ir_REF,Il_REF, Itot_REF;                                                  
 float Ir_REF_old = 0.0,Il_REF_old = 0.0;                                                  //correnti motori trazione REF_old (A)
 float Ir,Il;                                                                              //correnti motori trazione FB (A)
 float ecd_r_vmax = 400.0, ecd_l_vmax = 400.0;                                             //velocità massima impostata al driver (rpm)
-float ecd_r_imax = 15.0, ecd_l_imax = 15.0;                                               //corrente massima impostata al driver (A)
+float ecd_r_imax = 7.0, ecd_l_imax = 7.0;                                               //corrente massima impostata al driver (A)
 
 // Variabili motori sterzo:
 float deltar_REF = pi/2, deltal_REF = pi/2, delta;                                                      //variabili posizione sterzo  (rad )
@@ -99,7 +107,7 @@ float deltar = pi/2, deltal = pi/2;                                             
 float err_deltar, err_deltal;                                                             //errori di posizione angolo di sterzo (rad)
 float tau = 0.3;                                                                          //rapporto di trasmizzione delta_sterzo/delta_motore = z_motore/z_sterzo = 18/60;
 int mStepping = 8;                                                                        //valore microstepping (vedi enb_SMD parametro MODE)
-int Nstep = 200*mStepping/tau;                                                  //numero di step in un giro 
+int Nstep = 200*mStepping*mStepping/tau;                                                  //numero di step in un giro 
 int dnR, dnL, dNsoglia = 1000, nstepR_REF, nstepL_REF, nstepR_old, nstepL_old;            //variabili di riferimento sterzo in numero di step (per OL)
 
 // Gain controllo PID:
@@ -109,7 +117,7 @@ float kd = 0.0;
 float INT, DER;
 
 // Variabile di debug:
-bool enb_SERIALPRINT = false;
+bool enb_SERIALPRINT = true;
 
 // Variabili joystick:
 float Rx, Ry, Lx, RxvArm, RyvArm, LxvArm, RxwArm, RywArm, LxwArm, LygArm;									//variabili di lettura degli analogici
@@ -168,11 +176,11 @@ void setup()
   // Inizializzazione porte
   pinMode(SMD_R_STEP_PIN, OUTPUT); 
   pinMode(SMD_R_DIR_PIN, OUTPUT); 
-  pinMode(SMD_R_SLEEP_PIN, OUTPUT); 
+  pinMode(SMD_R_SCS_PIN, OUTPUT); 
   
   pinMode(SMD_L_STEP_PIN, OUTPUT);
   pinMode(SMD_L_DIR_PIN, OUTPUT);
-  pinMode(SMD_L_SLEEP_PIN, OUTPUT);  
+  pinMode(SMD_L_SCS_PIN, OUTPUT);  
 
   pinMode(ECD_R_DIR_PIN, OUTPUT);
   pinMode(ECD_R_ENB_PIN, OUTPUT);
@@ -198,6 +206,14 @@ void setup()
   if (enb_SERIALPRINT){
     Serial.println("PAQUITOP FIRMWARE inizializzazione:"); Serial.println("Comunicazione Seriale STABILITA;");
     }
+
+  // Attivo il BUS SPI  
+  SPI.begin(); 
+  SPI.beginTransaction(SPISettings(200000, MSBFIRST, SPI_MODE0));                           // v. di comunicazione 200kHz (max 250), MSBFIRST, MODE 0
+  if (enb_SERIALPRINT){
+    Serial.println("Comunicazione SPI STABILITA: f = 200kHz; MODE0; PIN STANDARD;");
+    }
+  delay(100);
     
   // Imposto e attivo il BUS SPI1
   SPI1.setMOSI(SPI1_MOSI_PIN);
@@ -213,7 +229,7 @@ void setup()
 
   // Inizializzo il Joystick
   if (enb_SERIALPRINT){Serial.print("Inizializzazione Gamepad \t...\t");}
-  Serial1.begin(100000, 8E2); // Sbus
+  Serial8.begin(100000, 8E2); // Sbus
   delay(500);
   padPAQ.begin();
   if (enb_SERIALPRINT){Serial.println("Gamepad inizializzato;");}
@@ -239,9 +255,9 @@ void setup()
   digitalWrite(SMD_L_SLEEP_PIN, HIGH);
   if (enb_SERIALPRINT){Serial.println("Driver STEPPER MOTORS ACCESI;");}
 
-  // Abilito/Disabilito SMD (LOW abilita, HIGH disabilita)
-  digitalWrite(SMD_R_SLEEP_PIN, LOW);
-  digitalWrite(SMD_L_SLEEP_PIN, LOW);
+  // Abilito/Disabilito SMD (0b1 abilita, 0b0 disabilita)
+  enb_SMD(SMD_R_SCS_PIN,0b1);
+  enb_SMD(SMD_L_SCS_PIN,0b1);
   if (enb_SERIALPRINT){Serial.println("Driver STEPPER MOTORS ABILITATI tramite SPI;");}
   
   //Abilito/Disabilito ECD
@@ -571,9 +587,9 @@ void loop()
     fkineVel(deltar, thetadr*pi/30, deltal, thetadl*pi/30);
     //sprintf(str_fb_q, "%f %f %f", odom_vx, odom_vy, odom_wz);
     //sprintf(str_fb_q, "%f %f %f %f", Ir, Il, Ir_REF, Il_REF);
-    sprintf(str_fb_q, "%f %f %f %f", deltar, deltal, deltar_REF, deltal_REF);
+    //sprintf(str_fb_q, "%f %f %f %f", deltar, deltal, deltar_REF, deltal_REF);
     //sprintf(str_fb_q, "%f %f", thetadr_REF, thetadl_REF);
-    //sprintf(str_fb_q, "%f", mapF(abs(Ir_REF),0,ecd_r_imax,255*0.1,255*0.9));
+    sprintf(str_fb_q, "%f", mapF(abs(Ir_REF),0,ecd_r_imax,255*0.1,255*0.9));
     
     if (!enb_SERIALPRINT){
       str_msg.data = str_fb_q;

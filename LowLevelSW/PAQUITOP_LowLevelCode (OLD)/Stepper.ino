@@ -1,6 +1,41 @@
  // Funzioni per il controllo dei motori stepper
 
 ///////////////////////////
+// ABILITA/DISABILITA    //
+///////////////////////////
+
+// Funzione che abilita e disabilita il motore collegato in SPI attraverso il Chip Select SCS
+// ENB = 0b0/0b1 --> disattivo/attivo il MOTORE;
+
+/////////////////////////////////
+/* CTRL register of the DRIVER:
+
+ISGAIN:
+GAIN 5 : 00; GAIN 10: 01;
+GAIN 20: 10; GAIN 40: 11;
+
+MODE:
+Full : 0000;    1/2  : 0001; 
+1/4  : 0010;    1/8  : 0011;
+1/16 : 0100;    1/32 : 0101; 
+1/64 : 0110;    1/128: 0111;
+1/256: 1000;
+
+SPI.transfer(RW<<7 | ADD<<4 | DTIME<<2 | ISGAIN);
+SPI.transfer(EXTALL<<7 | MODE<<4 | RSTEP<<3 | RDIR<<2 | ENBL);	
+*/
+/////////////////////////////////
+
+void enb_SMD(int SCS,byte ENBL){
+    
+  digitalWrite(SCS, HIGH);  //setting SCS_pin high to start transfer
+  SPI.transfer(0<<7 | 0b000<<4 | 0b11<<2 | 0b11);
+  SPI.transfer(0b0<<7 | 0b0011<<4 | 0b0<<3 | 0b0<<2 | ENBL);
+  delayMicroseconds(3);
+  digitalWrite(SCS, LOW); // stopping transer 
+}
+
+///////////////////////////
 // O.L. Control          //
 ///////////////////////////
 
@@ -79,19 +114,19 @@ void OL_StepperL(int nstepL_REF)
 void goStepperR(int DIRR)
 {
   digitalWrite(SMD_R_DIR_PIN, DIRR);
-  delayMicroseconds(10);
+  delayMicroseconds(1);
   digitalWrite(SMD_R_STEP_PIN, HIGH);
-  delayMicroseconds(400);
-  digitalWrite(SMD_R_STEP_PIN,LOW);
-  delayMicroseconds(400);
+  delayMicroseconds(2);
+  digitalWrite(SMD_R_STEP_PIN, LOW);
+  delayMicroseconds(2);
 }
 
 void goStepperL(int DIRL)
 {
   digitalWrite(SMD_L_DIR_PIN, DIRL);
-  delayMicroseconds(10);
+  delayMicroseconds(1);
   digitalWrite(SMD_L_STEP_PIN, HIGH);
-  delayMicroseconds(400);
-  digitalWrite(SMD_L_STEP_PIN,LOW);
-  delayMicroseconds(400);
+  delayMicroseconds(2);
+  digitalWrite(SMD_L_STEP_PIN, LOW);
+  delayMicroseconds(2);
 }
