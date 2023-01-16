@@ -25,7 +25,6 @@
         	<param name="robot_name" value="$(arg robot_name)"/>
         </node>	
 
-  
   <!-- Impedance control for the robotic arm-->
   <include file="$(find impedance_control)/launch/impedance_control.launch"/>
 

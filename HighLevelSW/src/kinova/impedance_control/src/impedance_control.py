@@ -5,6 +5,7 @@ import scipy.fftpack as fftpack
 import matplotlib.pyplot as plt
 import rospy
 from kortex_driver.msg import BaseCyclic_Feedback
+from geometry_msgs.msg import Twist
 
 # Constant for translate input force in velocity output
 OUT_max = 0.4 # m/s
@@ -87,11 +88,13 @@ def force_to_velocity(IN):
   return velocity
 
 def main():
+  cmd_vel = rospy.Publisher('/cmd_vel', Twist, queue_size=10)
+  vel_msg = Twist()
   rospy.init_node("impedance_control")
   Fx, Fy, Fz, Tx, Ty, Tz = [], [], [], [], [], []
   Fx_ofs, Fy_ofs, Fz_ofs, Tx_ofs, Ty_ofs, Tz_ofs = 0, 0, 0, 0, 0, 0
   vx = []
-  
+
   while not rospy.is_shutdown():
     data = rospy.wait_for_message("/my_gen3_lite/base_feedback",BaseCyclic_Feedback)
 
@@ -102,17 +105,24 @@ def main():
     Ty.append(data.base.tool_external_wrench_torque_y)
     Tz.append(data.base.tool_external_wrench_torque_z)
 
-
-
     Fx_mean, Fx, Fx_ofs = variable_control(Fx, Fx_ofs, span=50)
-    Fy_mean, Fy, Fy_ofs = variable_control(Fy, Fy_ofs, span=250)
-    Fz_mean, Fz, Fz_ofs = variable_control(Fz, Fz_ofs, span=250)
-    Tx_mean, Tx, Tx_ofs = variable_control(Tx, Tx_ofs, span=250)
-    Ty_mean, Ty, Ty_ofs = variable_control(Ty, Ty_ofs, span=250)
-    Tz_mean, Tz, Tz_ofs = variable_control(Tz, Tz_ofs, span=250)
+    Fy_mean, Fy, Fy_ofs = variable_control(Fy, Fy_ofs, span=50)
+    Fz_mean, Fz, Fz_ofs = variable_control(Fz, Fz_ofs, span=50)
+    Tx_mean, Tx, Tx_ofs = variable_control(Tx, Tx_ofs, span=50)
+    Ty_mean, Ty, Ty_ofs = variable_control(Ty, Ty_ofs, span=50)
+    Tz_mean, Tz, Tz_ofs = variable_control(Tz, Tz_ofs, span=50)
 
     vx.append(force_to_velocity(Fx_mean[-1]))
     vx = length_control(vx, span = 50)
+
+    vel_msg.linear.x = vx[-1]
+    vel_msg.linear.y = 0
+    vel_msg.linear.z = 0
+    vel_msg.angular.x = 0
+    vel_msg.angular.y = 0
+    vel_msg.angular.z = 0
+
+    cmd_vel.publish(vel_msg)
 
     plot_fct(Fx_mean, vx , title="$F_x$ mean value and $v_x$ output value")
     
