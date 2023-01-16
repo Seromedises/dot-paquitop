@@ -7,11 +7,11 @@ import rospy
 from kortex_driver.msg import BaseCyclic_Feedback
 
 # Constant for translate input force in velocity output
-OUT_max = 1 # m/s
+OUT_max = 0.4 # m/s
 OUT_lim = 0.1 # m/s
 
 IN_lim = 1 # N
-IN_max = 4 # N
+IN_max = 5 # N
 
 b1 = (OUT_max-OUT_lim)/(IN_max-IN_lim)
 b0 = OUT_max - b1*IN_max
@@ -34,7 +34,7 @@ def plot_fct(filterd, velocity, title):
   plt.xlabel("numbers of acquisitions")
   plt.ylabel("velocity [m/s]")
   plt.grid()
-  plt.ylim(ymax = 1/2 + OUT_max, ymin = -(1/2 + OUT_max))
+  plt.ylim(ymax = 0.5 + OUT_max, ymin = -(0.5 + OUT_max))
 
   plt.draw()
   plt.pause(0.0001)
@@ -51,8 +51,8 @@ def variable_control(variable, offset=0, span=100):
 
   variable = length_control(variable,span)
 
-  #if len(variable) < span:
-  #  offset = sum(variable)/len(variable)
+  if len(variable) < span:
+   offset = sum(variable)/len(variable)
 
   dct = fftpack.dct(variable, norm="ortho")
   dct[8:] = 0
@@ -67,6 +67,7 @@ def force_to_velocity(IN):
 
   velocity = 0
 
+  # input control
   if IN <= -IN_lim:
     velocity = b1 * IN - b0
   elif IN > -IN_lim and IN <= 0:
@@ -76,6 +77,12 @@ def force_to_velocity(IN):
     velocity = a5*(IN**5) + a4*(IN**4) + a3*(IN**3)
   elif IN > IN_lim:
     velocity = b1 * IN + b0
+
+  # saturation control
+  if velocity <-OUT_max:
+    velocity = -OUT_max 
+  elif velocity > OUT_max:
+    velocity = OUT_max
 
   return velocity
 
@@ -97,7 +104,7 @@ def main():
 
 
 
-    Fx_mean, Fx, Fx_ofs = variable_control(Fx, Fx_ofs, span=250)
+    Fx_mean, Fx, Fx_ofs = variable_control(Fx, Fx_ofs, span=100)
     Fy_mean, Fy, Fy_ofs = variable_control(Fy, Fy_ofs, span=250)
     Fz_mean, Fz, Fz_ofs = variable_control(Fz, Fz_ofs, span=250)
     Tx_mean, Tx, Tx_ofs = variable_control(Tx, Tx_ofs, span=250)
@@ -105,7 +112,7 @@ def main():
     Tz_mean, Tz, Tz_ofs = variable_control(Tz, Tz_ofs, span=250)
 
     vx.append(force_to_velocity(Fx_mean[-1]))
-    vx = length_control(vx, span = 250)
+    vx = length_control(vx, span = 100)
 
     plot_fct(Fx_mean, vx , title="$F_x$ mean value and $v_x$ output value")
     
