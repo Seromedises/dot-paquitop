@@ -104,7 +104,7 @@ def main():
 
 
 
-    Fx_mean, Fx, Fx_ofs = variable_control(Fx, Fx_ofs, span=100)
+    Fx_mean, Fx, Fx_ofs = variable_control(Fx, Fx_ofs, span=50)
     Fy_mean, Fy, Fy_ofs = variable_control(Fy, Fy_ofs, span=250)
     Fz_mean, Fz, Fz_ofs = variable_control(Fz, Fz_ofs, span=250)
     Tx_mean, Tx, Tx_ofs = variable_control(Tx, Tx_ofs, span=250)
@@ -112,7 +112,7 @@ def main():
     Tz_mean, Tz, Tz_ofs = variable_control(Tz, Tz_ofs, span=250)
 
     vx.append(force_to_velocity(Fx_mean[-1]))
-    vx = length_control(vx, span = 100)
+    vx = length_control(vx, span = 50)
 
     plot_fct(Fx_mean, vx , title="$F_x$ mean value and $v_x$ output value")
     
