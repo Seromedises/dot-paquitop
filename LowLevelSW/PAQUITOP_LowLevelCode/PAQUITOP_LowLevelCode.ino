@@ -218,6 +218,7 @@ void setup()
   padPAQ.begin();
   if (enb_SERIALPRINT){Serial.println("Gamepad inizializzato;");}
   delay(100);
+  
 
   // ROS Setup:
   if (!enb_SERIALPRINT){
