@@ -19,18 +19,33 @@ a3 = 2*(5*OUT_max - 5*b1*IN_max + 3*b1*IN_lim)/(IN_lim**3)
 a4 = -(15*OUT_max - 15*b1*IN_max + 8*b1*IN_lim)/(IN_lim**4)
 a5 = 3*(2*OUT_max - 2*b1*IN_max + b1*IN_lim)/(IN_lim**5)
 
-def plot_fct(filterd, velocity, title):
+def plot_fct(filtred, velocity, title1, filtred2, velocity2, title2):
   
-  plt.subplot(2, 1, 1)
-  plt.plot(filterd)
-  plt.title(title)
-  plt.xlabel("numbers of acquisitions")
+  plt.subplot(2, 2, 1)
+  plt.plot(filtred)
+  plt.title(title1)
+  #plt.xlabel("numbers of acquisitions")
   plt.ylabel("Force [N]")
   plt.grid()
   plt.ylim(ymax = 1/2 + IN_max, ymin = -(1/2 + IN_max))
 
-  plt.subplot(2, 1, 2)
+  plt.subplot(2, 2, 2)
   plt.plot(velocity)
+  plt.xlabel("numbers of acquisitions")
+  plt.ylabel("velocity [m/s]")
+  plt.grid()
+  plt.ylim(ymax = 0.5 + OUT_max, ymin = -(0.5 + OUT_max))
+
+  plt.subplot(2, 2, 1)
+  plt.plot(filtred2)
+  plt.title(title2)
+  #plt.xlabel("numbers of acquisitions")
+  plt.ylabel("Force [N]")
+  plt.grid()
+  plt.ylim(ymax = 1/2 + IN_max, ymin = -(1/2 + IN_max))
+
+  plt.subplot(2, 2, 2)
+  plt.plot(velocity2)
   plt.xlabel("numbers of acquisitions")
   plt.ylabel("velocity [m/s]")
   plt.grid()
@@ -124,9 +139,10 @@ def main():
     vel_msg.angular.z = wz[-1]
 
     cmd_vel.publish(vel_msg)
+    title1 = "$F_x$ mean value and $v_x$ output value"
+    title2="$T_z$ mean value and $\omega_z$ output value"
 
-    plot_fct(Fx_mean, vx , title="$F_x$ mean value and $v_x$ output value")
-    plot_fct(Tz_mean, wz , title="$T_z$ mean value and $\omega_z$ output value")
+    plot_fct(Fx_mean, vx , title1, Tz_mean, wz , title2)
     
 
 if __name__ == "__main__":
