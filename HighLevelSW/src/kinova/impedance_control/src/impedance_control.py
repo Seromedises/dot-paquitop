@@ -126,6 +126,7 @@ def main():
     cmd_vel.publish(vel_msg)
 
     plot_fct(Fx_mean, vx , title="$F_x$ mean value and $v_x$ output value")
+    plot_fct(Tz_mean, wz , title="$T_z$ mean value and $\omega_z$ output value")
     
 
 if __name__ == "__main__":
