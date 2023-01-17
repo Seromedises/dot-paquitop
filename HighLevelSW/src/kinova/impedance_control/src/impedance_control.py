@@ -142,8 +142,8 @@ def main():
     Tz_mean, Tz, Tz_ofs = variable_control(Tz, Tz_ofs, span=50)
 
     vx.append(force_to_velocity(Fx_mean[-1],IN_lim=3.5,IN_max=7.5))
-    vy.append(force_to_velocity(Fy_mean[-1],IN_lim=0.1,IN_max=0.5))
-    wz.append(force_to_velocity(Tz_mean[-1],IN_lim=0.5,IN_max=4))
+    vy.append(force_to_velocity(Fy_mean[-1],IN_lim=0.05,IN_max=0.25))
+    wz.append(force_to_velocity(Tz_mean[-1],IN_lim=1,IN_max=4))
     vx = length_control(vx, span=50)
     vy = length_control(vy, span=50)
     wz = length_control(wz, span=50)
