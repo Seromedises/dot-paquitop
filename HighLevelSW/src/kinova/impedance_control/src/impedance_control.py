@@ -9,19 +9,11 @@ from geometry_msgs.msg import Twist
 # Constant for translate input force in velocity output
 OUT_max = 0.4 # m/s
 OUT_lim = 0.1 # m/s
+IN_max = 6 # only for plt functions
 
-IN_lim = 1 # N
-IN_max = 5 # N
-
-b1 = (OUT_max-OUT_lim)/(IN_max-IN_lim)
-b0 = OUT_max - b1*IN_max
-a3 = 2*(5*OUT_max - 5*b1*IN_max + 3*b1*IN_lim)/(IN_lim**3)
-a4 = -(15*OUT_max - 15*b1*IN_max + 8*b1*IN_lim)/(IN_lim**4)
-a5 = 3*(2*OUT_max - 2*b1*IN_max + b1*IN_lim)/(IN_lim**5)
-
-def plot_fct(filtred, velocity, title1, filtred2, velocity2, title2):
+def plot_fct(filtred, velocity, title1, filtred2, velocity2, title2, filtred3, velocity3, title3):
   
-  plt.subplot(2, 2, 1)
+  plt.subplot(2, 3, 1)
   plt.plot(filtred)
   plt.title(title1)
   #plt.xlabel("numbers of acquisitions")
@@ -29,25 +21,40 @@ def plot_fct(filtred, velocity, title1, filtred2, velocity2, title2):
   plt.grid()
   plt.ylim(ymax = 1/2 + IN_max, ymin = -(1/2 + IN_max))
 
-  plt.subplot(2, 2, 3)
+  plt.subplot(2, 3, 4)
   plt.plot(velocity)
   plt.xlabel("numbers of acquisitions")
   plt.ylabel("velocity [m/s]")
   plt.grid()
   plt.ylim(ymax = 0.5 + OUT_max, ymin = -(0.5 + OUT_max))
 
-  plt.subplot(2, 2, 2)
+  plt.subplot(2, 3, 2)
   plt.plot(filtred2)
   plt.title(title2)
+  #plt.xlabel("numbers of acquisitions")
+  plt.ylabel("Force [N]")
+  plt.grid()
+  plt.ylim(ymax = 1/2 + IN_max, ymin = -(1/2 + IN_max))
+
+  plt.subplot(2, 3, 5)
+  plt.plot(velocity2)
+  plt.xlabel("numbers of acquisitions")
+  plt.ylabel("velocity [m/s]")
+  plt.grid()
+  plt.ylim(ymax = 0.5 + OUT_max, ymin = -(0.5 + OUT_max))
+
+  plt.subplot(2, 3, 3)
+  plt.plot(filtred3)
+  plt.title(title3)
   #plt.xlabel("numbers of acquisitions")
   plt.ylabel("Torque [Nm]")
   plt.grid()
   plt.ylim(ymax = 1/2 + IN_max, ymin = -(1/2 + IN_max))
 
-  plt.subplot(2, 2, 4)
-  plt.plot(velocity2)
+  plt.subplot(2, 3, 6)
+  plt.plot(velocity3)
   plt.xlabel("numbers of acquisitions")
-  plt.ylabel("velocity [m/s]")
+  plt.ylabel(" angular velocity [rad/s]")
   plt.grid()
   plt.ylim(ymax = 0.5 + OUT_max, ymin = -(0.5 + OUT_max))
 
@@ -78,9 +85,17 @@ def variable_control(variable, offset=0, span=100):
 
   return filtred, variable, offset
 
-def force_to_velocity(IN):
+def force_to_velocity(IN, IN_lim = 1, IN_max = 5):
+  
+  # IN_lim and IN_max are N or Nm 
 
   velocity = 0
+  
+  b1 = (OUT_max-OUT_lim)/(IN_max-IN_lim)
+  b0 = OUT_max - b1*IN_max
+  a3 = 2*(5*OUT_max - 5*b1*IN_max + 3*b1*IN_lim)/(IN_lim**3)
+  a4 = -(15*OUT_max - 15*b1*IN_max + 8*b1*IN_lim)/(IN_lim**4)
+  a5 = 3*(2*OUT_max - 2*b1*IN_max + b1*IN_lim)/(IN_lim**5)
 
   # input control
   if IN <= -IN_lim:
@@ -107,7 +122,7 @@ def main():
   rospy.init_node("impedance_control")
   Fx, Fy, Fz, Tx, Ty, Tz = [], [], [], [], [], []
   Fx_ofs, Fy_ofs, Fz_ofs, Tx_ofs, Ty_ofs, Tz_ofs = 0, 0, 0, 0, 0, 0
-  vx, wz = [], []
+  vx, vy,wz = [], [], []
 
   while not rospy.is_shutdown():
     data = rospy.wait_for_message("/my_gen3_lite/base_feedback",BaseCyclic_Feedback)
@@ -126,13 +141,15 @@ def main():
     Ty_mean, Ty, Ty_ofs = variable_control(Ty, Ty_ofs, span=50)
     Tz_mean, Tz, Tz_ofs = variable_control(Tz, Tz_ofs, span=50)
 
-    vx.append(force_to_velocity(Fx_mean[-1]))
+    vx.append(force_to_velocity(Fx_mean[-1],IN_lim=2,IN_max=6))
+    vy.append(force_to_velocity(Fy_mean[-1]))
     wz.append(force_to_velocity(Tz_mean[-1]))
     vx = length_control(vx, span=50)
+    vy = length_control(vy, span=50)
     wz = length_control(wz, span=50)
 
     vel_msg.linear.x = vx[-1]
-    vel_msg.linear.y = 0
+    vel_msg.linear.y = vy[-1]
     vel_msg.linear.z = 0
     vel_msg.angular.x = 0
     vel_msg.angular.y = 0
@@ -140,9 +157,10 @@ def main():
 
     cmd_vel.publish(vel_msg)
     title1 = "$F_x$ mean value and $v_x$ output value"
-    title2="$T_z$ mean value and $\omega_z$ output value"
+    title2 = "$F_y$ mean value and $v_y$ output value"
+    title3 = "$T_z$ mean value and $\omega_z$ output value"
 
-    plot_fct(Fx_mean, vx , title1, Tz_mean, wz , title2)
+    plot_fct(Fx_mean, vx , title1, Fy_mean, vy, title2, Tz_mean, wz , title3)
     
 
 if __name__ == "__main__":
