@@ -41,7 +41,7 @@ def plot_fct(filtred, velocity, title1, filtred2, velocity2, title2, filtred3, v
   plt.xlabel("numbers of acquisitions")
   plt.ylabel("velocity [m/s]")
   plt.grid()
-  plt.ylim(ymax = 0.5 + OUT_max, ymin = -(0.5 + OUT_max))
+  #plt.ylim(ymax = 0.5 + OUT_max, ymin = -(0.5 + OUT_max))
 
   plt.subplot(2, 3, 3)
   plt.plot(filtred3)
@@ -49,14 +49,14 @@ def plot_fct(filtred, velocity, title1, filtred2, velocity2, title2, filtred3, v
   #plt.xlabel("numbers of acquisitions")
   plt.ylabel("Torque [Nm]")
   plt.grid()
-  plt.ylim(ymax = 1/2 + IN_max, ymin = -(1/2 + IN_max))
+  #plt.ylim(ymax = 1/2 + IN_max, ymin = -(1/2 + IN_max))
 
   plt.subplot(2, 3, 6)
   plt.plot(velocity3)
   plt.xlabel("numbers of acquisitions")
   plt.ylabel(" angular velocity [rad/s]")
   plt.grid()
-  plt.ylim(ymax = 0.5 + OUT_max, ymin = -(0.5 + OUT_max))
+  #plt.ylim(ymax = 0.5 + OUT_max, ymin = -(0.5 + OUT_max))
 
   plt.draw()
   plt.pause(0.0001)
