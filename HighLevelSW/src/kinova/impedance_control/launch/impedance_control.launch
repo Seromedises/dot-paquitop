@@ -2,7 +2,8 @@
 <launch>
 	<!--<arg name="arm" default="gen3_lite"/>
 	<arg name="robot_name" default="my_$(arg arm)"/>-->
-    <node name="impedance_control" pkg="impedance_control" type="impedance_control.py"/><!-- ns="$(arg robot_name)" output="screen"/>
-     launch-prefix="bash -c 'sleep $(arg start_delay_seconds); $0 $@' " />   
+    <arg name="start_delay_seconds" default="4"/>
+    <node name="impedance_control" pkg="impedance_control" type="impedance_control.py" launch-prefix="bash -c 'sleep $(arg start_delay_seconds); $0 $@' " />   <!-- ns="$(arg robot_name)" output="screen"/>
+     
     -->
 </launch>

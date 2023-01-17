@@ -51,7 +51,7 @@ def variable_control(variable, offset=0, span=100):
 
   variable = length_control(variable,span)
 
-  if len(variable) < span:
+  if len(variable) < 10:
    offset = sum(variable)/len(variable)
 
   dct = fftpack.dct(variable, norm="ortho")
@@ -92,7 +92,7 @@ def main():
   rospy.init_node("impedance_control")
   Fx, Fy, Fz, Tx, Ty, Tz = [], [], [], [], [], []
   Fx_ofs, Fy_ofs, Fz_ofs, Tx_ofs, Ty_ofs, Tz_ofs = 0, 0, 0, 0, 0, 0
-  vx = []
+  vx, wz = [], []
 
   while not rospy.is_shutdown():
     data = rospy.wait_for_message("/my_gen3_lite/base_feedback",BaseCyclic_Feedback)
@@ -112,14 +112,16 @@ def main():
     Tz_mean, Tz, Tz_ofs = variable_control(Tz, Tz_ofs, span=50)
 
     vx.append(force_to_velocity(Fx_mean[-1]))
-    vx = length_control(vx, span = 50)
+    wz.append(force_to_velocity(Tz_mean[-1]))
+    vx = length_control(vx, span=50)
+    wz = length_control(wz, span=50)
 
     vel_msg.linear.x = vx[-1]
     vel_msg.linear.y = 0
     vel_msg.linear.z = 0
     vel_msg.angular.x = 0
     vel_msg.angular.y = 0
-    vel_msg.angular.z = 0
+    vel_msg.angular.z = wz[-1]
 
     cmd_vel.publish(vel_msg)
 
