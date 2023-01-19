@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import rospy
 from kortex_driver.msg import BaseCyclic_Feedback
 from geometry_msgs.msg import Twist
+from paquitop.msg import Joint_position
 
 # Constant for translate input force in velocity output
 OUT_max = 0.4 # m/s
@@ -117,13 +118,23 @@ def force_to_velocity(IN, IN_lim = 1, IN_max = 5):
   return velocity
 
 def main():
+  rospy.init_node('impedance_control')
   cmd_vel = rospy.Publisher('/cmd_vel', Twist, queue_size=10)
+  rest_position_cmd = rospy.Publisher('/joint_angles', Joint_position, queue_size=1)
   vel_msg = Twist()
-  rospy.init_node("impedance_control")
+  start_position = Joint_position()
+  rest_position_cmd.publish(start_position)
+  rospy.sleep(1)
+  
   Fx, Fy, Fz, Tx, Ty, Tz = [], [], [], [], [], []
   Fx_ofs, Fy_ofs, Fz_ofs, Tx_ofs, Ty_ofs, Tz_ofs = 0, 0, 0, 0, 0, 0
   vx, vy,wz = [], [], []
 
+  start_position.value = [30, 330, 300, 45, 300, 300]
+  rest_position_cmd.publish(start_position)
+  rospy.sleep(5)
+  
+  
   while not rospy.is_shutdown():
     data = rospy.wait_for_message("/my_gen3_lite/base_feedback",BaseCyclic_Feedback)
 

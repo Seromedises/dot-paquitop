@@ -279,8 +279,7 @@ class ExampleFullArmMovement:
             return self.wait_for_action_end_or_abort()
 
 def main():
-    rospy.init_node('joint_position')
-    """gripper_open = 0.0
+    gripper_open = 0.0
     joint = []
 
     rospy.init_node('joint_position')
@@ -292,16 +291,14 @@ def main():
     except:
         pass
     success = example.example_clear_faults()
-    success = example.example_subscribe_to_a_robot_notification()"""
+    success = example.example_subscribe_to_a_robot_notification()
     
-
     while not rospy.is_shutdown():
 
-        rest_pose = rospy.wait_for_message("/joint_angles", Joint_position)
-
-        print(rest_pose)
-        #reach = example.example_send_gripper_command(gripper_open)
-        #reach = example.example_send_joint_angles(joint)
+        joint = rospy.wait_for_message('/joint_angles', Joint_position)
+        
+        reach = example.example_send_gripper_command(gripper_open)
+        reach = example.example_send_joint_angles(joint.value)
             
 
 if __name__ == '__main__':
