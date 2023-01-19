@@ -130,9 +130,10 @@ def main():
   Fx_ofs, Fy_ofs, Fz_ofs, Tx_ofs, Ty_ofs, Tz_ofs = 0, 0, 0, 0, 0, 0
   vx, vy,wz = [], [], []
 
-  start_position.value = [30, 330, 300, 45, 300, 300]
-  rest_position_cmd.publish(start_position)
-  rospy.sleep(5)
+  start_position.value = [30, 330, 300, 42, 300, 300]
+  for i in range(3):
+    rest_position_cmd.publish(start_position)
+  rospy.sleep(10)
   
   
   while not rospy.is_shutdown():
@@ -153,7 +154,7 @@ def main():
     Tz_mean, Tz, Tz_ofs = variable_control(Tz, Tz_ofs, span=50)
 
     vx.append(force_to_velocity(Fx_mean[-1],IN_lim=3.5,IN_max=7.5))
-    vy.append(force_to_velocity(Fy_mean[-1],IN_lim=0.05,IN_max=0.25))
+    vy.append(force_to_velocity(Fy_mean[-1],IN_lim=0.15,IN_max=0.25))
     wz.append(force_to_velocity(Tz_mean[-1],IN_lim=1,IN_max=4))
     vx = length_control(vx, span=50)
     vy = length_control(vy, span=50)

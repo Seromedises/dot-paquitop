@@ -10,9 +10,6 @@
     <param name="port" value="/dev/ttyACM0"/>
     <param name="baud" value="115200"/>
   </node>-->
-
-  <arg name="arm" default="gen3_lite"/>
-	<arg name="robot_name" default="my_$(arg arm)"/>	
   
   <!-- Driver for kinova kortex interface-->
   <include file="$(find kortex_driver)/launch/kortex_driver.launch">
@@ -21,10 +18,14 @@
 	</include>
 
   <!-- Launch to put the robotic arm in the correct position -->
+  <include file="$(find kortex_movement)/launch/joint_position.launch"/>
+  <!--
+  <arg name="arm" default="gen3_lite"/>
+	<arg name="robot_name" default="my_$(arg arm)"/>	
 	<node name="joint_position" pkg="kortex_movement" type="joint_position.py" ns="$(arg robot_name)" output="screen" respawn="true"> 
         	<param name="robot_name" value="$(arg robot_name)"/>
         </node>	
-
+  -->
   <!-- Impedance control for the robotic arm-->
   <include file="$(find impedance_control)/launch/impedance_control.launch"/>
 

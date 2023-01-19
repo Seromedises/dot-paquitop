@@ -18,7 +18,7 @@ from paquitop.msg import Joint_position
 class ExampleFullArmMovement:
     def __init__(self):
         try:
-            rospy.init_node('rest_position')
+            rospy.init_node('joint_position')
 
             self.HOME_ACTION_IDENTIFIER = 2
 
@@ -280,7 +280,7 @@ class ExampleFullArmMovement:
 
 def main():
     gripper_open = 0.0
-    joint = []
+    joint = Joint_position()
 
     rospy.init_node('joint_position')
     example = ExampleFullArmMovement()
@@ -296,9 +296,12 @@ def main():
     while not rospy.is_shutdown():
 
         joint = rospy.wait_for_message('/joint_angles', Joint_position)
-        
-        reach = example.example_send_gripper_command(gripper_open)
-        reach = example.example_send_joint_angles(joint.value)
+        goal = list(joint.value)
+        rospy.loginfo("Position recieved: "+str(goal))
+
+        if len(goal) == example.degrees_of_freedom:
+            reach = example.example_send_gripper_command(gripper_open)
+            reach = example.example_send_joint_angles(goal)
             
 
 if __name__ == '__main__':
