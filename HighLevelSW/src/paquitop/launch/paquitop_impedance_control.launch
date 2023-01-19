@@ -4,12 +4,12 @@
 
   <!-- Base Controller Using Arduino -->  
   <!-- Subscribe: /cmd_vel -->
-  <!-- Publish: /fb_q -->
+  <!-- Publish: /fb_q 
 
   <node pkg="rosserial_python" type="serial_node.py" name="serial_node" respawn="true">
     <param name="port" value="/dev/ttyACM0"/>
     <param name="baud" value="115200"/>
-  </node>
+  </node>-->
 
   <arg name="arm" default="gen3_lite"/>
 	<arg name="robot_name" default="my_$(arg arm)"/>	
@@ -21,7 +21,7 @@
 	</include>
 
   <!-- Launch to put the robotic arm in the correct position -->
-	<node name="rest_position" pkg="kortex_movement" type="rest_position.py" ns="$(arg robot_name)" output="screen" respawn="true"> 
+	<node name="joint_position" pkg="kortex_movement" type="joint_position.py" ns="$(arg robot_name)" output="screen" respawn="true"> 
         	<param name="robot_name" value="$(arg robot_name)"/>
         </node>	
 
