@@ -280,8 +280,7 @@ class ExampleFullArmMovement:
 
 def main():
     gripper_open = 0.0
-    joint = Joint_position()
-
+    
     rospy.init_node('joint_position')
     example = ExampleFullArmMovement()
     # For testing purposes
