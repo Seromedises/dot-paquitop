@@ -10,7 +10,8 @@ from paquitop.msg import Joint_position
 # Constant for translate input force in velocity output
 OUT_max = 0.4 # m/s
 OUT_lim = 0.1 # m/s
-IN_max = 6 # only for plt functions
+IN_max_Fx, IN_max_Fy, IN_max_Tz = 7.5, 5, 4# N, N and Nm
+IN_min_Fx, IN_min_Fy, IN_min_Tz= 2, 2, 1 # N, N and Nm
 
 def plot_fct(filtred, velocity, title1, filtred2, velocity2, title2, filtred3, velocity3, title3):
   
@@ -20,7 +21,7 @@ def plot_fct(filtred, velocity, title1, filtred2, velocity2, title2, filtred3, v
   #plt.xlabel("numbers of acquisitions")
   plt.ylabel("Force [N]")
   plt.grid()
-  #plt.ylim(ymax = 1/2 + IN_max, ymin = -(1/2 + IN_max))
+  plt.ylim(ymax = 1.1*IN_max_Fx, ymin = -(1.1*IN_max_Fx))
 
   plt.subplot(2, 3, 4)
   plt.plot(velocity)
@@ -35,7 +36,7 @@ def plot_fct(filtred, velocity, title1, filtred2, velocity2, title2, filtred3, v
   #plt.xlabel("numbers of acquisitions")
   plt.ylabel("Force [N]")
   plt.grid()
-  #plt.ylim(ymax = 1/2 + IN_max, ymin = -(1/2 + IN_max))
+  plt.ylim(ymax = 1.1*IN_max_Fy, ymin = -(1.1*IN_max_Fy))
 
   plt.subplot(2, 3, 5)
   plt.plot(velocity2)
@@ -50,7 +51,7 @@ def plot_fct(filtred, velocity, title1, filtred2, velocity2, title2, filtred3, v
   #plt.xlabel("numbers of acquisitions")
   plt.ylabel("Torque [Nm]")
   plt.grid()
-  #plt.ylim(ymax = 1/2 + IN_max, ymin = -(1/2 + IN_max))
+  plt.ylim(ymax = 1.1*IN_max_Tz, ymin = -(1.1*IN_max_Tz))
 
   plt.subplot(2, 3, 6)
   plt.plot(velocity3)
@@ -130,7 +131,7 @@ def main():
   Fx_ofs, Fy_ofs, Fz_ofs, Tx_ofs, Ty_ofs, Tz_ofs = 0, 0, 0, 0, 0, 0
   vx, vy,wz = [], [], []
 
-  start_position.value = [30, 330, 300, 42, 300, 300]
+  start_position.value = [90, -30, -60, 10, -60, -90] #[40, 330, 300, 40, 295, 300]
   for i in range(3):
     rest_position_cmd.publish(start_position)
   rospy.sleep(10)
@@ -153,9 +154,9 @@ def main():
     Ty_mean, Ty, Ty_ofs = variable_control(Ty, Ty_ofs, span=50)
     Tz_mean, Tz, Tz_ofs = variable_control(Tz, Tz_ofs, span=50)
 
-    vx.append(force_to_velocity(Fx_mean[-1],IN_lim=3.5,IN_max=7.5))
-    vy.append(force_to_velocity(Fy_mean[-1],IN_lim=0.15,IN_max=0.25))
-    wz.append(force_to_velocity(Tz_mean[-1],IN_lim=1,IN_max=4))
+    vx.append(force_to_velocity(Fx_mean[-1],IN_lim=IN_min_Fx,IN_max=IN_max_Fx))
+    vy.append(force_to_velocity(Fy_mean[-1],IN_lim=IN_min_Fy,IN_max=IN_max_Fy))
+    wz.append(force_to_velocity(Tz_mean[-1],IN_lim=IN_min_Tz,IN_max=IN_max_Tz))
     vx = length_control(vx, span=50)
     vy = length_control(vy, span=50)
     wz = length_control(wz, span=50)

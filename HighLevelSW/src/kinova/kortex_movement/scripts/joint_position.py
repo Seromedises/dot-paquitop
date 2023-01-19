@@ -296,9 +296,9 @@ def main():
 
         joint = rospy.wait_for_message('/joint_angles', Joint_position)
         goal = list(joint.value)
-        rospy.loginfo("Position recieved: "+str(goal))
-
+        
         if len(goal) == example.degrees_of_freedom:
+            rospy.loginfo("Position recieved: "+str(goal))
             reach = example.example_send_gripper_command(gripper_open)
             reach = example.example_send_joint_angles(goal)
             
