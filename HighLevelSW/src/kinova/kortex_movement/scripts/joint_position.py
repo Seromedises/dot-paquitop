@@ -13,7 +13,7 @@ import time
 
 from kortex_driver.srv import *
 from kortex_driver.msg import *
-
+from paquitop.msg import Joint_position
 
 class ExampleFullArmMovement:
     def __init__(self):
@@ -279,44 +279,29 @@ class ExampleFullArmMovement:
             return self.wait_for_action_end_or_abort()
 
 def main():
-    rospy.init_node('rest_position')
+    rospy.init_node('joint_position')
+    """gripper_open = 0.0
+    joint = []
 
-    gripper_open = 0.0
-    joint = np.zeros(6)
-    # rest position
-    joint[0] = 0.0
-    joint[1] = 105.0
-    joint[2] = 148.0
-    joint[3] = 90.0
-    joint[4] = 45.0
-    joint[5] = 90.0
-        
+    rospy.init_node('joint_position')
     example = ExampleFullArmMovement()
-
     # For testing purposes
     success = example.is_init_success
-    
     try:
         rospy.delete_param("/kortex_examples_test_results/moveit_general_python")
     except:
         pass
-
     success = example.example_clear_faults()
-          
-    success = example.example_subscribe_to_a_robot_notification()
-    
-    reach = example.example_send_gripper_command(gripper_open)
-    reach = example.example_send_joint_angles(joint)
-    rospy.loginfo("READY")
+    success = example.example_subscribe_to_a_robot_notification()"""
     
 
     while not rospy.is_shutdown():
 
-        rest_pose = rospy.wait_for_message("/arm_rest_pose", Bool)
+        rest_pose = rospy.wait_for_message("/joint_angles", Joint_position)
+
         print(rest_pose)
-        if rest_pose:
-            reach = example.example_send_gripper_command(gripper_open)
-            reach = example.example_send_joint_angles(joint)
+        #reach = example.example_send_gripper_command(gripper_open)
+        #reach = example.example_send_joint_angles(joint)
             
 
 if __name__ == '__main__':

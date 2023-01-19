@@ -34,6 +34,7 @@ find_package(catkin REQUIRED
   tf2_ros
   tf2_eigen
   tf2_geometry_msgs
+  paquitop
 	)
 # roslaunch_add_file_check(launch)
 
@@ -74,13 +75,12 @@ find_package(catkin REQUIRED
 ## Generate messages in the 'msg' folder
 # add_message_files(
 #   FILES
-#   Message1.msg
-#   Message2.msg
+#   Joint_position.msg
 # )
 
 ## Generate services in the 'srv' folder
 add_service_files(
-   FILES
+  FILES
 	cartesian_movement.srv
 )
 
@@ -93,8 +93,7 @@ add_service_files(
 
 ## Generate added messages and services with any dependencies listed here
  generate_messages(
-   DEPENDENCIES
-   std_msgs  # Or other packages containing msgs
+   DEPENDENCIES std_msgs paquitop  # Or other packages containing msgs
  )
 
 ################################################
@@ -128,13 +127,14 @@ add_service_files(
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
  LIBRARIES kortex_movement
- CATKIN_DEPENDS roscpp rospy
+ CATKIN_DEPENDS roscpp rospy message_runtime
  DEPENDS #system_lib
  moveit_core
  moveit_visual_tools
  moveit_ros_planning_interface
  interactive_markers
  tf2_geometry_msgs
+ paquitop
 )
 
 ###########
