@@ -14,6 +14,7 @@ OUT_max = 0.4 # m/s
 OUT_lim = 0.1 # m/s
 IN_max_Fx, IN_max_Fy, IN_max_Tz = 5, 5, 4# N, N and Nm
 IN_min_Fx, IN_min_Fy, IN_min_Tz= 1.5, 1.5, 1 # N, N and Nm
+filter_span = 20
 
 def plot_fct(filtred, velocity, title1, filtred2, velocity2, title2, filtred3, velocity3, title3):
   
@@ -141,7 +142,7 @@ def main():
   vx, vy,wz = [], [], []
   T1, T2, T3, T4, T5, T6 = [], [], [], [], [], []
   T1_mean, T2_mean, T3_mean, T4_mean, T5_mean, T6_mean= [], [], [], [], [], []
-
+  
   start_position.value = [0, 340, 0, 90, 70, 0]#[90, -30, -60, 10, -60, -90] #[40, 330, 300, 40, 295, 300]
   for i in range(3):
     rest_position_cmd.publish(start_position)
@@ -171,12 +172,12 @@ def main():
     T5_ofs = offset(T5)
     T6_ofs = offset(T6)
     
-    T1_mean.append(filter(T1,10,T1_ofs))
-    T2_mean.append(filter(T2,10,T2_ofs))
-    T3_mean.append(filter(T3,10,T3_ofs))
-    T4_mean.append(filter(T4,10,T4_ofs))
-    T5_mean.append(filter(T5,10,T5_ofs))
-    T6_mean.append(filter(T6,10,T6_ofs))
+    T1_mean.append(filter(T1,filter_span,T1_ofs))
+    T2_mean.append(filter(T2,filter_span,T2_ofs))
+    T3_mean.append(filter(T3,filter_span,T3_ofs))
+    T4_mean.append(filter(T4,filter_span,T4_ofs))
+    T5_mean.append(filter(T5,filter_span,T5_ofs))
+    T6_mean.append(filter(T6,filter_span,T6_ofs))
 
     T1_mean = length_control(T1_mean,span=50)
     T2_mean = length_control(T2_mean,span=50)
