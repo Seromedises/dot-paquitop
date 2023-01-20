@@ -7,6 +7,7 @@ import rospy
 from sensor_msgs.msg import JointState
 from geometry_msgs.msg import Twist
 from paquitop.msg import Joint_position
+import vispy.plot as vp
 
 # Constant for translate input force in velocity output
 OUT_max = 0.4 # m/s
@@ -15,17 +16,15 @@ IN_max_Fx, IN_max_Fy, IN_max_Tz = 5, 5, 4# N, N and Nm
 IN_min_Fx, IN_min_Fy, IN_min_Tz= 1.5, 1.5, 1 # N, N and Nm
 
 def plot_one(T1):#, T2, T3, T4, T5, T6):
-  plt.plot(T1)
-  plt.title("Acquisition")
-  #plt.xlabel("numbers of acquisitions")
-  plt.ylabel("Torque [Nm]")
-  plt.grid()
-  #plt.ylim(ymax = 1.1*IN_max_Fx, ymin = -(1.1*IN_max_Fx))
-  plt.ylim(ymax = 1.1*IN_max_Tz, ymin = -(1.1*IN_max_Tz))
+  fig = vp.Fig(size=(600,500),show=False)
+  plotwidget = fig[0,0]
 
-  plt.draw()
-  plt.pause(0.0000001)
-  plt.clf()
+  y = np.array(T1)
+  x = np.array(range(len(T1)))
+  plotwidget.plot((x,y))
+
+  fig.show(run=True)
+
 
 def plot_fct(filtred, velocity, title1, filtred2, velocity2, title2, filtred3, velocity3, title3):
   
@@ -79,7 +78,7 @@ def plot_fct(filtred, velocity, title1, filtred2, velocity2, title2, filtred3, v
   #plt.ylim(ymax = 0.5 + OUT_max, ymin = -(0.5 + OUT_max))
   plt.ylim(ymax = 1.1*IN_max_Tz, ymin = -(1.1*IN_max_Tz))
 
-  plt.draw()
+  plt.draw
   plt.pause(0.0000001)
   plt.clf()
 
@@ -158,7 +157,6 @@ def main():
     rest_position_cmd.publish(start_position)
   rospy.sleep(10)
   
-  count = 0
   while not rospy.is_shutdown():
     data = rospy.wait_for_message("/my_gen3_lite/base_feedback/joint_state", JointState)
 
@@ -225,10 +223,8 @@ def main():
     title1 = "$F_x$ mean value and $v_x$ output value"
     title2 = "$F_y$ mean value and $v_y$ output value"
     title3 = "$T_z$ mean value and $\omega_z$ output value"
-    count += 1
-    if count == 100:
-      plot_one(T3)
-      count = 0
+    plot_one(T3)
+      
 
       # plot_fct(T1, T2, "T1 and T2", T3, T4, "T3 and T4", T5, T6, "T5 and T6")
       # plot_fct(T1_mean, T2_mean , "T1 and T2", T3_mean, T4_mean, "T3 and T4", T5_mean, T6_mean , "T5 and T6")
