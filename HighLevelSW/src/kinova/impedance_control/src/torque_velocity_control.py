@@ -67,7 +67,7 @@ def plot_fct(filtred, velocity, title1, filtred2, velocity2, title2, filtred3, v
   plt.ylim(ymax = 1.1*IN_max_Tz, ymin = -(1.1*IN_max_Tz))
 
   plt.draw()
-  plt.pause(0.000001)
+  plt.pause(0.0000001)
   plt.clf()
 
 def length_control(variable,span=100):
@@ -155,9 +155,6 @@ def main():
     T5.append(data.effort[4])
     T6.append(data.effort[5])
 
-    print(str(T1[-1])+","+str(T2[-1])+","+str(T3[-1])+","+str(T4[-1])+","+str(T5[-1])+","+str(T6[-1]))
-
-    """
     T1 = length_control(T1,span=50)
     T2 = length_control(T2,span=50)
     T3 = length_control(T3,span=50)
@@ -165,6 +162,9 @@ def main():
     T5 = length_control(T5,span=50)
     T6 = length_control(T6,span=50)
 
+    print(str(T1[-1])+","+str(T2[-1])+","+str(T3[-1])+","+str(T4[-1])+","+str(T5[-1])+","+str(T6[-1]))
+
+    """
     T1 = offset(T1,T1_ofs)
     T2 = offset(T2,T2_ofs)
     T3 = offset(T3,T3_ofs)
