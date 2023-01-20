@@ -158,7 +158,7 @@ def main():
     rest_position_cmd.publish(start_position)
   rospy.sleep(10)
   
-  
+  count = 0
   while not rospy.is_shutdown():
     data = rospy.wait_for_message("/my_gen3_lite/base_feedback/joint_state", JointState)
 
@@ -225,10 +225,14 @@ def main():
     title1 = "$F_x$ mean value and $v_x$ output value"
     title2 = "$F_y$ mean value and $v_y$ output value"
     title3 = "$T_z$ mean value and $\omega_z$ output value"
-    plot_one(T1)
-    # plot_fct(T1, T2, "T1 and T2", T3, T4, "T3 and T4", T5, T6, "T5 and T6")
-    # plot_fct(T1_mean, T2_mean , "T1 and T2", T3_mean, T4_mean, "T3 and T4", T5_mean, T6_mean , "T5 and T6")
-    
+    count += 1
+    if count == 100:
+      plot_one(T3)
+      count = 0
+
+      # plot_fct(T1, T2, "T1 and T2", T3, T4, "T3 and T4", T5, T6, "T5 and T6")
+      # plot_fct(T1_mean, T2_mean , "T1 and T2", T3_mean, T4_mean, "T3 and T4", T5_mean, T6_mean , "T5 and T6")
+      
 
 if __name__ == "__main__":
   main()
