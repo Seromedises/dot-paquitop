@@ -10,8 +10,8 @@ from paquitop.msg import Joint_position
 # Constant for translate input force in velocity output
 OUT_max = 0.4 # m/s
 OUT_lim = 0.1 # m/s
-IN_max_Fx, IN_max_Fy, IN_max_Tz = 7.5, 5, 4# N, N and Nm
-IN_min_Fx, IN_min_Fy, IN_min_Tz= 2, 2, 1 # N, N and Nm
+IN_max_Fx, IN_max_Fy, IN_max_Tz = 5, 5, 4# N, N and Nm
+IN_min_Fx, IN_min_Fy, IN_min_Tz= 1.5, 1.5, 1 # N, N and Nm
 
 def plot_fct(filtred, velocity, title1, filtred2, velocity2, title2, filtred3, velocity3, title3):
   
@@ -73,15 +73,16 @@ def length_control(variable,span=100):
 
 def variable_control(variable, offset=0, span=100):
 
-  variable = length_control(variable,span)
+  variable = length_control(variable,50)
 
   if len(variable) < 10:
    offset = sum(variable)/len(variable)
-
+  """
   dct = fftpack.dct(variable, norm="ortho")
   dct[8:] = 0
   filtred = fftpack.idct(dct, norm="ortho")
-
+  """
+  filtred = variable
   for i in range(len(filtred)):
     filtred[i] = filtred[i]- offset 
 
@@ -131,7 +132,7 @@ def main():
   Fx_ofs, Fy_ofs, Fz_ofs, Tx_ofs, Ty_ofs, Tz_ofs = 0, 0, 0, 0, 0, 0
   vx, vy,wz = [], [], []
 
-  start_position.value = [90, -30, -60, 10, -60, -90] #[40, 330, 300, 40, 295, 300]
+  start_position.value = [0,0,0,0,0,0]#[90, -30, -60, 10, -60, -90] #[40, 330, 300, 40, 295, 300]
   for i in range(3):
     rest_position_cmd.publish(start_position)
   rospy.sleep(10)

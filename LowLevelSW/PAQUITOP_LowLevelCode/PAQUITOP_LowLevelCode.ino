@@ -103,8 +103,8 @@ int Nstep = 200*mStepping/tau;                                                  
 int dnR, dnL, dNsoglia = 1000, nstepR_REF, nstepL_REF, nstepR_old, nstepL_old;            //variabili di riferimento sterzo in numero di step (per OL)
 
 // Gain controllo PID:
-float kp = 20.0*0.0056753;                                                              //2 senza carico, 20 con carico
-float ki = 0.0005;                                                                      //0.00005 senza carico, 0.0005 con carico
+float kp = 2.0*0.0056753;                                                              //2 senza carico, 20 con carico
+float ki = 0.00005;                                                                      //0.00005 senza carico, 0.0005 con carico
 float kd = 0.0;
 float INT, DER;
 
