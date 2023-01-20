@@ -31,7 +31,7 @@ def plot_fct(filtred, velocity, title1, filtred2, velocity2, title2, filtred3, v
   plt.ylabel("velocity [m/s]")
   plt.grid()
   #plt.ylim(ymax = 0.5 + OUT_max, ymin = -(0.5 + OUT_max))
-  plt.ylim(ymax = 1.1*IN_max_Tz, ymin = -(1.1*IN_max_Tz))
+  plt.ylim(ymax = 1.1*4, ymin = (1.1*8))
 
   plt.subplot(2, 3, 2)
   plt.plot(filtred2)
