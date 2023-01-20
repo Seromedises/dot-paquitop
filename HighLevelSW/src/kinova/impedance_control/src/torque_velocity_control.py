@@ -31,7 +31,7 @@ def plot_fct(filtred, velocity, title1, filtred2, velocity2, title2, filtred3, v
   plt.ylabel("velocity [m/s]")
   plt.grid()
   #plt.ylim(ymax = 0.5 + OUT_max, ymin = -(0.5 + OUT_max))
-  plt.ylim(ymax = -1.1*4, ymin = -(1.1*8))
+  plt.ylim(ymax = 1.1*IN_max_Tz, ymin = -(1.1*IN_max_Tz))
 
   plt.subplot(2, 3, 2)
   plt.plot(filtred2)
@@ -77,25 +77,22 @@ def length_control(variable,span=100):
   
   return variable
 
-def variable_control(variable, offset=0, span=100):
-
-  variable = length_control(variable,50)
-
+def offset(variable, offset):
   if len(variable) < 10:
    offset = sum(variable)/len(variable)
-  """
+  else:
+    for i in range(len(variable)):
+      variable[i] = variable[i]- offset 
+  return variable, offset
+
+def filter(variable,span):
+
+  variable = length_control(variable,span)
   dct = fftpack.dct(variable, norm="ortho")
   dct[8:] = 0
-  filtred = fftpack.idct(dct, norm="ortho")
-  """
-  filtred = variable
-  """
-  for i in range(len(filtred)):
-    filtred[i] = filtred[i]- offset 
-  """
-  return filtred, variable, offset
+  return fftpack.idct(dct, norm="ortho")
 
-def force_to_velocity(IN, IN_lim = 1, IN_max = 5):
+def to_velocity(IN, IN_lim = 1, IN_max = 5):
   
   # IN_lim and IN_max are N or Nm 
 
@@ -135,10 +132,9 @@ def main():
   rest_position_cmd.publish(start_position)
   rospy.sleep(1)
   
-  Fx, Fy, Fz, Tx, Ty, Tz = [], [], [], [], [], []
-  Fx_ofs, Fy_ofs, Fz_ofs, Tx_ofs, Ty_ofs, Tz_ofs = 0, 0, 0, 0, 0, 0
+  T1_ofs, T2_ofs, T3_ofs, T4_ofs, T5_ofs, T6_ofs = 0, 0, 0, 0, 0, 0
   vx, vy,wz = [], [], []
-  T1, T2, T3, T4, T5, T6 = [], [], [], [], [], []
+  T1, T2, T3, T4, T5, T6, T1_mean, T2_mean, T3_mean, T4_mean, T5_mean, T6_mean= [], [], [], [], [], [], [], [], [], [], [], []
 
   start_position.value = [0, 340, 0, 90, 70, 0]#[90, -30, -60, 10, -60, -90] #[40, 330, 300, 40, 295, 300]
   for i in range(3):
@@ -164,6 +160,29 @@ def main():
     T4 = length_control(T4,span=50)
     T5 = length_control(T5,span=50)
     T6 = length_control(T6,span=50)
+    
+    T1_mean.append(filter(T1,span=10))
+    T2_mean.append(filter(T2,span=10))
+    T3_mean.append(filter(T3,span=10))
+    T4_mean.append(filter(T4,span=10))
+    T5_mean.append(filter(T5,span=10))
+    T6_mean.append(filter(T6,span=10))
+
+    T1_mean = offset(T1_mean,T1_ofs)
+    T2_mean = offset(T2_mean,T2_ofs)
+    T3_mean = offset(T3_mean,T3_ofs)
+    T4_mean = offset(T4_mean,T4_ofs)
+    T5_mean = offset(T5_mean,T5_ofs)
+    T6_mean = offset(T6_mean,T6_ofs)
+
+    T1_mean = length_control(T1_mean,span=50)
+    T2_mean = length_control(T2_mean,span=50)
+    T3_mean = length_control(T3_mean,span=50)
+    T4_mean = length_control(T4_mean,span=50)
+    T5_mean = length_control(T5_mean,span=50)
+    T6_mean = length_control(T6_mean,span=50)
+
+
 
     """
     Fx_mean, Fx, Fx_ofs = variable_control(Fx, Fx_ofs, span=50)
@@ -193,7 +212,7 @@ def main():
     title3 = "$T_z$ mean value and $\omega_z$ output value"
     
 
-    plot_fct(T1, T2 , "T1 and T2", T3, T4, "T3 and T4", T5, T6 , "T5 and T6")
+    plot_fct(T1_mean, T2_mean , "T1 and T2", T3_mean, T4_mean, "T3 and T4", T5_mean, T6_mean , "T5 and T6")
     
 
 if __name__ == "__main__":
