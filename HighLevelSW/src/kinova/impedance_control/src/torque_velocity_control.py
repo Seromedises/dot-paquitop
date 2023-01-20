@@ -160,6 +160,13 @@ def main():
     T4 = length_control(T4,span=50)
     T5 = length_control(T5,span=50)
     T6 = length_control(T6,span=50)
+
+    T1 = offset(T1,T1_ofs)
+    T2 = offset(T2,T2_ofs)
+    T3 = offset(T3,T3_ofs)
+    T4 = offset(T4,T4_ofs)
+    T5 = offset(T5,T5_ofs)
+    T6 = offset(T6,T6_ofs)
     
     T1_mean.append(filter(T1,span=10))
     T2_mean.append(filter(T2,span=10))
@@ -167,13 +174,6 @@ def main():
     T4_mean.append(filter(T4,span=10))
     T5_mean.append(filter(T5,span=10))
     T6_mean.append(filter(T6,span=10))
-
-    T1_mean = offset(T1_mean,T1_ofs)
-    T2_mean = offset(T2_mean,T2_ofs)
-    T3_mean = offset(T3_mean,T3_ofs)
-    T4_mean = offset(T4_mean,T4_ofs)
-    T5_mean = offset(T5_mean,T5_ofs)
-    T6_mean = offset(T6_mean,T6_ofs)
 
     T1_mean = length_control(T1_mean,span=50)
     T2_mean = length_control(T2_mean,span=50)
