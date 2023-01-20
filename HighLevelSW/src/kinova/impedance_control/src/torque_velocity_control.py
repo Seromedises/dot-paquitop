@@ -168,12 +168,12 @@ def main():
     T5 = offset(T5,T5_ofs)
     T6 = offset(T6,T6_ofs)
     
-    T1_mean.append(filter(T1,span=10))
-    T2_mean.append(filter(T2,span=10))
-    T3_mean.append(filter(T3,span=10))
-    T4_mean.append(filter(T4,span=10))
-    T5_mean.append(filter(T5,span=10))
-    T6_mean.append(filter(T6,span=10))
+    T1_mean = (filter(T1,span=10))
+    T2_mean = (filter(T2,span=10))
+    T3_mean = (filter(T3,span=10))
+    T4_mean = (filter(T4,span=10))
+    T5_mean = (filter(T5,span=10))
+    T6_mean = (filter(T6,span=10))
 
     T1_mean = length_control(T1_mean,span=50)
     T2_mean = length_control(T2_mean,span=50)
