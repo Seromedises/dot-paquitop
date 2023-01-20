@@ -7,24 +7,13 @@ import rospy
 from sensor_msgs.msg import JointState
 from geometry_msgs.msg import Twist
 from paquitop.msg import Joint_position
-import vispy.plot as vp
+
 
 # Constant for translate input force in velocity output
 OUT_max = 0.4 # m/s
 OUT_lim = 0.1 # m/s
 IN_max_Fx, IN_max_Fy, IN_max_Tz = 5, 5, 4# N, N and Nm
 IN_min_Fx, IN_min_Fy, IN_min_Tz= 1.5, 1.5, 1 # N, N and Nm
-
-def plot_one(T1):#, T2, T3, T4, T5, T6):
-  fig = vp.Fig(size=(600,500),show=False)
-  plotwidget = fig[0,0]
-
-  y = np.array(T1)
-  x = np.array(range(len(T1)))
-  plotwidget.plot((x,y))
-
-  fig.show(run=True)
-
 
 def plot_fct(filtred, velocity, title1, filtred2, velocity2, title2, filtred3, velocity3, title3):
   
@@ -142,6 +131,7 @@ def main():
   rospy.init_node('torque_velocity_control')
   cmd_vel = rospy.Publisher('/cmd_vel', Twist, queue_size=10)
   rest_position_cmd = rospy.Publisher('/joint_angles', Joint_position, queue_size=1)
+  plot_fb = rospy.Publisher('/torque',Joint_position,queue_size=10)
   vel_msg = Twist()
   start_position = Joint_position()
   rest_position_cmd.publish(start_position)
@@ -223,7 +213,9 @@ def main():
     title1 = "$F_x$ mean value and $v_x$ output value"
     title2 = "$F_y$ mean value and $v_y$ output value"
     title3 = "$T_z$ mean value and $\omega_z$ output value"
-    plot_one(T3)
+    torque = Joint_position()
+    torque.value = [T1[-1], T2[-1], T3[-1], T4[-1], T5[-1], T6[-1]]
+    plot_fb.publish(torque)
       
 
       # plot_fct(T1, T2, "T1 and T2", T3, T4, "T3 and T4", T5, T6, "T5 and T6")
