@@ -167,7 +167,7 @@ def main():
     T4 = offset(T4,T4_ofs)
     T5 = offset(T5,T5_ofs)
     T6 = offset(T6,T6_ofs)
-    
+    """
     T1_mean = (filter(T1,span=10))
     T2_mean = (filter(T2,span=10))
     T3_mean = (filter(T3,span=10))
@@ -181,7 +181,7 @@ def main():
     T4_mean = length_control(T4_mean,span=50)
     T5_mean = length_control(T5_mean,span=50)
     T6_mean = length_control(T6_mean,span=50)
-
+    """
 
 
     """
@@ -211,8 +211,8 @@ def main():
     title2 = "$F_y$ mean value and $v_y$ output value"
     title3 = "$T_z$ mean value and $\omega_z$ output value"
     
-
-    plot_fct(T1_mean, T2_mean , "T1 and T2", T3_mean, T4_mean, "T3 and T4", T5_mean, T6_mean , "T5 and T6")
+    plot_fct(T1, T2, "T1 and T2", T3, T4, "T3 and T4", T5, T6, "T5 and T6")
+    #plot_fct(T1_mean, T2_mean , "T1 and T2", T3_mean, T4_mean, "T3 and T4", T5_mean, T6_mean , "T5 and T6")
     
 
 if __name__ == "__main__":
