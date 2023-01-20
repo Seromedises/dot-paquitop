@@ -188,7 +188,7 @@ def main():
     title3 = "$T_z$ mean value and $\omega_z$ output value"
     
 
-    plot_fct(T1, T2 , title1, T3, T4, title2, T5, T6 , title3)
+    plot_fct(T1, T2 , "T1 and T2", T3, T4, "T3 and T4", T5, T6 , "T5 and T6")
     
 
 if __name__ == "__main__":
