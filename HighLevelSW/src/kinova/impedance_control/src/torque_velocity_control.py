@@ -90,7 +90,7 @@ def filter(variable,span):
   variable = length_control(variable,span)
   dct = fftpack.dct(variable, norm="ortho")
   dct[8:] = 0
-  return fftpack.idct(dct, norm="ortho")
+  return list(fftpack.idct(dct, norm="ortho"))
 
 def to_velocity(IN, IN_lim = 1, IN_max = 5):
   
