@@ -133,7 +133,7 @@ def main():
   Fx, Fy, Fz, Tx, Ty, Tz = [], [], [], [], [], []
   Fx_ofs, Fy_ofs, Fz_ofs, Tx_ofs, Ty_ofs, Tz_ofs = 0, 0, 0, 0, 0, 0
   vx, vy,wz = [], [], []
-  Torque = np.array(array_like)
+  T1, T2, T3, T4, T5, T6 = [], [], [], [], [], []
 
   start_position.value = [0, 340, 0, 90, 70, 0]#[90, -30, -60, 10, -60, -90] #[40, 330, 300, 40, 295, 300]
   for i in range(3):
@@ -144,8 +144,19 @@ def main():
   while not rospy.is_shutdown():
     data = rospy.wait_for_message("/my_gen3_lite/base_feedback/joint_state", JointState)
     
-    Torque.append(list(data.effort))
-    print(Torque)
+    T1.append(data.effort(0))
+    T2.append(data.effort(1))
+    T3.append(data.effort(2))
+    T4.append(data.effort(3))
+    T5.append(data.effort(4))
+    T6.append(data.effort(5))
+
+    T1 = length_control(T1,span=50)
+    T2 = length_control(T2,span=50)
+    T3 = length_control(T3,span=50)
+    T4 = length_control(T4,span=50)
+    T5 = length_control(T5,span=50)
+    T6 = length_control(T6,span=50)
 
     """
     Fx_mean, Fx, Fx_ofs = variable_control(Fx, Fx_ofs, span=50)
@@ -162,7 +173,6 @@ def main():
     vy = length_control(vy, span=50)
     wz = length_control(wz, span=50)
     
-
     vel_msg.linear.x = vx[-1]
     vel_msg.linear.y = vy[-1]
     vel_msg.linear.z = 0
@@ -170,13 +180,13 @@ def main():
     vel_msg.angular.y = 0
     vel_msg.angular.z = wz[-1]
 
-    cmd_vel.publish(vel_msg)
+    cmd_vel.publish(vel_msg)"""
     title1 = "$F_x$ mean value and $v_x$ output value"
     title2 = "$F_y$ mean value and $v_y$ output value"
     title3 = "$T_z$ mean value and $\omega_z$ output value"
-    """
+    
 
-    plot_fct(Fx_mean, vx , title1, Fy_mean, vy, title2, Tz_mean, wz , title3)
+    plot_fct(T1, T2 , title1, T3, T4, title2, T5, T6 , title3)
     
 
 if __name__ == "__main__":
