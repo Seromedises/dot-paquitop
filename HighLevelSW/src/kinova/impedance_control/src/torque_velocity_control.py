@@ -78,11 +78,13 @@ def length_control(variable,span=100):
   return variable
 
 def offset(variable, offset):
+  
   if len(variable) < 10:
    offset = sum(variable)/len(variable)
-  else:
-    for i in range(len(variable)):
-      variable[i] = variable[i]- offset 
+  
+  for i in range(len(variable)):
+    variable[i] = variable[i]- offset 
+  
   return variable, offset
 
 def filter(variable,span):
