@@ -146,7 +146,7 @@ def main():
   while not rospy.is_shutdown():
     data = rospy.wait_for_message("/my_gen3_lite/base_feedback/joint_state", JointState)
     
-    # data.effort = list(data.effort)
+    data.effort = list(data.effort)
 
     T1.append(data.effort[0])
     T2.append(data.effort[1])
