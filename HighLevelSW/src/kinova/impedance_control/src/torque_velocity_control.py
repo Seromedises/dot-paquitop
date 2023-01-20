@@ -93,7 +93,7 @@ def filter(variable,span):
   dct = fftpack.dct(variable, norm="ortho")
   dct[8:] = 0
   filtred = fftpack.idct(dct, norm="ortho")
-  return list(filtred)
+  return filtred
 
 def to_velocity(IN, IN_lim = 1, IN_max = 5):
   
@@ -137,7 +137,8 @@ def main():
   
   T1_ofs, T2_ofs, T3_ofs, T4_ofs, T5_ofs, T6_ofs = 0, 0, 0, 0, 0, 0
   vx, vy,wz = [], [], []
-  T1, T2, T3, T4, T5, T6, T1_mean, T2_mean, T3_mean, T4_mean, T5_mean, T6_mean= [], [], [], [], [], [], [], [], [], [], [], []
+  T1, T2, T3, T4, T5, T6 = [], [], [], [], [], []
+  T1_mean, T2_mean, T3_mean, T4_mean, T5_mean, T6_mean= [], [], [], [], [], []
 
   start_position.value = [0, 340, 0, 90, 70, 0]#[90, -30, -60, 10, -60, -90] #[40, 330, 300, 40, 295, 300]
   for i in range(3):
@@ -147,8 +148,6 @@ def main():
   
   while not rospy.is_shutdown():
     data = rospy.wait_for_message("/my_gen3_lite/base_feedback/joint_state", JointState)
-    
-    data.effort = list(data.effort)
 
     T1.append(data.effort[0])
     T2.append(data.effort[1])
@@ -164,7 +163,6 @@ def main():
     T5 = length_control(T5,span=50)
     T6 = length_control(T6,span=50)
 
-    
     T1,T1_ofs = offset(T1,T1_ofs)
     T2,T2_ofs = offset(T2,T2_ofs)
     T3,T3_ofs = offset(T3,T3_ofs)
@@ -215,8 +213,8 @@ def main():
     title2 = "$F_y$ mean value and $v_y$ output value"
     title3 = "$T_z$ mean value and $\omega_z$ output value"
     
-    # plot_fct(T1, T2, "T1 and T2", T3, T4, "T3 and T4", T5, T6, "T5 and T6")
-    plot_fct(T1_mean, T2_mean , "T1 and T2", T3_mean, T4_mean, "T3 and T4", T5_mean, T6_mean , "T5 and T6")
+    plot_fct(T1, T2, "T1 and T2", T3, T4, "T3 and T4", T5, T6, "T5 and T6")
+    #plot_fct(T1_mean, T2_mean , "T1 and T2", T3_mean, T4_mean, "T3 and T4", T5_mean, T6_mean , "T5 and T6")
     
 
 if __name__ == "__main__":
