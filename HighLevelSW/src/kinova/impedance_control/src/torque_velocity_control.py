@@ -93,9 +93,9 @@ def filter(variable,span,offset):
   dct[8:] = 0
   filtred = fftpack.idct(dct, norm="ortho")
   for i in range(len(filtred)):
-    filtred[i] = filtred[i]- offset
+    filtred[i] = float(filtred[i]- offset)
   
-  return filtred
+  return list(filtred)
 
 def to_velocity(IN, IN_lim = 1, IN_max = 5):
   
