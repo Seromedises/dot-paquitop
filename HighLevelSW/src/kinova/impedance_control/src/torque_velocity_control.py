@@ -178,7 +178,7 @@ def main():
     T4_mean.append(filter(T4,filter_span,T4_ofs))
     T5_mean.append(filter(T5,filter_span,T5_ofs))
     T6_mean.append(filter(T6,filter_span,T6_ofs))
-
+    """
     T1_mean = length_control(T1_mean,span=50)
     T2_mean = length_control(T2_mean,span=50)
     T3_mean = length_control(T3_mean,span=50)
@@ -186,7 +186,7 @@ def main():
     T5_mean = length_control(T5_mean,span=50)
     T6_mean = length_control(T6_mean,span=50)
     
-    """
+    
     Fx_mean, Fx, Fx_ofs = variable_control(Fx, Fx_ofs, span=50)
     Fy_mean, Fy, Fy_ofs = variable_control(Fy, Fy_ofs, span=50)
     #Fz_mean, Fz, Fz_ofs = variable_control(Fz, Fz_ofs, span=50)
