@@ -175,14 +175,14 @@ def main():
     T4 = length_control(T4,span=50)
     T5 = length_control(T5,span=50)
     T6 = length_control(T6,span=50)
-
+    """"
     T1,T1_ofs = offset(T1,T1_ofs)
     T2,T2_ofs = offset(T2,T2_ofs)
     T3,T3_ofs = offset(T3,T3_ofs)
     T4,T4_ofs = offset(T4,T4_ofs)
     T5,T5_ofs = offset(T5,T5_ofs)
     T6,T6_ofs = offset(T6,T6_ofs)
-
+    """
     #print(str(T1[-1]))#+","+str(T2[-1])+","+str(T3[-1])+","+str(T4[-1])+","+str(T5[-1])+","+str(T6[-1]))
 
     T1_mean.append(filter(T1,span=10))
