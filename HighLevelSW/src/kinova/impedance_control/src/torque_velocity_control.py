@@ -81,9 +81,9 @@ def offset(variable, offset):
   
   if len(variable) < 10:
    offset = sum(variable)/len(variable)
-  
-  for i in range(len(variable)):
-    variable[i] = variable[i]- offset 
+  else:
+    for i in range(len(variable)):
+      variable[i] = variable[i]- offset 
   
   return variable, offset
 
@@ -165,21 +165,21 @@ def main():
     T6 = length_control(T6,span=50)
 
     
-    T1 = offset(T1,T1_ofs)
-    T2 = offset(T2,T2_ofs)
-    T3 = offset(T3,T3_ofs)
-    T4 = offset(T4,T4_ofs)
-    T5 = offset(T5,T5_ofs)
-    T6 = offset(T6,T6_ofs)
-    print(str(T1[-1])+","+str(T2[-1])+","+str(T3[-1])+","+str(T4[-1])+","+str(T5[-1])+","+str(T6[-1]))
+    T1,T1_ofs = offset(T1,T1_ofs)
+    T2,T2_ofs = offset(T2,T2_ofs)
+    T3,T3_ofs = offset(T3,T3_ofs)
+    T4,T4_ofs = offset(T4,T4_ofs)
+    T5,T5_ofs = offset(T5,T5_ofs)
+    T6,T6_ofs = offset(T6,T6_ofs)
 
-    """
-    T1_mean = (filter(T1,span=10))
-    T2_mean = (filter(T2,span=10))
-    T3_mean = (filter(T3,span=10))
-    T4_mean = (filter(T4,span=10))
-    T5_mean = (filter(T5,span=10))
-    T6_mean = (filter(T6,span=10))
+    #print(str(T1[-1])+","+str(T2[-1])+","+str(T3[-1])+","+str(T4[-1])+","+str(T5[-1])+","+str(T6[-1]))
+
+    T1_mean.append(filter(T1,span=10))
+    T2_mean.append(filter(T2,span=10))
+    T3_mean.append(filter(T3,span=10))
+    T4_mean.append(filter(T4,span=10))
+    T5_mean.append(filter(T5,span=10))
+    T6_mean.append(filter(T6,span=10))
 
     T1_mean = length_control(T1_mean,span=50)
     T2_mean = length_control(T2_mean,span=50)
@@ -187,9 +187,7 @@ def main():
     T4_mean = length_control(T4_mean,span=50)
     T5_mean = length_control(T5_mean,span=50)
     T6_mean = length_control(T6_mean,span=50)
-    """
-
-
+    
     """
     Fx_mean, Fx, Fx_ofs = variable_control(Fx, Fx_ofs, span=50)
     Fy_mean, Fy, Fy_ofs = variable_control(Fy, Fy_ofs, span=50)
@@ -217,8 +215,8 @@ def main():
     title2 = "$F_y$ mean value and $v_y$ output value"
     title3 = "$T_z$ mean value and $\omega_z$ output value"
     
-    plot_fct(T1, T2, "T1 and T2", T3, T4, "T3 and T4", T5, T6, "T5 and T6")
-    #plot_fct(T1_mean, T2_mean , "T1 and T2", T3_mean, T4_mean, "T3 and T4", T5_mean, T6_mean , "T5 and T6")
+    # plot_fct(T1, T2, "T1 and T2", T3, T4, "T3 and T4", T5, T6, "T5 and T6")
+    plot_fct(T1_mean, T2_mean , "T1 and T2", T3_mean, T4_mean, "T3 and T4", T5_mean, T6_mean , "T5 and T6")
     
 
 if __name__ == "__main__":
