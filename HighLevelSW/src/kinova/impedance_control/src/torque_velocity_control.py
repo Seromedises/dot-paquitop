@@ -23,6 +23,10 @@ def plot_one(T1):#, T2, T3, T4, T5, T6):
   #plt.ylim(ymax = 1.1*IN_max_Fx, ymin = -(1.1*IN_max_Fx))
   plt.ylim(ymax = 1.1*IN_max_Tz, ymin = -(1.1*IN_max_Tz))
 
+  plt.draw()
+  plt.pause(0.0000001)
+  plt.clf()
+
 def plot_fct(filtred, velocity, title1, filtred2, velocity2, title2, filtred3, velocity3, title3):
   
   plt.subplot(2, 3, 1)
