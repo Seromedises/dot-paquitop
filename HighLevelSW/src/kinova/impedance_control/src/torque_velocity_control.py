@@ -78,22 +78,22 @@ def length_control(variable,span=100):
   
   return variable
 
-def offset(variable, offset):
+def offset(variable):
   
   if len(variable) < 10:
    offset = sum(variable)/len(variable)
-  else:
-    for i in range(len(variable)):
-      variable[i] = variable[i]- offset 
   
-  return variable, offset
+  return offset
 
-def filter(variable,span):
+def filter(variable,span,offset):
 
   variable = length_control(variable,span)
   dct = fftpack.dct(variable, norm="ortho")
   dct[8:] = 0
   filtred = fftpack.idct(dct, norm="ortho")
+  for i in range(len(filtred)):
+    filtred[i] = filtred[i]- offset
+  
   return filtred
 
 def to_velocity(IN, IN_lim = 1, IN_max = 5):
@@ -163,22 +163,20 @@ def main():
     T4 = length_control(T4,span=50)
     T5 = length_control(T5,span=50)
     T6 = length_control(T6,span=50)
-    """"
-    T1,T1_ofs = offset(T1,T1_ofs)
-    T2,T2_ofs = offset(T2,T2_ofs)
-    T3,T3_ofs = offset(T3,T3_ofs)
-    T4,T4_ofs = offset(T4,T4_ofs)
-    T5,T5_ofs = offset(T5,T5_ofs)
-    T6,T6_ofs = offset(T6,T6_ofs)
-    """
-    #print(str(T1[-1]))#+","+str(T2[-1])+","+str(T3[-1])+","+str(T4[-1])+","+str(T5[-1])+","+str(T6[-1]))
-
-    T1_mean.append(filter(T1,span=10))
-    T2_mean.append(filter(T2,span=10))
-    T3_mean.append(filter(T3,span=10))
-    T4_mean.append(filter(T4,span=10))
-    T5_mean.append(filter(T5,span=10))
-    T6_mean.append(filter(T6,span=10))
+    
+    T1_ofs = offset(T1)
+    T2_ofs = offset(T2)
+    T3_ofs = offset(T3)
+    T4_ofs = offset(T4)
+    T5_ofs = offset(T5)
+    T6_ofs = offset(T6)
+    
+    T1_mean.append(filter(T1,10,T1_ofs))
+    T2_mean.append(filter(T2,10,T2_ofs))
+    T3_mean.append(filter(T3,10,T3_ofs))
+    T4_mean.append(filter(T4,10,T4_ofs))
+    T5_mean.append(filter(T5,10,T5_ofs))
+    T6_mean.append(filter(T6,10,T6_ofs))
 
     T1_mean = length_control(T1_mean,span=50)
     T2_mean = length_control(T2_mean,span=50)
@@ -214,7 +212,7 @@ def main():
     title2 = "$F_y$ mean value and $v_y$ output value"
     title3 = "$T_z$ mean value and $\omega_z$ output value"
     torque = Joint_position()
-    torque.value = [T1[-1], T2[-1], T3[-1], T4[-1], T5[-1], T6[-1]]
+    torque.value = [T1_mean[-1], T2_mean[-1], T3_mean[-1], T4_mean[-1], T5_mean[-1], T6_mean[-1]]
     plot_fb.publish(torque)
       
 
