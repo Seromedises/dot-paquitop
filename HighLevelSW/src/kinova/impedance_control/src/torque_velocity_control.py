@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 
+import numpy as np
 import scipy.fftpack as fftpack
 import matplotlib.pyplot as plt
 import rospy
-from kortex_driver.msg import BaseCyclic_Feedback
+from sensor_msgs.msg import JointState
 from geometry_msgs.msg import Twist
 from paquitop.msg import Joint_position
 
@@ -121,7 +122,7 @@ def force_to_velocity(IN, IN_lim = 1, IN_max = 5):
   return velocity
 
 def main():
-  rospy.init_node('impedance_control')
+  rospy.init_node('torque_velocity_control')
   cmd_vel = rospy.Publisher('/cmd_vel', Twist, queue_size=10)
   rest_position_cmd = rospy.Publisher('/joint_angles', Joint_position, queue_size=1)
   vel_msg = Twist()
@@ -132,6 +133,7 @@ def main():
   Fx, Fy, Fz, Tx, Ty, Tz = [], [], [], [], [], []
   Fx_ofs, Fy_ofs, Fz_ofs, Tx_ofs, Ty_ofs, Tz_ofs = 0, 0, 0, 0, 0, 0
   vx, vy,wz = [], [], []
+  Torque = np.array()
 
   start_position.value = [0, 340, 0, 90, 70, 0]#[90, -30, -60, 10, -60, -90] #[40, 330, 300, 40, 295, 300]
   for i in range(3):
@@ -140,15 +142,12 @@ def main():
   
   
   while not rospy.is_shutdown():
-    data = rospy.wait_for_message("/my_gen3_lite/base_feedback",BaseCyclic_Feedback)
+    data = rospy.wait_for_message("/my_gen3_lite/base_feedback/joint_state", JointState)
+    
+    Torque.append(list(data.effort))
+    print(Torque)
 
-    Fx.append(data.base.tool_external_wrench_force_x)
-    Fy.append(data.base.tool_external_wrench_force_y)
-    #Fz.append(data.base.tool_external_wrench_force_z)
-    #Tx.append(data.base.tool_external_wrench_torque_x)
-    #Ty.append(data.base.tool_external_wrench_torque_y)
-    Tz.append(data.base.tool_external_wrench_torque_z)
-
+    """
     Fx_mean, Fx, Fx_ofs = variable_control(Fx, Fx_ofs, span=50)
     Fy_mean, Fy, Fy_ofs = variable_control(Fy, Fy_ofs, span=50)
     #Fz_mean, Fz, Fz_ofs = variable_control(Fz, Fz_ofs, span=50)
@@ -162,6 +161,7 @@ def main():
     vx = length_control(vx, span=50)
     vy = length_control(vy, span=50)
     wz = length_control(wz, span=50)
+    
 
     vel_msg.linear.x = vx[-1]
     vel_msg.linear.y = vy[-1]
@@ -174,6 +174,7 @@ def main():
     title1 = "$F_x$ mean value and $v_x$ output value"
     title2 = "$F_y$ mean value and $v_y$ output value"
     title3 = "$T_z$ mean value and $\omega_z$ output value"
+    """
 
     plot_fct(Fx_mean, vx , title1, Fy_mean, vy, title2, Tz_mean, wz , title3)
     
