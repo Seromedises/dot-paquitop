@@ -155,6 +155,9 @@ def main():
     T5.append(data.effort[4])
     T6.append(data.effort[5])
 
+    print(str(T1[-1])+","+str(T2[-1])+","+str(T3[-1])+","+str(T4[-1])+","+str(T5[-1])+","+str(T6[-1]))
+
+    """
     T1 = length_control(T1,span=50)
     T2 = length_control(T2,span=50)
     T3 = length_control(T3,span=50)
@@ -168,7 +171,7 @@ def main():
     T4 = offset(T4,T4_ofs)
     T5 = offset(T5,T5_ofs)
     T6 = offset(T6,T6_ofs)
-    """
+    
     T1_mean = (filter(T1,span=10))
     T2_mean = (filter(T2,span=10))
     T3_mean = (filter(T3,span=10))
