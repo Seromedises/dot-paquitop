@@ -56,12 +56,12 @@ def plot_fct(filtred, velocity, title1, filtred2, velocity2, title2, filtred3, v
   plt.subplot(2, 3, 6)
   plt.plot(velocity3)
   plt.xlabel("numbers of acquisitions")
-  plt.ylabel(" angular velocity [rad/s]")
+  plt.ylabel("angular velocity [rad/s]")
   plt.grid()
   plt.ylim(ymax = 0.5 + OUT_max, ymin = -(0.5 + OUT_max))
 
   plt.draw()
-  plt.pause(0.0001)
+  plt.pause(0.000001)
   plt.clf()
 
 def length_control(variable,span=100):
@@ -132,7 +132,7 @@ def main():
   Fx_ofs, Fy_ofs, Fz_ofs, Tx_ofs, Ty_ofs, Tz_ofs = 0, 0, 0, 0, 0, 0
   vx, vy,wz = [], [], []
 
-  start_position.value = [0,0,0,0,0,0]#[90, -30, -60, 10, -60, -90] #[40, 330, 300, 40, 295, 300]
+  start_position.value = [0, 0, 0, 0, 0, 0]#[90, -30, -60, 10, -60, -90] #[40, 330, 300, 40, 295, 300]
   for i in range(3):
     rest_position_cmd.publish(start_position)
   rospy.sleep(10)
@@ -143,16 +143,16 @@ def main():
 
     Fx.append(data.base.tool_external_wrench_force_x)
     Fy.append(data.base.tool_external_wrench_force_y)
-    Fz.append(data.base.tool_external_wrench_force_z)
-    Tx.append(data.base.tool_external_wrench_torque_x)
-    Ty.append(data.base.tool_external_wrench_torque_y)
+    #Fz.append(data.base.tool_external_wrench_force_z)
+    #Tx.append(data.base.tool_external_wrench_torque_x)
+    #Ty.append(data.base.tool_external_wrench_torque_y)
     Tz.append(data.base.tool_external_wrench_torque_z)
 
     Fx_mean, Fx, Fx_ofs = variable_control(Fx, Fx_ofs, span=50)
     Fy_mean, Fy, Fy_ofs = variable_control(Fy, Fy_ofs, span=50)
-    Fz_mean, Fz, Fz_ofs = variable_control(Fz, Fz_ofs, span=50)
-    Tx_mean, Tx, Tx_ofs = variable_control(Tx, Tx_ofs, span=50)
-    Ty_mean, Ty, Ty_ofs = variable_control(Ty, Ty_ofs, span=50)
+    #Fz_mean, Fz, Fz_ofs = variable_control(Fz, Fz_ofs, span=50)
+    #Tx_mean, Tx, Tx_ofs = variable_control(Tx, Tx_ofs, span=50)
+    #Ty_mean, Ty, Ty_ofs = variable_control(Ty, Ty_ofs, span=50)
     Tz_mean, Tz, Tz_ofs = variable_control(Tz, Tz_ofs, span=50)
 
     vx.append(force_to_velocity(Fx_mean[-1],IN_lim=IN_min_Fx,IN_max=IN_max_Fx))
