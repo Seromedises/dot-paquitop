@@ -183,7 +183,7 @@ def main():
     T5,T5_ofs = offset(T5,T5_ofs)
     T6,T6_ofs = offset(T6,T6_ofs)
 
-    print(str(T1[-1]))#+","+str(T2[-1])+","+str(T3[-1])+","+str(T4[-1])+","+str(T5[-1])+","+str(T6[-1]))
+    #print(str(T1[-1]))#+","+str(T2[-1])+","+str(T3[-1])+","+str(T4[-1])+","+str(T5[-1])+","+str(T6[-1]))
 
     T1_mean.append(filter(T1,span=10))
     T2_mean.append(filter(T2,span=10))
