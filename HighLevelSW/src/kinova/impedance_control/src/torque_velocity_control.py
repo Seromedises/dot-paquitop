@@ -162,16 +162,16 @@ def main():
     T5 = length_control(T5,span=50)
     T6 = length_control(T6,span=50)
 
-    print(str(T1[-1])+","+str(T2[-1])+","+str(T3[-1])+","+str(T4[-1])+","+str(T5[-1])+","+str(T6[-1]))
-
-    """
+    
     T1 = offset(T1,T1_ofs)
     T2 = offset(T2,T2_ofs)
     T3 = offset(T3,T3_ofs)
     T4 = offset(T4,T4_ofs)
     T5 = offset(T5,T5_ofs)
     T6 = offset(T6,T6_ofs)
-    
+    print(str(T1[-1])+","+str(T2[-1])+","+str(T3[-1])+","+str(T4[-1])+","+str(T5[-1])+","+str(T6[-1]))
+
+    """
     T1_mean = (filter(T1,span=10))
     T2_mean = (filter(T2,span=10))
     T3_mean = (filter(T3,span=10))
