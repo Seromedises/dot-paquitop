@@ -13,7 +13,7 @@ from paquitop.msg import Joint_position
 OUT_max = 0.4 # m/s
 OUT_lim = 0.1 # m/s
 IN_max_T3, IN_max_T4, IN_max_T6 = 5, 2, 2# N, N and Nm
-IN_min_T3, IN_min_T4, IN_min_T6= 1.25, 0.5, 0.5 # N, N and Nm
+IN_min_T3, IN_min_T4, IN_min_T6= 1.0, 0.5, 0.5 # N, N and Nm
 filter_span = 50
 
 def length_control(variable,span=100):
@@ -131,12 +131,24 @@ def main():
     vy = length_control(vy, span=50)
     wz = length_control(wz, span=50)
     
-    vel_msg.linear.x = vx[-1]
-    vel_msg.linear.y = vy[-1]
-    vel_msg.linear.z = 0
-    vel_msg.angular.x = 0
-    vel_msg.angular.y = 0
-    vel_msg.angular.z = wz[-1]
+
+    # controll to disacopiate vx and vy
+    if abs(vx[-1])> abs(vy[-1]) or abs(wz[-1])> abs(vy[-1]):
+      vel_msg.linear.x = vx[-1]
+      vel_msg.linear.y = 0
+      vel_msg.linear.z = 0
+      vel_msg.angular.x = 0
+      vel_msg.angular.y = 0
+      vel_msg.angular.z = wz[-1]
+
+    else:
+      vel_msg.linear.x = 0
+      vel_msg.linear.y = vy[-1]
+      vel_msg.linear.z = 0
+      vel_msg.angular.x = 0
+      vel_msg.angular.y = 0
+      vel_msg.angular.z = 0
+
     torque = Joint_position()
     torque.value = [T1_mean[-1], T2_mean[-1], T3_mean[-1], T4_mean[-1], T5_mean[-1], T6_mean[-1]]
     
