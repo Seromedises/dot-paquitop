@@ -96,15 +96,15 @@ float deltar_REF = pi/2, deltal_REF = pi/2, delta;                              
 float dr1, dr2, dr_old, dl_old1, dl1, dl2, dl_old;
 float deltar_REF_old, deltal_REF_old, countSR = 0, countSL = 0;
 float deltar = pi/2, deltal = pi/2;                                                             //variabili posizione sterzo e velocità ruote (rad e rad/s)
-float err_deltar, err_deltal;                                                             //errori di posizione angolo di sterzo (rad)
+float err_deltar, err_deltal, k_eStep;                                                             //errori di posizione angolo di sterzo (rad)
 float tau = 0.3;                                                                          //rapporto di trasmizzione delta_sterzo/delta_motore = z_motore/z_sterzo = 18/60;
 int mStepping = 8;                                                                        //valore microstepping (vedi enb_SMD parametro MODE)
 int Nstep = 200*mStepping/tau;                                                  //numero di step in un giro 
-int dnR, dnL, dNsoglia = 1000, nstepR_REF, nstepL_REF, nstepR_old, nstepL_old;            //variabili di riferimento sterzo in numero di step (per OL)
+int dnR, dnL, dNsoglia = 1000, nstepR_REF, nstepL_REF, nstepR_old, nstepL_old, e_step;            //variabili di riferimento sterzo in numero di step (per OL)
 
 // Gain controllo PID:
-float kp = 2.0*0.0056753;                                                              //2 senza carico, 20 con carico
-float ki = 0.00005;                                                                      //0.00005 senza carico, 0.0005 con carico
+float kp = 20.0*0.0056753;                                                              //2 senza carico, 20 con carico
+float ki = 0.0005;                                                                      //0.00005 senza carico, 0.0005 con carico
 float kd = 0.0;
 float INT, DER;
 
@@ -492,12 +492,21 @@ void loop()
   // Ciclo a 200 kHz ///////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////
   
-  if (dt1 > 5)
+  if (dt1 > 100)
   {
        
     // Calcolo riferimento sterzo in numero di step:
     nstepR_REF = deltar_REF*Nstep/(2*pi);
-    nstepL_REF = deltal_REF*Nstep/(2*pi);    
+    nstepL_REF = deltal_REF*Nstep/(2*pi); 
+
+    e_step = (abs(deltar_REF-deltar)+abs(deltal_REF-deltal))*Nstep/(pi);
+    Serial.println(e_step);
+    if (e_step <=1000 || e_step>=10500){
+      k_eStep = 1.0;
+    }
+    else {
+      k_eStep = 0.10;
+    }
 
     // OpenLoop angoli sterzo:
     OL_StepperR(nstepR_REF);
@@ -510,8 +519,8 @@ void loop()
     Il = mapF(analogRead(ECD_L_IL_PIN),0,1023,0,ecd_l_imax); //A
     
     // Calcolo il segnale di controllo per i driver:
-    Il_REF = PID_ctrl(dt, Il_REF_old, thetadl_REF*30/pi, thetadl, thetadl_old, kp, kd, ki, -ecd_l_imax, ecd_l_imax);
-    Ir_REF = PID_ctrl(dt, Ir_REF_old, thetadr_REF*30/pi, thetadr, thetadr_old, kp, kd, ki, -ecd_r_imax, ecd_r_imax);
+    Il_REF = PID_ctrl(dt, Il_REF_old, k_eStep*thetadl_REF*30/pi, thetadl, thetadl_old, kp, kd, ki, -ecd_l_imax, ecd_l_imax);
+    Ir_REF = PID_ctrl(dt, Ir_REF_old, k_eStep*thetadr_REF*30/pi, thetadr, thetadr_old, kp, kd, ki, -ecd_r_imax, ecd_r_imax);
     Itot_REF = Ir_REF + Il_REF;
     
     
@@ -575,6 +584,7 @@ void loop()
     sprintf(str_fb_q, "%f %f %f %f", deltar, deltal, deltar_REF, deltal_REF);
     //sprintf(str_fb_q, "%f %f", thetadr_REF, thetadl_REF);
     //sprintf(str_fb_q, "%f", mapF(abs(Ir_REF),0,ecd_r_imax,255*0.1,255*0.9));
+    
     
     if (!enb_SERIALPRINT){
       str_msg.data = str_fb_q;
