@@ -133,7 +133,7 @@ def main():
     
 
     # controll to disacopiate vx and vy
-    if abs(v[-1])>OUT_lim: #abs(vx[-1])> abs(vy[-1]) or abs(wz[-1])> abs(vy[-1]):
+    if abs(v[-1])<OUT_lim: #abs(vx[-1])> abs(vy[-1]) or abs(wz[-1])> abs(vy[-1]):
       vel_msg.linear.x = vx[-1]
       vel_msg.linear.y = 0
       vel_msg.linear.z = 0
