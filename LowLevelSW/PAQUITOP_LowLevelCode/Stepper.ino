@@ -81,9 +81,9 @@ void goStepperR(int DIRR)
   digitalWrite(SMD_R_DIR_PIN, DIRR);
   delayMicroseconds(10);
   digitalWrite(SMD_R_STEP_PIN, HIGH);
-  delayMicroseconds(400);
+  delayMicroseconds(300);
   digitalWrite(SMD_R_STEP_PIN,LOW);
-  delayMicroseconds(400);
+  delayMicroseconds(300);
 }
 
 void goStepperL(int DIRL)
@@ -91,7 +91,7 @@ void goStepperL(int DIRL)
   digitalWrite(SMD_L_DIR_PIN, DIRL);
   delayMicroseconds(10);
   digitalWrite(SMD_L_STEP_PIN, HIGH);
-  delayMicroseconds(400);
+  delayMicroseconds(300);
   digitalWrite(SMD_L_STEP_PIN,LOW);
-  delayMicroseconds(400);
+  delayMicroseconds(300);
 }
