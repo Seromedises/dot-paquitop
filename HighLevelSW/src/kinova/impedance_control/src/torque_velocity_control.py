@@ -88,7 +88,7 @@ def main():
   T1, T2, T3, T4, T5, T6 = [], [], [], [], [], []
   T1_mean, T2_mean, T3_mean, T4_mean, T5_mean, T6_mean = [], [], [], [], [], []
   
-  start_position.value = [0, 340, 0, -180, 25, 0]# 70, 0]#[90, -30, -60, 10, -60, -90] #[40, 330, 300, 40, 295, 300]
+  start_position.value = [0, 340, -20, -180, 25, 0]# 70, 0]#[90, -30, -60, 10, -60, -90] #[40, 330, 300, 40, 295, 300]
   for i in range(3):
     rest_position_cmd.publish(start_position)
   rospy.sleep(10)
