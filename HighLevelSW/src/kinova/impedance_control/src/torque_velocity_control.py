@@ -133,22 +133,22 @@ def main():
     
 
     # controll to disacopiate vx and vy
-    if abs(vy[-1])<0.02: #abs(vx[-1])> abs(vy[-1]) or abs(wz[-1])> abs(vy[-1]):
-      vel_msg.linear.x = vx[-1]
-      vel_msg.linear.y = 0
-      vel_msg.linear.z = 0
-      vel_msg.angular.x = 0
-      vel_msg.angular.y = 0
-      vel_msg.angular.z = wz[-1]
+    #if abs(vy[-1])<0.02: #abs(vx[-1])> abs(vy[-1]) or abs(wz[-1])> abs(vy[-1]):
+    vel_msg.linear.x = vx[-1]
+    vel_msg.linear.y = vy[-1]
+    vel_msg.linear.z = 0
+    vel_msg.angular.x = 0
+    vel_msg.angular.y = 0
+    vel_msg.angular.z = wz[-1]
 
-    else:
+    """else:
       vel_msg.linear.x = 0
       vel_msg.linear.y = vy[-1]
       vel_msg.linear.z = 0
       vel_msg.angular.x = 0
       vel_msg.angular.y = 0
       vel_msg.angular.z = 0
-
+"""
     torque = Joint_position()
     torque.value = [T1_mean[-1], T2_mean[-1], T3_mean[-1], T4_mean[-1], T5_mean[-1], T6_mean[-1]]
     
