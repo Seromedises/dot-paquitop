@@ -79,7 +79,8 @@ def length_control(variable,span=100):
   
   return variable
 
-def offset(variable):
+def offset(variable, offset):
+
   
   if len(variable) < 10:
    offset = sum(variable)/len(variable)
@@ -165,12 +166,12 @@ def main():
     T5 = length_control(T5,span=50)
     T6 = length_control(T6,span=50)
     
-    T1_ofs = offset(T1)
-    T2_ofs = offset(T2)
-    T3_ofs = offset(T3)
-    T4_ofs = offset(T4)
-    T5_ofs = offset(T5)
-    T6_ofs = offset(T6)
+    T1_ofs = offset(T1,T1_ofs)
+    T2_ofs = offset(T2,T2_ofs)
+    T3_ofs = offset(T3,T3_ofs)
+    T4_ofs = offset(T4,T4_ofs)
+    T5_ofs = offset(T5,T5_ofs)
+    T6_ofs = offset(T6,T6_ofs)
 
     T1_mean = filter(T1,filter_span,T1_ofs)
     T2_mean = filter(T2,filter_span,T2_ofs)
