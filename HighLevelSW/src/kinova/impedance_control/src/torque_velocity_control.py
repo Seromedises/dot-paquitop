@@ -12,65 +12,9 @@ from paquitop.msg import Joint_position
 # Constant for translate input force in velocity output
 OUT_max = 0.4 # m/s
 OUT_lim = 0.1 # m/s
-IN_max_Fx, IN_max_Fy, IN_max_Tz = 5, 5, 4# N, N and Nm
-IN_min_Fx, IN_min_Fy, IN_min_Tz= 1.5, 1.5, 1 # N, N and Nm
+IN_max_T3, IN_max_T4, IN_max_T6 = 5, 2, 2# N, N and Nm
+IN_min_T3, IN_min_T4, IN_min_T6= 1.25, 0.5, 0.5 # N, N and Nm
 filter_span = 50
-
-def plot_fct(filtred, velocity, title1, filtred2, velocity2, title2, filtred3, velocity3, title3):
-  
-  plt.subplot(2, 3, 1)
-  plt.plot(filtred)
-  plt.title(title1)
-  #plt.xlabel("numbers of acquisitions")
-  plt.ylabel("Force [N]")
-  plt.grid()
-  #plt.ylim(ymax = 1.1*IN_max_Fx, ymin = -(1.1*IN_max_Fx))
-  plt.ylim(ymax = 1.1*IN_max_Tz, ymin = -(1.1*IN_max_Tz))
-
-  plt.subplot(2, 3, 4)
-  plt.plot(velocity)
-  plt.xlabel("numbers of acquisitions")
-  plt.ylabel("velocity [m/s]")
-  plt.grid()
-  #plt.ylim(ymax = 0.5 + OUT_max, ymin = -(0.5 + OUT_max))
-  plt.ylim(ymax = 1.1*IN_max_Tz, ymin = -(1.1*IN_max_Tz))
-
-  plt.subplot(2, 3, 2)
-  plt.plot(filtred2)
-  plt.title(title2)
-  #plt.xlabel("numbers of acquisitions")
-  plt.ylabel("Force [N]")
-  plt.grid()
-  #plt.ylim(ymax = 1.1*IN_max_Fy, ymin = -(1.1*IN_max_Fy))
-  plt.ylim(ymax = 1.1*IN_max_Tz, ymin = -(1.1*IN_max_Tz))
-
-  plt.subplot(2, 3, 5)
-  plt.plot(velocity2)
-  plt.xlabel("numbers of acquisitions")
-  plt.ylabel("velocity [m/s]")
-  plt.grid()
-  #plt.ylim(ymax = 0.5 + OUT_max, ymin = -(0.5 + OUT_max))
-  plt.ylim(ymax = 1.1*IN_max_Tz, ymin = -(1.1*IN_max_Tz))
-
-  plt.subplot(2, 3, 3)
-  plt.plot(filtred3)
-  plt.title(title3)
-  #plt.xlabel("numbers of acquisitions")
-  plt.ylabel("Torque [Nm]")
-  plt.grid()
-  plt.ylim(ymax = 1.1*IN_max_Tz, ymin = -(1.1*IN_max_Tz))
-
-  plt.subplot(2, 3, 6)
-  plt.plot(velocity3)
-  plt.xlabel("numbers of acquisitions")
-  plt.ylabel("angular velocity [rad/s]")
-  plt.grid()
-  #plt.ylim(ymax = 0.5 + OUT_max, ymin = -(0.5 + OUT_max))
-  plt.ylim(ymax = 1.1*IN_max_Tz, ymin = -(1.1*IN_max_Tz))
-
-  plt.draw
-  plt.pause(0.0000001)
-  plt.clf()
 
 def length_control(variable,span=100):
 
@@ -180,32 +124,9 @@ def main():
     T5_mean = filter(T5,filter_span,T5_ofs)
     T6_mean = filter(T6,filter_span,T6_ofs)
 
-    """
-    T1_mean.append(i for i in (filter(T1,filter_span,T1_ofs)))
-    T2_mean.append(i for i in (filter(T2,filter_span,T2_ofs)))
-    T3_mean.append(i for i in (filter(T3,filter_span,T3_ofs)))
-    T4_mean.append(i for i in (filter(T4,filter_span,T4_ofs)))
-    T5_mean.append(i for i in (filter(T5,filter_span,T5_ofs)))
-    T6_mean.append(i for i in (filter(T6,filter_span,T6_ofs)))
-    
-    T1_mean = length_control(T1_mean,span=50)
-    T2_mean = length_control(T2_mean,span=50)
-    T3_mean = length_control(T3_mean,span=50)
-    T4_mean = length_control(T4_mean,span=50)
-    T5_mean = length_control(T5_mean,span=50)
-    T6_mean = length_control(T6_mean,span=50)
-    
-    
-    Fx_mean, Fx, Fx_ofs = variable_control(Fx, Fx_ofs, span=50)
-    Fy_mean, Fy, Fy_ofs = variable_control(Fy, Fy_ofs, span=50)
-    #Fz_mean, Fz, Fz_ofs = variable_control(Fz, Fz_ofs, span=50)
-    #Tx_mean, Tx, Tx_ofs = variable_control(Tx, Tx_ofs, span=50)
-    #Ty_mean, Ty, Ty_ofs = variable_control(Ty, Ty_ofs, span=50)
-    Tz_mean, Tz, Tz_ofs = variable_control(Tz, Tz_ofs, span=50)
-
-    vx.append(force_to_velocity(Fx_mean[-1],IN_lim=IN_min_Fx,IN_max=IN_max_Fx))
-    vy.append(force_to_velocity(Fy_mean[-1],IN_lim=IN_min_Fy,IN_max=IN_max_Fy))
-    wz.append(force_to_velocity(Tz_mean[-1],IN_lim=IN_min_Tz,IN_max=IN_max_Tz))
+    vx.append(to_velocity(T3_mean[-1],IN_lim=IN_min_T3,IN_max=IN_max_T3))
+    vy.append(to_velocity(T6_mean[-1],IN_lim=IN_min_T6,IN_max=IN_max_T6))
+    wz.append(to_velocity(T4_mean[-1],IN_lim=IN_min_T4,IN_max=IN_max_T4))
     vx = length_control(vx, span=50)
     vy = length_control(vy, span=50)
     wz = length_control(wz, span=50)
@@ -216,17 +137,11 @@ def main():
     vel_msg.angular.x = 0
     vel_msg.angular.y = 0
     vel_msg.angular.z = wz[-1]
-
-    cmd_vel.publish(vel_msg)"""
-
     torque = Joint_position()
     torque.value = [T1_mean[-1], T2_mean[-1], T3_mean[-1], T4_mean[-1], T5_mean[-1], T6_mean[-1]]
+    
     plot_fb.publish(torque)
-      
-
-      # plot_fct(T1, T2, "T1 and T2", T3, T4, "T3 and T4", T5, T6, "T5 and T6")
-      # plot_fct(T1_mean, T2_mean , "T1 and T2", T3_mean, T4_mean, "T3 and T4", T5_mean, T6_mean , "T5 and T6")
-      
-
+    cmd_vel.publish(vel_msg)
+    
 if __name__ == "__main__":
   main()
