@@ -7,6 +7,6 @@
      
     <node name="torque_plot"
         pkg="rqt_multiplot"
-        type="rqt_multiplot"
-        args="/torque/value[0] /torque/value[1] /torque/value[2] /torque/value[3] /torque/value[4] /torque/value[5]" />
+        type="rqt_multiplot"/>
+        <!-- args="/torque/value[0] /torque/value[1] /torque/value[2] /torque/value[3] /torque/value[4] /torque/value[5]" />-->
 </launch>
