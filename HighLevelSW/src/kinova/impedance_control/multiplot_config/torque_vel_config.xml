@@ -97,7 +97,7 @@
                                         <absolute_minimum>-3</absolute_minimum>
                                         <relative_maximum>3</relative_maximum>
                                         <relative_minimum>-3</relative_minimum>
-                                        <type>0</type>
+                                        <type>1</type>
                                     </scale>
                                     <topic>/torque</topic>
                                     <type>paquitop/Joint_position</type>
@@ -148,7 +148,7 @@
                                         <absolute_minimum>-3</absolute_minimum>
                                         <relative_maximum>3</relative_maximum>
                                         <relative_minimum>-3</relative_minimum>
-                                        <type>0</type>
+                                        <type>1</type>
                                     </scale>
                                     <topic>/torque</topic>
                                     <type>paquitop/Joint_position</type>
@@ -199,7 +199,7 @@
                                         <absolute_minimum>-3</absolute_minimum>
                                         <relative_maximum>3</relative_maximum>
                                         <relative_minimum>-3</relative_minimum>
-                                        <type>0</type>
+                                        <type>1</type>
                                     </scale>
                                     <topic>/torque</topic>
                                     <type>paquitop/Joint_position</type>
@@ -250,7 +250,7 @@
                                         <absolute_minimum>-3</absolute_minimum>
                                         <relative_maximum>3</relative_maximum>
                                         <relative_minimum>-3</relative_minimum>
-                                        <type>0</type>
+                                        <type>1</type>
                                     </scale>
                                     <topic>/torque</topic>
                                     <type>paquitop/Joint_position</type>
@@ -301,7 +301,7 @@
                                         <absolute_minimum>-3</absolute_minimum>
                                         <relative_maximum>3</relative_maximum>
                                         <relative_minimum>-3</relative_minimum>
-                                        <type>0</type>
+                                        <type>1</type>
                                     </scale>
                                     <topic>/torque</topic>
                                     <type>paquitop/Joint_position</type>
@@ -363,8 +363,8 @@
                                         <absolute_maximum>1000</absolute_maximum>
                                         <absolute_minimum>0</absolute_minimum>
                                         <relative_maximum>0</relative_maximum>
-                                        <relative_minimum>-1000</relative_minimum>
-                                        <type>0</type>
+                                        <relative_minimum>-10</relative_minimum>
+                                        <type>2</type>
                                     </scale>
                                     <topic>/cmd_vel</topic>
                                     <type>geometry_msgs/Twist</type>
@@ -376,7 +376,7 @@
                                         <absolute_maximum>0.45</absolute_maximum>
                                         <absolute_minimum>-0.45</absolute_minimum>
                                         <relative_maximum>0</relative_maximum>
-                                        <relative_minimum>-1000</relative_minimum>
+                                        <relative_minimum>-10</relative_minimum>
                                         <type>1</type>
                                     </scale>
                                     <topic>/cmd_vel</topic>
@@ -414,8 +414,8 @@
                                         <absolute_maximum>1000</absolute_maximum>
                                         <absolute_minimum>0</absolute_minimum>
                                         <relative_maximum>0</relative_maximum>
-                                        <relative_minimum>-1000</relative_minimum>
-                                        <type>0</type>
+                                        <relative_minimum>-10</relative_minimum>
+                                        <type>2</type>
                                     </scale>
                                     <topic>/cmd_vel</topic>
                                     <type>geometry_msgs/Twist</type>
@@ -465,8 +465,8 @@
                                         <absolute_maximum>1000</absolute_maximum>
                                         <absolute_minimum>0</absolute_minimum>
                                         <relative_maximum>0</relative_maximum>
-                                        <relative_minimum>-1000</relative_minimum>
-                                        <type>0</type>
+                                        <relative_minimum>-10</relative_minimum>
+                                        <type>2</type>
                                     </scale>
                                     <topic>/cmd_vel</topic>
                                     <type>geometry_msgs/Twist</type>
