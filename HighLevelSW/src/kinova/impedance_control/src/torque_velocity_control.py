@@ -88,7 +88,7 @@ def main():
   T1, T2, T3, T4, T5, T6 = [], [], [], [], [], []
   T1_mean, T2_mean, T3_mean, T4_mean, T5_mean, T6_mean = [], [], [], [], [], []
   
-  start_position.value = [270, 0, 0, 0, 0, 0]#[0, 340, 0, 90, 25, 0]#[90, -30, -60, 10, -60, -90] #[40, 330, 300, 40, 295, 300]
+  start_position.value = [270, 5, 5, 0, 0, 0]#[0, 340, 0, 90, 25, 0]#[90, -30, -60, 10, -60, -90] #[40, 330, 300, 40, 295, 300]
   for i in range(3):
     rest_position_cmd.publish(start_position)
   rospy.sleep(10)
@@ -126,7 +126,7 @@ def main():
 
     vx.append(to_velocity(T5_mean[-1],IN_lim=IN_min_T3,IN_max=IN_max_T3))
     vy.append(to_velocity(T6_mean[-1],IN_lim=IN_min_T6,IN_max=IN_max_T6))
-    wz.append(to_velocity(T4_mean[-1],IN_lim=IN_min_T4,IN_max=IN_max_T4))
+    wz.append(to_velocity(T1_mean[-1],IN_lim=IN_min_T4,IN_max=IN_max_T4))
     vx = length_control(vx, span=50)
     vy = length_control(vy, span=50)
     wz = length_control(wz, span=50)
