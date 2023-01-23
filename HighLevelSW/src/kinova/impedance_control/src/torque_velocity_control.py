@@ -14,7 +14,7 @@ OUT_max = 0.4 # m/s
 OUT_lim = 0.1 # m/s
 IN_max_Fx, IN_max_Fy, IN_max_Tz = 5, 5, 4# N, N and Nm
 IN_min_Fx, IN_min_Fy, IN_min_Tz= 1.5, 1.5, 1 # N, N and Nm
-filter_span = 20
+filter_span = 50
 
 def plot_fct(filtred, velocity, title1, filtred2, velocity2, title2, filtred3, velocity3, title3):
   
@@ -141,7 +141,7 @@ def main():
   T1_ofs, T2_ofs, T3_ofs, T4_ofs, T5_ofs, T6_ofs = 0, 0, 0, 0, 0, 0
   vx, vy,wz = [], [], []
   T1, T2, T3, T4, T5, T6 = [], [], [], [], [], []
-  T1_mean, T2_mean, T3_mean, T4_mean, T5_mean, T6_mean= [], [], [], [], [], []
+  T1_mean, T2_mean, T3_mean, T4_mean, T5_mean, T6_mean = [], [], [], [], [], []
   
   start_position.value = [0, 340, 0, 90, 70, 0]#[90, -30, -60, 10, -60, -90] #[40, 330, 300, 40, 295, 300]
   for i in range(3):
@@ -171,14 +171,22 @@ def main():
     T4_ofs = offset(T4)
     T5_ofs = offset(T5)
     T6_ofs = offset(T6)
-    
+
+    T1_mean = filter(T1,filter_span,T1_ofs)
+    T2_mean = filter(T2,filter_span,T2_ofs)
+    T3_mean = filter(T3,filter_span,T3_ofs)
+    T4_mean = filter(T4,filter_span,T4_ofs)
+    T5_mean = filter(T5,filter_span,T5_ofs)
+    T6_mean = filter(T6,filter_span,T6_ofs)
+
+    """
     T1_mean.append(i for i in (filter(T1,filter_span,T1_ofs)))
     T2_mean.append(i for i in (filter(T2,filter_span,T2_ofs)))
     T3_mean.append(i for i in (filter(T3,filter_span,T3_ofs)))
     T4_mean.append(i for i in (filter(T4,filter_span,T4_ofs)))
     T5_mean.append(i for i in (filter(T5,filter_span,T5_ofs)))
     T6_mean.append(i for i in (filter(T6,filter_span,T6_ofs)))
-    """
+    
     T1_mean = length_control(T1_mean,span=50)
     T2_mean = length_control(T2_mean,span=50)
     T3_mean = length_control(T3_mean,span=50)
@@ -209,9 +217,7 @@ def main():
     vel_msg.angular.z = wz[-1]
 
     cmd_vel.publish(vel_msg)"""
-    title1 = "$F_x$ mean value and $v_x$ output value"
-    title2 = "$F_y$ mean value and $v_y$ output value"
-    title3 = "$T_z$ mean value and $\omega_z$ output value"
+
     torque = Joint_position()
     torque.value = [T1_mean[-1], T2_mean[-1], T3_mean[-1], T4_mean[-1], T5_mean[-1], T6_mean[-1]]
     plot_fb.publish(torque)
