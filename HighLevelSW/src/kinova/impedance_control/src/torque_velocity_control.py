@@ -12,8 +12,8 @@ from paquitop.msg import Joint_position
 # Constant for translate input force in velocity output
 OUT_max = 0.4 # m/s
 OUT_lim = 0.1 # m/s
-IN_max_T3, IN_max_T4, IN_max_T6 = 5, 5, 4 # N, N and Nm
-IN_min_T3, IN_min_T4, IN_min_T6= 2, 2, 1 # N, N and Nm
+IN_max_T3, IN_max_T4, IN_max_T6 = 3.5, 3.5, 2.5 # N, N and Nm
+IN_min_T3, IN_min_T4, IN_min_T6= 2, 2, 0.5 # N, N and Nm
 filter_span = 50
 
 def length_control(variable,span=100):
