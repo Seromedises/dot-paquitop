@@ -23,12 +23,20 @@ def length_control(variable,span=100):
   
   return variable
 
-def offset(variable, offset):
+def offset(variable, min, max):
 
-  
+  if variable > max:
+    offset = 0
+
+  elif variable < min:
+    offset = variable - min
+
+  else:
+    offset = 0
+  """
   if len(variable) < 10:
    offset = sum(variable)/len(variable)
-  
+  """
   return offset
 
 def filter(variable,span,offset):
@@ -88,7 +96,7 @@ def main():
   T1, T2, T3, T4, T5, T6 = [], [], [], [], [], []
   T1_mean, T2_mean, T3_mean, T4_mean, T5_mean, T6_mean = [], [], [], [], [], []
   
-  start_position.value = [270, 10, 10, 0, 0, 0]#[0, 340, 0, 90, 25, 0]#[90, -30, -60, 10, -60, -90] #[40, 330, 300, 40, 295, 300]
+  start_position.value = [270, 0, 0, 0, 0, 0] #[270, 10, 10, 0, 0, 0]#[0, 340, 0, 90, 25, 0]#[90, -30, -60, 10, -60, -90] #[40, 330, 300, 40, 295, 300]
   for i in range(3):
     rest_position_cmd.publish(start_position)
   rospy.sleep(10)
@@ -110,12 +118,19 @@ def main():
     T5 = length_control(T5,span=50)
     T6 = length_control(T6,span=50)
     
-    T1_ofs = offset(T1,T1_ofs)
+    """T1_ofs = offset(T1,T1_ofs)
     T2_ofs = offset(T2,T2_ofs)
     T3_ofs = offset(T3,T3_ofs)
     T4_ofs = offset(T4,T4_ofs)
     T5_ofs = offset(T5,T5_ofs)
-    T6_ofs = offset(T6,T6_ofs)
+    T6_ofs = offset(T6,T6_ofs)"""
+
+    T1[-1] = offset(T1[-1],0.65,0.95)
+    T2[-1] = offset(T2[-1],-2.5,3.3)
+    T3[-1] = offset(T3[-1],-0.25,1.5)
+    T4[-1] = offset(T4[-1],-0.05,0.1)
+    T5[-1] = offset(T5[-1],0.05,0.175)
+    T6[-1] = offset(T6[-1],0.2,0.4)
 
     T1_mean = filter(T1,filter_span,T1_ofs)
     T2_mean = filter(T2,filter_span,T2_ofs)

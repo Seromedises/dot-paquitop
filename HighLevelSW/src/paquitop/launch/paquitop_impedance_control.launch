@@ -21,6 +21,6 @@
   <include file="$(find kortex_movement)/launch/joint_position.launch"/>
   
   <!-- Impedance control for the robotic arm-->
-  <include file="$(find impedance_control)/launch/impedance_control.launch"/>
+  <include file="$(find impedance_control)/launch/torque_velocity_control.launch"/>
 
 </launch>
