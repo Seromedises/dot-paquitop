@@ -13,7 +13,7 @@ from paquitop.msg import Joint_position
 OUT_max = 0.4 # m/s
 OUT_lim = 0.1 # m/s
 IN_max_T3, IN_max_T4, IN_max_T6 = 3.5, 3.5, 2.5 # N, N and Nm
-IN_min_T3, IN_min_T4, IN_min_T6= 2, 2, 0.5 # N, N and Nm
+IN_min_T3, IN_min_T4, IN_min_T6= 1.5, 1.5, 0.5 # N, N and Nm
 filter_span = 50
 
 def length_control(variable,span=100):
