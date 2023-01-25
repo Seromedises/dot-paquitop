@@ -130,7 +130,7 @@ def main():
     T3[-1] = offset(T3[-1],-0.25,1.5)
     T4[-1] = offset(T4[-1],-0.05,0.1)
     T5[-1] = offset(T5[-1],0.05,0.175)
-    T6[-1] = offset(T6[-1],0.2,0.4)
+    T6[-1] = offset(T6[-1],-0.3,0.4)
 
     T1_mean = filter(T1,filter_span,T1_ofs)
     T2_mean = filter(T2,filter_span,T2_ofs)
