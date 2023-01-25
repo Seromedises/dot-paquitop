@@ -157,7 +157,7 @@ def main():
       T5_mean[-1] = offset(T5_mean[-1], 1.1, 1.3)
       T6_mean[-1] = offset(T6_mean[-1], -0.3, 0.4)     
       
-      vx.append(to_velocity(T5_mean[-1],IN_lim=IN_min_T3,IN_max=IN_max_T3))
+      vx.append(to_velocity(T3_mean[-1],IN_lim=IN_min_T3,IN_max=IN_max_T3))
       vy.append(to_velocity(T6_mean[-1],IN_lim=IN_min_T6,IN_max=IN_max_T6))
       wz.append(to_velocity(T4_mean[-1],IN_lim=IN_min_T4,IN_max=IN_max_T4))
 
