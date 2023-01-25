@@ -13,9 +13,9 @@ from paquitop.msg import Joint_position
 OUT_max = 0.4 # m/s
 OUT_lim = 0.1 # m/s
 IN_max_T3, IN_max_T4, IN_max_T6 = 3, 3, 2.5 # N, N and Nm
-IN_min_T3, IN_min_T4, IN_min_T6= 1.5, 1.5, 0.5 # N, N and Nm
+IN_min_T3, IN_min_T4, IN_min_T6= 1.5, 1.5, 0.4 # N, N and Nm
 filter_span = 50
-CONFIG_POS = 4
+CONFIG_POS = 3
 
 def length_control(variable,span=100):
 
@@ -143,19 +143,31 @@ def main():
       T3_mean[-1] = offset(T3_mean[-1], -0.25, 1.5)
       T4_mean[-1] = offset(T4_mean[-1], -0.05, 0.1)
       T5_mean[-1] = offset(T5_mean[-1], 0.05, 0.175)
-      T6_mean[-1] = offset(T6_mean[-1], -0.3, 0.4)    
+      T6_mean[-1] = offset(T6_mean[-1], -0.4, 0.4)    
       
       vx.append(to_velocity(-T5_mean[-1],IN_lim=IN_min_T3,IN_max=IN_max_T3))
       vy.append(to_velocity(T6_mean[-1],IN_lim=IN_min_T6,IN_max=IN_max_T6))
       wz.append(to_velocity(T4_mean[-1],IN_lim=IN_min_T4,IN_max=IN_max_T4))
 
+    elif CONFIG_POS == 3:
+      T1_mean[-1] = offset(T1_mean[-1], 0, 0.6)
+      T2_mean[-1] = offset(T2_mean[-1], -6.9, -2.3)
+      T3_mean[-1] = offset(T3_mean[-1], 1.8, 2.2)
+      T4_mean[-1] = offset(T4_mean[-1], -0.3, -0.1)
+      T5_mean[-1] = offset(T5_mean[-1], 0.35, 1)
+      T6_mean[-1] = offset(T6_mean[-1], -0.4, 0.4)     
+      
+      vx.append(to_velocity(T3_mean[-1],IN_lim=IN_min_T3,IN_max=IN_max_T3))
+      vy.append(to_velocity(T6_mean[-1],IN_lim=IN_min_T6,IN_max=IN_max_T6))
+      wz.append(to_velocity(T1_mean[-1],IN_lim=IN_min_T4,IN_max=IN_max_T4))
+
     elif CONFIG_POS == 4:
       T1_mean[-1] = offset(T1_mean[-1], 0, 0.5)
-      T2_mean[-1] = offset(T2_mean[-1], -4, -8)
+      T2_mean[-1] = offset(T2_mean[-1], -8, -4)
       T3_mean[-1] = offset(T3_mean[-1], 2, 2.4)
       T4_mean[-1] = offset(T4_mean[-1], -0.2, 0)
       T5_mean[-1] = offset(T5_mean[-1], 1.1, 1.3)
-      T6_mean[-1] = offset(T6_mean[-1], -0.3, 0.4)     
+      T6_mean[-1] = offset(T6_mean[-1], -0.4, 0.4)     
       
       vx.append(to_velocity(T3_mean[-1],IN_lim=IN_min_T3,IN_max=IN_max_T3))
       vy.append(to_velocity(T6_mean[-1],IN_lim=IN_min_T6,IN_max=IN_max_T6))
