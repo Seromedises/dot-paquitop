@@ -334,7 +334,7 @@
                         <visible>true</visible>
                     </legend>
                     <plot_rate>30</plot_rate>
-                    <title>Measured and Fltred Torque</title>
+                    <title>Torque witohut dead band</title>
                 </column_0>
             </row_0>
             <row_1>
