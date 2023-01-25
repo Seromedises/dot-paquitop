@@ -15,7 +15,7 @@ OUT_lim = 0.1 # m/s
 IN_max_T3, IN_max_T4, IN_max_T6 = 3, 3, 2.5 # N, N and Nm
 IN_min_T3, IN_min_T4, IN_min_T6= 1.5, 1.5, 0.4 # N, N and Nm
 filter_span = 50
-CONFIG_POS = 3
+CONFIG_POS = 2
 
 def length_control(variable,span=100):
 
@@ -143,6 +143,18 @@ def main():
       T3_mean[-1] = offset(T3_mean[-1], -0.25, 1.5)
       T4_mean[-1] = offset(T4_mean[-1], -0.05, 0.1)
       T5_mean[-1] = offset(T5_mean[-1], 0.05, 0.175)
+      T6_mean[-1] = offset(T6_mean[-1], -0.4, 0.4)    
+      
+      vx.append(to_velocity(-T5_mean[-1],IN_lim=IN_min_T3,IN_max=IN_max_T3))
+      vy.append(to_velocity(T6_mean[-1],IN_lim=IN_min_T6,IN_max=IN_max_T6))
+      wz.append(to_velocity(T4_mean[-1],IN_lim=IN_min_T4,IN_max=IN_max_T4))
+    
+    elif CONFIG_POS == 2:
+      T1_mean[-1] = offset(T1_mean[-1], -1, 0.8)
+      T2_mean[-1] = offset(T2_mean[-1], 1, 3)
+      T3_mean[-1] = offset(T3_mean[-1], 0.15, 1.8)
+      T4_mean[-1] = offset(T4_mean[-1], -0.05, 0.1)
+      T5_mean[-1] = offset(T5_mean[-1], 0.07, 0.17)
       T6_mean[-1] = offset(T6_mean[-1], -0.4, 0.4)    
       
       vx.append(to_velocity(-T5_mean[-1],IN_lim=IN_min_T3,IN_max=IN_max_T3))
