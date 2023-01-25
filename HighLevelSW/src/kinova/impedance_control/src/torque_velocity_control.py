@@ -12,7 +12,7 @@ from paquitop.msg import Joint_position
 # Constant for translate input force in velocity output
 OUT_max = 0.4 # m/s
 OUT_lim = 0.1 # m/s
-IN_max_T3, IN_max_T4, IN_max_T6 = 3.5, 3.5, 2.5 # N, N and Nm
+IN_max_T3, IN_max_T4, IN_max_T6 = 3, 3, 2.5 # N, N and Nm
 IN_min_T3, IN_min_T4, IN_min_T6= 1.5, 1.5, 0.5 # N, N and Nm
 filter_span = 50
 
@@ -26,7 +26,7 @@ def length_control(variable,span=100):
 def offset(variable, min, max):
 
   if variable > max:
-    offset = variable- max
+    offset = variable - max
 
   elif variable < min:
     offset = variable - min
