@@ -15,6 +15,7 @@ OUT_lim = 0.1 # m/s
 IN_max_T3, IN_max_T4, IN_max_T6 = 3, 3, 2.5 # N, N and Nm
 IN_min_T3, IN_min_T4, IN_min_T6= 1.5, 1.5, 0.5 # N, N and Nm
 filter_span = 50
+CONFIG_POS = 4
 
 def length_control(variable,span=100):
 
@@ -96,7 +97,18 @@ def main():
   T1, T2, T3, T4, T5, T6 = [], [], [], [], [], []
   T1_mean, T2_mean, T3_mean, T4_mean, T5_mean, T6_mean = [], [], [], [], [], []
   
-  start_position.value = [270, 0, 0, 0, 0, 0] #[270, 10, 10, 0, 0, 0]#[0, 340, 0, 90, 25, 0]#[90, -30, -60, 10, -60, -90] #[40, 330, 300, 40, 295, 300]
+  if CONFIG_POS == 2:
+    start_position.value = [270, 10, 10, 0, 0, 0]
+  elif CONFIG_POS == 3:
+    start_position.value = [0, 340, 0, 90, 25, 0]
+  elif CONFIG_POS == 4:
+    start_position.value = [0, 340, 0, 90, 70, 0]
+  else:
+    start_position.value = [270, 0, 0, 0, 0, 0]
+    if CONFIG_POS != 1:
+      rospy.loginfo("Position number not in range 1 - 4. Using position 1")
+
+  #SCARTATE:[90, -30, -60, 10, -60, -90] #[40, 330, 300, 40, 295, 300]
   for i in range(3):
     rest_position_cmd.publish(start_position)
   rospy.sleep(10)
@@ -117,20 +129,6 @@ def main():
     T4 = length_control(T4,span=50)
     T5 = length_control(T5,span=50)
     T6 = length_control(T6,span=50)
-    
-    """T1_ofs = offset(T1,T1_ofs)
-    T2_ofs = offset(T2,T2_ofs)
-    T3_ofs = offset(T3,T3_ofs)
-    T4_ofs = offset(T4,T4_ofs)
-    T5_ofs = offset(T5,T5_ofs)
-    T6_ofs = offset(T6,T6_ofs)"""
-
-    T1[-1] = offset(T1[-1],-0.8,0.95)
-    T2[-1] = offset(T2[-1],-2.5,3.3)
-    T3[-1] = offset(T3[-1],-0.25,1.5)
-    T4[-1] = offset(T4[-1],-0.05,0.1)
-    T5[-1] = offset(T5[-1],0.05,0.175)
-    T6[-1] = offset(T6[-1],-0.3,0.4)
 
     T1_mean = filter(T1,filter_span,T1_ofs)
     T2_mean = filter(T2,filter_span,T2_ofs)
@@ -138,10 +136,31 @@ def main():
     T4_mean = filter(T4,filter_span,T4_ofs)
     T5_mean = filter(T5,filter_span,T5_ofs)
     T6_mean = filter(T6,filter_span,T6_ofs)
+    
+    if CONFIG_POS == 1:
+      T1_mean[-1] = offset(T1_mean[-1], -0.8, 0.95)
+      T2_mean[-1] = offset(T2_mean[-1], -2.5, 3.3)
+      T3_mean[-1] = offset(T3_mean[-1], -0.25, 1.5)
+      T4_mean[-1] = offset(T4_mean[-1], -0.05, 0.1)
+      T5_mean[-1] = offset(T5_mean[-1], 0.05, 0.175)
+      T6_mean[-1] = offset(T6_mean[-1], -0.3, 0.4)    
+      
+      vx.append(to_velocity(-T5_mean[-1],IN_lim=IN_min_T3,IN_max=IN_max_T3))
+      vy.append(to_velocity(T6_mean[-1],IN_lim=IN_min_T6,IN_max=IN_max_T6))
+      wz.append(to_velocity(T4_mean[-1],IN_lim=IN_min_T4,IN_max=IN_max_T4))
 
-    vx.append(to_velocity(-T5_mean[-1],IN_lim=IN_min_T3,IN_max=IN_max_T3))
-    vy.append(to_velocity(T6_mean[-1],IN_lim=IN_min_T6,IN_max=IN_max_T6))
-    wz.append(to_velocity(T4_mean[-1],IN_lim=IN_min_T4,IN_max=IN_max_T4))
+    elif CONFIG_POS == 4:
+      T1_mean[-1] = offset(T1_mean[-1], 0, 0.5)
+      T2_mean[-1] = offset(T2_mean[-1], -4, -8)
+      T3_mean[-1] = offset(T3_mean[-1], 2, 2.4)
+      T4_mean[-1] = offset(T4_mean[-1], -0.2, 0)
+      T5_mean[-1] = offset(T5_mean[-1], 1.1, 1.3)
+      T6_mean[-1] = offset(T6_mean[-1], -0.3, 0.4)     
+      
+      vx.append(to_velocity(T5_mean[-1],IN_lim=IN_min_T3,IN_max=IN_max_T3))
+      vy.append(to_velocity(T6_mean[-1],IN_lim=IN_min_T6,IN_max=IN_max_T6))
+      wz.append(to_velocity(T4_mean[-1],IN_lim=IN_min_T4,IN_max=IN_max_T4))
+
     vx = length_control(vx, span=50)
     vy = length_control(vy, span=50)
     wz = length_control(wz, span=50)
