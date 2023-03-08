@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+
+<launch>
+
+  <node pkg="tf2_ros" type="static_transform_publisher" name="odom_to_broadcaster" args="0 0 0 0 0 0 odom base_footprint"/>
+  <node pkg="tf2_ros" type="static_transform_publisher" name="broadcaster_to_base_link" args="0 0 0.05 0 0 0 base_footprint base_link"/>
+  <node pkg="tf2_ros" type="static_transform_publisher" name="base_link_to_laser" args="0.25 0 0.2529 3.14 0 0 base_link laser"/>
+  <node pkg="tf2_ros" type="static_transform_publisher" name="base_link_to_camera_pose_frame" args="0.0 0.0 0.0 -1.57 0 0 base_footprint camera_pose_frame"/>
+  <node pkg="tf2_ros" type="static_transform_publisher" name="odom_to_camera_odom" args="0.0 0.0 0.0 -1.57 0 0 odom camera_odom_frame"/>
+	
+  <arg name="node_start_delay" default="0.0" /> 
+  <node name="rplidarNode" pkg="rplidar_ros" type="rplidarNode" output="screen" launch-prefix="bash -c 'sleep $(arg node_start_delay); $0 $@' " respawn="true">
+    
+    <param name="serial_port"         type="string" value="/dev/ttyUSB0"/>
+    <param name="serial_baudrate"     type="int"    value="115200"/><!--A1/A2 -->
+    <!--param name="serial_baudrate"     type="int"    value="256000"--><!--A3 -->
+    <param name="frame_id"            type="string" value="laser"/>
+    <param name="inverted"            type="bool"   value="false"/>
+    <param name="angle_compensate"    type="bool"   value="true"/>
+  </node>
+
+  <include file="$(find navstack_pub)/launch/t265_noserver.launch" > 
+		<!--<arg name="machine" value="client" />-->
+	</include>
+
+  <node pkg="hector_mapping" type="hector_mapping" name="hector_mapping" output="screen"><!-- launch-prefix="bash -c 'sleep $(arg node_start_delay); $0 $@' " -->
+    
+		<param name="map_frame" value="map" />
+		<param name="base_frame" value="base_footprint" />
+		<param name="odom_frame" value="odom" />	
+		
+		<rosparam command="load" file="$(find navstack_pub)/param/hector_params.yaml" />
+
+	</node>
+  <node pkg="hector_trajectory_server" type="hector_trajectory_server" name="hector_trajectory_server" output="screen">
+    <param name="target_frame_name" type="string" value="/map" />
+    <param name="source_frame_name" type="string" value="/base_footprint" />
+    <param name="trajectory_update_rate" type="double" value="4" />
+    <param name="trajectory_publish_rate" type="double" value="4" />
+ </node>
+
+
+  <node pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true">
+    <rosparam command="load" file="$(find navstack_pub)/param/ekf_template_use_camera_odom.yaml" />
+  </node>
+  
+  <!-- Base Controller Using Arduino -->  
+  <!-- Subscribe: /cmd_vel -->
+  <!-- Publish: /fb_q -->
+  <!-- <node pkg="rosserial_python" type="serial_node.py" name="serial_node" respawn="true">
+    <param name="port" value="/dev/ttyACM0"/>
+    <param name="baud" value="115200"/>
+  </node> -->
+  
+  <!-- Driver for kinova kortex interface
+  <include file="$(find kortex_driver)/launch/kortex_driver.launch">
+		<arg name="start_rviz" value="false"/>
+		<arg name="start_moveit" value="false"/>
+	</include> -->
+
+  <!-- Launch to put the robotic arm in the correct position 
+  <include file="$(find kortex_movement)/launch/joint_position.launch"/>-->
+  
+  <!-- Impedance control for the robotic arm
+  <include file="$(find impedance_control)/launch/torque_velocity_control.launch"/> -->
+
+  <!-- <group ns="camera_rviz">
+    
+    <node pkg="tf" type="static_transform_publisher" name="camera_rviz_broadcaster"
+        args="0.0 0.0 5.0.707 0 0.707 0 0 base_footprint rviz_cam 10" />
+    <node name="camera_info" pkg="rostopic" type="rostopic" 
+        args="pub camera_info sensor_msgs/CameraInfo
+        '{header: {seq: 0, stamp: {secs: 0, nsecs: 0}, frame_id: 'rviz_cam'},
+        height: 480, width: 640, distortion_model: 'plumb_bob',
+        D: [0],
+        K: [500.0, 0.0, 320, 0.0, 500.0, 240.0, 0.0, 0.0, 1.0],
+        R: [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0],
+        P: [500.0, 0.0, 320, 0.0, 0.0, 500, 240, 0.0, 0.0, 0.0, 1.0, 0.0],
+        binning_x: 0, binning_y: 0,
+        roi: {x_offset: 0, y_offset: 0, height: 480, width: 640, do_rectify: false}}' -r 2"
+        output="screen" respawn="true"/>
+  </group>
+
+  <node name="web_video_server" pkg="web_video_server" type="web_video_server" output="screen" respawn="true"/>
+  -->
+  <arg name="node_start_delay3" default="3.0" />
+	<node type="rviz" name="rviz" pkg="rviz" args="-d $(find paquitop)/rviz/config.rviz" launch-prefix="bash -c 'sleep $(arg node_start_delay3); $0 $@' "/>
+
+</launch>

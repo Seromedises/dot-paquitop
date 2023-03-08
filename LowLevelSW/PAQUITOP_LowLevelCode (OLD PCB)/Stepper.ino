@@ -14,12 +14,12 @@ void OL_StepperR(int nstepR_REF)
 	{
 		if (dnR > 0)
 		{
-			goStepperR(LOW);
+			goStepperR(HIGH);
 			nstepR_old += 1;
 		}
 		else if (dnR < 0)
 		{
-			goStepperR(HIGH);
+			goStepperR(LOW);
 			nstepR_old -= 1;
 		}
 	}
@@ -27,12 +27,12 @@ void OL_StepperR(int nstepR_REF)
 	{
 		if (dnR > 0)
 		{
-			goStepperR(HIGH);
+			goStepperR(LOW);
 			nstepR_old = deltar_REF*Nstep/(2*pi);
 		}
 		else if (dnR < 0)
 		{
-			goStepperR(LOW);
+			goStepperR(HIGH);
 			nstepR_old = deltar_REF*Nstep/(2*pi);
 		}
 	}
@@ -46,12 +46,12 @@ void OL_StepperL(int nstepL_REF)
 	{
 		if (dnL > 0)
 		{
-			goStepperL(LOW);
+			goStepperL(HIGH);
 			nstepL_old += 1;
 		}
 		else if (dnL < 0)
 		{
-			goStepperL(HIGH);
+			goStepperL(LOW);
 			nstepL_old -= 1;
 		}
 	}
@@ -59,12 +59,12 @@ void OL_StepperL(int nstepL_REF)
 	{
 		if (dnL > 0)
 		{
-			goStepperL(HIGH);
+			goStepperL(LOW);
       nstepL_old = deltal_REF*Nstep/(2*pi);
 		}
 		else if (dnL < 0)
 		{
-			goStepperL(LOW);
+			goStepperL(HIGH);
       nstepL_old = deltal_REF*Nstep/(2*pi);
 		}
 	}
@@ -79,19 +79,19 @@ void OL_StepperL(int nstepL_REF)
 void goStepperR(int DIRR)
 {
   digitalWrite(SMD_R_DIR_PIN, DIRR);
-  delayMicroseconds(10);
+  delayMicroseconds(5);
   digitalWrite(SMD_R_STEP_PIN, HIGH);
-  delayMicroseconds(300);
+  delayMicroseconds(100);
   digitalWrite(SMD_R_STEP_PIN,LOW);
-  delayMicroseconds(300);
+  delayMicroseconds(100);
 }
 
 void goStepperL(int DIRL)
 {
   digitalWrite(SMD_L_DIR_PIN, DIRL);
-  delayMicroseconds(10);
+  delayMicroseconds(5);
   digitalWrite(SMD_L_STEP_PIN, HIGH);
-  delayMicroseconds(300);
+  delayMicroseconds(100);
   digitalWrite(SMD_L_STEP_PIN,LOW);
-  delayMicroseconds(300);
+  delayMicroseconds(100);
 }

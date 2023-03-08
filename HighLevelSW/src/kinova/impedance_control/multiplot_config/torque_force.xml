@@ -29,27 +29,27 @@
                                     <field></field>
                                     <field_type>1</field_type>
                                     <scale>
-                                        <absolute_maximum>0</absolute_maximum>
-                                        <absolute_minimum>-10</absolute_minimum>
+                                        <absolute_maximum>1000</absolute_maximum>
+                                        <absolute_minimum>0</absolute_minimum>
                                         <relative_maximum>0</relative_maximum>
                                         <relative_minimum>-10</relative_minimum>
                                         <type>2</type>
                                     </scale>
-                                    <topic>/torque</topic>
-                                    <type>paquitop/Joint_position</type>
+                                    <topic>/my_gen3_lite/base_feedback/joint_state</topic>
+                                    <type>sensor_msgs/JointState</type>
                                 </x_axis>
                                 <y_axis>
-                                    <field>value/0</field>
+                                    <field>effort/0</field>
                                     <field_type>0</field_type>
                                     <scale>
-                                        <absolute_maximum>3</absolute_maximum>
-                                        <absolute_minimum>-3</absolute_minimum>
-                                        <relative_maximum>3</relative_maximum>
-                                        <relative_minimum>-3</relative_minimum>
+                                        <absolute_maximum>7</absolute_maximum>
+                                        <absolute_minimum>-7</absolute_minimum>
+                                        <relative_maximum>0</relative_maximum>
+                                        <relative_minimum>-1000</relative_minimum>
                                         <type>1</type>
                                     </scale>
-                                    <topic>/torque</topic>
-                                    <type>paquitop/Joint_position</type>
+                                    <topic>/my_gen3_lite/base_feedback/joint_state</topic>
+                                    <type>sensor_msgs/JointState</type>
                                 </y_axis>
                             </axes>
                             <color>
@@ -59,16 +59,16 @@
                             <data>
                                 <circular_buffer_capacity>1000</circular_buffer_capacity>
                                 <time_frame_length>10</time_frame_length>
-                                <type>3</type>
+                                <type>0</type>
                             </data>
                             <style>
-                                <lines_interpolate>true</lines_interpolate>
+                                <lines_interpolate>false</lines_interpolate>
                                 <pen_style>1</pen_style>
                                 <pen_width>5</pen_width>
                                 <render_antialias>false</render_antialias>
                                 <steps_invert>false</steps_invert>
                                 <sticks_baseline>0</sticks_baseline>
-                                <sticks_orientation>1</sticks_orientation>
+                                <sticks_orientation>2</sticks_orientation>
                                 <type>0</type>
                             </style>
                             <subscriber_queue_size>100</subscriber_queue_size>
@@ -80,27 +80,27 @@
                                     <field></field>
                                     <field_type>1</field_type>
                                     <scale>
-                                        <absolute_maximum>0</absolute_maximum>
-                                        <absolute_minimum>-10</absolute_minimum>
+                                        <absolute_maximum>1000</absolute_maximum>
+                                        <absolute_minimum>0</absolute_minimum>
                                         <relative_maximum>0</relative_maximum>
                                         <relative_minimum>-10</relative_minimum>
                                         <type>2</type>
                                     </scale>
-                                    <topic>/torque</topic>
-                                    <type>paquitop/Joint_position</type>
+                                    <topic>/my_gen3_lite/base_feedback/joint_state</topic>
+                                    <type>sensor_msgs/JointState</type>
                                 </x_axis>
                                 <y_axis>
-                                    <field>value/1</field>
+                                    <field>effort/1</field>
                                     <field_type>0</field_type>
                                     <scale>
                                         <absolute_maximum>3</absolute_maximum>
                                         <absolute_minimum>-3</absolute_minimum>
-                                        <relative_maximum>3</relative_maximum>
-                                        <relative_minimum>-3</relative_minimum>
+                                        <relative_maximum>0</relative_maximum>
+                                        <relative_minimum>-1000</relative_minimum>
                                         <type>1</type>
                                     </scale>
-                                    <topic>/torque</topic>
-                                    <type>paquitop/Joint_position</type>
+                                    <topic>/my_gen3_lite/base_feedback/joint_state</topic>
+                                    <type>sensor_msgs/JointState</type>
                                 </y_axis>
                             </axes>
                             <color>
@@ -110,16 +110,16 @@
                             <data>
                                 <circular_buffer_capacity>1000</circular_buffer_capacity>
                                 <time_frame_length>10</time_frame_length>
-                                <type>3</type>
+                                <type>0</type>
                             </data>
                             <style>
-                                <lines_interpolate>true</lines_interpolate>
+                                <lines_interpolate>false</lines_interpolate>
                                 <pen_style>1</pen_style>
                                 <pen_width>5</pen_width>
                                 <render_antialias>false</render_antialias>
                                 <steps_invert>false</steps_invert>
                                 <sticks_baseline>0</sticks_baseline>
-                                <sticks_orientation>1</sticks_orientation>
+                                <sticks_orientation>2</sticks_orientation>
                                 <type>0</type>
                             </style>
                             <subscriber_queue_size>100</subscriber_queue_size>
@@ -131,27 +131,27 @@
                                     <field></field>
                                     <field_type>1</field_type>
                                     <scale>
-                                        <absolute_maximum>0</absolute_maximum>
-                                        <absolute_minimum>-10</absolute_minimum>
+                                        <absolute_maximum>1000</absolute_maximum>
+                                        <absolute_minimum>0</absolute_minimum>
                                         <relative_maximum>0</relative_maximum>
                                         <relative_minimum>-10</relative_minimum>
                                         <type>2</type>
                                     </scale>
-                                    <topic>/torque</topic>
-                                    <type>paquitop/Joint_position</type>
+                                    <topic>/my_gen3_lite/base_feedback/joint_state</topic>
+                                    <type>sensor_msgs/JointState</type>
                                 </x_axis>
                                 <y_axis>
-                                    <field>value/2</field>
+                                    <field>effort/2</field>
                                     <field_type>0</field_type>
                                     <scale>
                                         <absolute_maximum>3</absolute_maximum>
                                         <absolute_minimum>-3</absolute_minimum>
-                                        <relative_maximum>3</relative_maximum>
-                                        <relative_minimum>-3</relative_minimum>
+                                        <relative_maximum>0</relative_maximum>
+                                        <relative_minimum>-1000</relative_minimum>
                                         <type>1</type>
                                     </scale>
-                                    <topic>/torque</topic>
-                                    <type>paquitop/Joint_position</type>
+                                    <topic>/my_gen3_lite/base_feedback/joint_state</topic>
+                                    <type>sensor_msgs/JointState</type>
                                 </y_axis>
                             </axes>
                             <color>
@@ -161,16 +161,16 @@
                             <data>
                                 <circular_buffer_capacity>1000</circular_buffer_capacity>
                                 <time_frame_length>10</time_frame_length>
-                                <type>3</type>
+                                <type>0</type>
                             </data>
                             <style>
-                                <lines_interpolate>true</lines_interpolate>
+                                <lines_interpolate>false</lines_interpolate>
                                 <pen_style>1</pen_style>
                                 <pen_width>5</pen_width>
                                 <render_antialias>false</render_antialias>
                                 <steps_invert>false</steps_invert>
                                 <sticks_baseline>0</sticks_baseline>
-                                <sticks_orientation>1</sticks_orientation>
+                                <sticks_orientation>2</sticks_orientation>
                                 <type>0</type>
                             </style>
                             <subscriber_queue_size>100</subscriber_queue_size>
@@ -182,27 +182,27 @@
                                     <field></field>
                                     <field_type>1</field_type>
                                     <scale>
-                                        <absolute_maximum>0</absolute_maximum>
-                                        <absolute_minimum>-10</absolute_minimum>
+                                        <absolute_maximum>1000</absolute_maximum>
+                                        <absolute_minimum>0</absolute_minimum>
                                         <relative_maximum>0</relative_maximum>
                                         <relative_minimum>-10</relative_minimum>
                                         <type>2</type>
                                     </scale>
-                                    <topic>/torque</topic>
-                                    <type>paquitop/Joint_position</type>
+                                    <topic>/my_gen3_lite/base_feedback/joint_state</topic>
+                                    <type>sensor_msgs/JointState</type>
                                 </x_axis>
                                 <y_axis>
-                                    <field>value/3</field>
+                                    <field>effort/3</field>
                                     <field_type>0</field_type>
                                     <scale>
                                         <absolute_maximum>3</absolute_maximum>
                                         <absolute_minimum>-3</absolute_minimum>
-                                        <relative_maximum>3</relative_maximum>
-                                        <relative_minimum>-3</relative_minimum>
+                                        <relative_maximum>0</relative_maximum>
+                                        <relative_minimum>-1000</relative_minimum>
                                         <type>1</type>
                                     </scale>
-                                    <topic>/torque</topic>
-                                    <type>paquitop/Joint_position</type>
+                                    <topic>/my_gen3_lite/base_feedback/joint_state</topic>
+                                    <type>sensor_msgs/JointState</type>
                                 </y_axis>
                             </axes>
                             <color>
@@ -212,16 +212,16 @@
                             <data>
                                 <circular_buffer_capacity>1000</circular_buffer_capacity>
                                 <time_frame_length>10</time_frame_length>
-                                <type>3</type>
+                                <type>0</type>
                             </data>
                             <style>
-                                <lines_interpolate>true</lines_interpolate>
+                                <lines_interpolate>false</lines_interpolate>
                                 <pen_style>1</pen_style>
                                 <pen_width>5</pen_width>
                                 <render_antialias>false</render_antialias>
                                 <steps_invert>false</steps_invert>
                                 <sticks_baseline>0</sticks_baseline>
-                                <sticks_orientation>1</sticks_orientation>
+                                <sticks_orientation>2</sticks_orientation>
                                 <type>0</type>
                             </style>
                             <subscriber_queue_size>100</subscriber_queue_size>
@@ -233,27 +233,27 @@
                                     <field></field>
                                     <field_type>1</field_type>
                                     <scale>
-                                        <absolute_maximum>0</absolute_maximum>
-                                        <absolute_minimum>-10</absolute_minimum>
+                                        <absolute_maximum>1000</absolute_maximum>
+                                        <absolute_minimum>0</absolute_minimum>
                                         <relative_maximum>0</relative_maximum>
                                         <relative_minimum>-10</relative_minimum>
                                         <type>2</type>
                                     </scale>
-                                    <topic>/torque</topic>
-                                    <type>paquitop/Joint_position</type>
+                                    <topic>/my_gen3_lite/base_feedback/joint_state</topic>
+                                    <type>sensor_msgs/JointState</type>
                                 </x_axis>
                                 <y_axis>
-                                    <field>value/4</field>
+                                    <field>effort/4</field>
                                     <field_type>0</field_type>
                                     <scale>
                                         <absolute_maximum>3</absolute_maximum>
                                         <absolute_minimum>-3</absolute_minimum>
-                                        <relative_maximum>3</relative_maximum>
-                                        <relative_minimum>-3</relative_minimum>
+                                        <relative_maximum>0</relative_maximum>
+                                        <relative_minimum>-1000</relative_minimum>
                                         <type>1</type>
                                     </scale>
-                                    <topic>/torque</topic>
-                                    <type>paquitop/Joint_position</type>
+                                    <topic>/my_gen3_lite/base_feedback/joint_state</topic>
+                                    <type>sensor_msgs/JointState</type>
                                 </y_axis>
                             </axes>
                             <color>
@@ -263,16 +263,16 @@
                             <data>
                                 <circular_buffer_capacity>1000</circular_buffer_capacity>
                                 <time_frame_length>10</time_frame_length>
-                                <type>3</type>
+                                <type>0</type>
                             </data>
                             <style>
-                                <lines_interpolate>true</lines_interpolate>
+                                <lines_interpolate>false</lines_interpolate>
                                 <pen_style>1</pen_style>
                                 <pen_width>5</pen_width>
                                 <render_antialias>false</render_antialias>
                                 <steps_invert>false</steps_invert>
                                 <sticks_baseline>0</sticks_baseline>
-                                <sticks_orientation>1</sticks_orientation>
+                                <sticks_orientation>2</sticks_orientation>
                                 <type>0</type>
                             </style>
                             <subscriber_queue_size>100</subscriber_queue_size>
@@ -284,27 +284,27 @@
                                     <field></field>
                                     <field_type>1</field_type>
                                     <scale>
-                                        <absolute_maximum>0</absolute_maximum>
-                                        <absolute_minimum>-10</absolute_minimum>
+                                        <absolute_maximum>1000</absolute_maximum>
+                                        <absolute_minimum>0</absolute_minimum>
                                         <relative_maximum>0</relative_maximum>
                                         <relative_minimum>-10</relative_minimum>
                                         <type>2</type>
                                     </scale>
-                                    <topic>/torque</topic>
-                                    <type>paquitop/Joint_position</type>
+                                    <topic>/my_gen3_lite/base_feedback/joint_state</topic>
+                                    <type>sensor_msgs/JointState</type>
                                 </x_axis>
                                 <y_axis>
-                                    <field>value/5</field>
+                                    <field>effort/5</field>
                                     <field_type>0</field_type>
                                     <scale>
                                         <absolute_maximum>3</absolute_maximum>
                                         <absolute_minimum>-3</absolute_minimum>
-                                        <relative_maximum>3</relative_maximum>
-                                        <relative_minimum>-3</relative_minimum>
+                                        <relative_maximum>0</relative_maximum>
+                                        <relative_minimum>-1000</relative_minimum>
                                         <type>1</type>
                                     </scale>
-                                    <topic>/torque</topic>
-                                    <type>paquitop/Joint_position</type>
+                                    <topic>/my_gen3_lite/base_feedback/joint_state</topic>
+                                    <type>sensor_msgs/JointState</type>
                                 </y_axis>
                             </axes>
                             <color>
@@ -314,16 +314,16 @@
                             <data>
                                 <circular_buffer_capacity>1000</circular_buffer_capacity>
                                 <time_frame_length>10</time_frame_length>
-                                <type>3</type>
+                                <type>0</type>
                             </data>
                             <style>
-                                <lines_interpolate>true</lines_interpolate>
+                                <lines_interpolate>false</lines_interpolate>
                                 <pen_style>1</pen_style>
                                 <pen_width>5</pen_width>
                                 <render_antialias>false</render_antialias>
                                 <steps_invert>false</steps_invert>
                                 <sticks_baseline>0</sticks_baseline>
-                                <sticks_orientation>1</sticks_orientation>
+                                <sticks_orientation>2</sticks_orientation>
                                 <type>0</type>
                             </style>
                             <subscriber_queue_size>100</subscriber_queue_size>
@@ -334,7 +334,7 @@
                         <visible>true</visible>
                     </legend>
                     <plot_rate>30</plot_rate>
-                    <title>Torque witohut dead band</title>
+                    <title>Torque</title>
                 </column_0>
             </row_0>
             <row_1>
@@ -366,21 +366,21 @@
                                         <relative_minimum>-10</relative_minimum>
                                         <type>2</type>
                                     </scale>
-                                    <topic>/cmd_vel</topic>
-                                    <type>geometry_msgs/Twist</type>
+                                    <topic>/my_gen3_lite/base_feedback</topic>
+                                    <type>kortex_driver/BaseCyclic_Feedback</type>
                                 </x_axis>
                                 <y_axis>
-                                    <field>linear/x</field>
+                                    <field>base/tool_external_wrench_force_x</field>
                                     <field_type>0</field_type>
                                     <scale>
-                                        <absolute_maximum>0.45</absolute_maximum>
-                                        <absolute_minimum>-0.45</absolute_minimum>
+                                        <absolute_maximum>3</absolute_maximum>
+                                        <absolute_minimum>-3</absolute_minimum>
                                         <relative_maximum>0</relative_maximum>
-                                        <relative_minimum>-10</relative_minimum>
+                                        <relative_minimum>-1000</relative_minimum>
                                         <type>1</type>
                                     </scale>
-                                    <topic>/cmd_vel</topic>
-                                    <type>geometry_msgs/Twist</type>
+                                    <topic>/my_gen3_lite/base_feedback</topic>
+                                    <type>kortex_driver/BaseCyclic_Feedback</type>
                                 </y_axis>
                             </axes>
                             <color>
@@ -390,7 +390,7 @@
                             <data>
                                 <circular_buffer_capacity>1000</circular_buffer_capacity>
                                 <time_frame_length>10</time_frame_length>
-                                <type>3</type>
+                                <type>0</type>
                             </data>
                             <style>
                                 <lines_interpolate>false</lines_interpolate>
@@ -403,7 +403,7 @@
                                 <type>0</type>
                             </style>
                             <subscriber_queue_size>100</subscriber_queue_size>
-                            <title>Velocity x</title>
+                            <title>Force x</title>
                         </curve_0>
                         <curve_1>
                             <axes>
@@ -417,21 +417,21 @@
                                         <relative_minimum>-10</relative_minimum>
                                         <type>2</type>
                                     </scale>
-                                    <topic>/cmd_vel</topic>
-                                    <type>geometry_msgs/Twist</type>
+                                    <topic>/my_gen3_lite/base_feedback</topic>
+                                    <type>kortex_driver/BaseCyclic_Feedback</type>
                                 </x_axis>
                                 <y_axis>
-                                    <field>linear/y</field>
+                                    <field>base/tool_external_wrench_force_y</field>
                                     <field_type>0</field_type>
                                     <scale>
-                                        <absolute_maximum>0.45</absolute_maximum>
-                                        <absolute_minimum>-0.45</absolute_minimum>
+                                        <absolute_maximum>1000</absolute_maximum>
+                                        <absolute_minimum>0</absolute_minimum>
                                         <relative_maximum>0</relative_maximum>
                                         <relative_minimum>-1000</relative_minimum>
-                                        <type>1</type>
+                                        <type>0</type>
                                     </scale>
-                                    <topic>/cmd_vel</topic>
-                                    <type>geometry_msgs/Twist</type>
+                                    <topic>/my_gen3_lite/base_feedback</topic>
+                                    <type>kortex_driver/BaseCyclic_Feedback</type>
                                 </y_axis>
                             </axes>
                             <color>
@@ -441,7 +441,7 @@
                             <data>
                                 <circular_buffer_capacity>1000</circular_buffer_capacity>
                                 <time_frame_length>10</time_frame_length>
-                                <type>3</type>
+                                <type>0</type>
                             </data>
                             <style>
                                 <lines_interpolate>false</lines_interpolate>
@@ -454,7 +454,7 @@
                                 <type>0</type>
                             </style>
                             <subscriber_queue_size>100</subscriber_queue_size>
-                            <title>Velocity y</title>
+                            <title>Force y</title>
                         </curve_1>
                         <curve_2>
                             <axes>
@@ -468,21 +468,21 @@
                                         <relative_minimum>-10</relative_minimum>
                                         <type>2</type>
                                     </scale>
-                                    <topic>/cmd_vel</topic>
-                                    <type>geometry_msgs/Twist</type>
+                                    <topic>/my_gen3_lite/base_feedback</topic>
+                                    <type>kortex_driver/BaseCyclic_Feedback</type>
                                 </x_axis>
                                 <y_axis>
-                                    <field>angular/z</field>
+                                    <field>base/tool_external_wrench_force_z</field>
                                     <field_type>0</field_type>
                                     <scale>
-                                        <absolute_maximum>0.45</absolute_maximum>
-                                        <absolute_minimum>-0.45</absolute_minimum>
+                                        <absolute_maximum>1000</absolute_maximum>
+                                        <absolute_minimum>0</absolute_minimum>
                                         <relative_maximum>0</relative_maximum>
                                         <relative_minimum>-1000</relative_minimum>
-                                        <type>1</type>
+                                        <type>0</type>
                                     </scale>
-                                    <topic>/cmd_vel</topic>
-                                    <type>geometry_msgs/Twist</type>
+                                    <topic>/my_gen3_lite/base_feedback</topic>
+                                    <type>kortex_driver/BaseCyclic_Feedback</type>
                                 </y_axis>
                             </axes>
                             <color>
@@ -492,7 +492,7 @@
                             <data>
                                 <circular_buffer_capacity>1000</circular_buffer_capacity>
                                 <time_frame_length>10</time_frame_length>
-                                <type>3</type>
+                                <type>0</type>
                             </data>
                             <style>
                                 <lines_interpolate>false</lines_interpolate>
@@ -505,14 +505,167 @@
                                 <type>0</type>
                             </style>
                             <subscriber_queue_size>100</subscriber_queue_size>
-                            <title>Angular Velocity z</title>
+                            <title>Force z</title>
                         </curve_2>
+                        <curve_3>
+                            <axes>
+                                <x_axis>
+                                    <field></field>
+                                    <field_type>1</field_type>
+                                    <scale>
+                                        <absolute_maximum>1000</absolute_maximum>
+                                        <absolute_minimum>0</absolute_minimum>
+                                        <relative_maximum>0</relative_maximum>
+                                        <relative_minimum>-10</relative_minimum>
+                                        <type>2</type>
+                                    </scale>
+                                    <topic>/my_gen3_lite/base_feedback</topic>
+                                    <type>kortex_driver/BaseCyclic_Feedback</type>
+                                </x_axis>
+                                <y_axis>
+                                    <field>base/tool_external_wrench_torque_x</field>
+                                    <field_type>0</field_type>
+                                    <scale>
+                                        <absolute_maximum>1000</absolute_maximum>
+                                        <absolute_minimum>0</absolute_minimum>
+                                        <relative_maximum>0</relative_maximum>
+                                        <relative_minimum>-1000</relative_minimum>
+                                        <type>0</type>
+                                    </scale>
+                                    <topic>/my_gen3_lite/base_feedback</topic>
+                                    <type>kortex_driver/BaseCyclic_Feedback</type>
+                                </y_axis>
+                            </axes>
+                            <color>
+                                <custom_color>#000000</custom_color>
+                                <type>0</type>
+                            </color>
+                            <data>
+                                <circular_buffer_capacity>1000</circular_buffer_capacity>
+                                <time_frame_length>10</time_frame_length>
+                                <type>0</type>
+                            </data>
+                            <style>
+                                <lines_interpolate>false</lines_interpolate>
+                                <pen_style>1</pen_style>
+                                <pen_width>5</pen_width>
+                                <render_antialias>false</render_antialias>
+                                <steps_invert>false</steps_invert>
+                                <sticks_baseline>0</sticks_baseline>
+                                <sticks_orientation>2</sticks_orientation>
+                                <type>0</type>
+                            </style>
+                            <subscriber_queue_size>100</subscriber_queue_size>
+                            <title>Torque x</title>
+                        </curve_3>
+                        <curve_4>
+                            <axes>
+                                <x_axis>
+                                    <field></field>
+                                    <field_type>1</field_type>
+                                    <scale>
+                                        <absolute_maximum>1000</absolute_maximum>
+                                        <absolute_minimum>0</absolute_minimum>
+                                        <relative_maximum>0</relative_maximum>
+                                        <relative_minimum>-10</relative_minimum>
+                                        <type>2</type>
+                                    </scale>
+                                    <topic>/my_gen3_lite/base_feedback</topic>
+                                    <type>kortex_driver/BaseCyclic_Feedback</type>
+                                </x_axis>
+                                <y_axis>
+                                    <field>base/tool_external_wrench_torque_y</field>
+                                    <field_type>0</field_type>
+                                    <scale>
+                                        <absolute_maximum>1000</absolute_maximum>
+                                        <absolute_minimum>0</absolute_minimum>
+                                        <relative_maximum>0</relative_maximum>
+                                        <relative_minimum>-1000</relative_minimum>
+                                        <type>0</type>
+                                    </scale>
+                                    <topic>/my_gen3_lite/base_feedback</topic>
+                                    <type>kortex_driver/BaseCyclic_Feedback</type>
+                                </y_axis>
+                            </axes>
+                            <color>
+                                <custom_color>#000000</custom_color>
+                                <type>0</type>
+                            </color>
+                            <data>
+                                <circular_buffer_capacity>1000</circular_buffer_capacity>
+                                <time_frame_length>10</time_frame_length>
+                                <type>0</type>
+                            </data>
+                            <style>
+                                <lines_interpolate>false</lines_interpolate>
+                                <pen_style>1</pen_style>
+                                <pen_width>5</pen_width>
+                                <render_antialias>false</render_antialias>
+                                <steps_invert>false</steps_invert>
+                                <sticks_baseline>0</sticks_baseline>
+                                <sticks_orientation>2</sticks_orientation>
+                                <type>0</type>
+                            </style>
+                            <subscriber_queue_size>100</subscriber_queue_size>
+                            <title>Torque y</title>
+                        </curve_4>
+                        <curve_5>
+                            <axes>
+                                <x_axis>
+                                    <field></field>
+                                    <field_type>1</field_type>
+                                    <scale>
+                                        <absolute_maximum>1000</absolute_maximum>
+                                        <absolute_minimum>0</absolute_minimum>
+                                        <relative_maximum>0</relative_maximum>
+                                        <relative_minimum>-10</relative_minimum>
+                                        <type>2</type>
+                                    </scale>
+                                    <topic>/my_gen3_lite/base_feedback</topic>
+                                    <type>kortex_driver/BaseCyclic_Feedback</type>
+                                </x_axis>
+                                <y_axis>
+                                    <field>base/tool_external_wrench_torque_z</field>
+                                    <field_type>0</field_type>
+                                    <scale>
+                                        <absolute_maximum>1000</absolute_maximum>
+                                        <absolute_minimum>0</absolute_minimum>
+                                        <relative_maximum>0</relative_maximum>
+                                        <relative_minimum>-1000</relative_minimum>
+                                        <type>0</type>
+                                    </scale>
+                                    <topic>/my_gen3_lite/base_feedback</topic>
+                                    <type>kortex_driver/BaseCyclic_Feedback</type>
+                                </y_axis>
+                            </axes>
+                            <color>
+                                <custom_color>#000000</custom_color>
+                                <type>0</type>
+                            </color>
+                            <data>
+                                <circular_buffer_capacity>1000</circular_buffer_capacity>
+                                <time_frame_length>10</time_frame_length>
+                                <type>0</type>
+                            </data>
+                            <style>
+                                <lines_interpolate>false</lines_interpolate>
+                                <pen_style>1</pen_style>
+                                <pen_width>5</pen_width>
+                                <render_antialias>false</render_antialias>
+                                <steps_invert>false</steps_invert>
+                                <sticks_baseline>0</sticks_baseline>
+                                <sticks_orientation>2</sticks_orientation>
+                                <type>0</type>
+                            </style>
+                            <subscriber_queue_size>100</subscriber_queue_size>
+                            <title>Torque z</title>
+                        </curve_5>
                     </curves>
                     <legend>
                         <visible>true</visible>
                     </legend>
                     <plot_rate>30</plot_rate>
-                    <title>Velocities</title>
+                    <title>User Wrench Force</title>
                 </column_0>
             </row_1>
         </plots>
