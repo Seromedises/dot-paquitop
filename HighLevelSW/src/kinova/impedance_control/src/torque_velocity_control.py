@@ -12,8 +12,8 @@ from paquitop.msg import Joint_position
 # Constant for translate input force in velocity output
 OUT_max = 0.4 # m/s
 OUT_lim = 0.1 # m/s
-IN_max_T3, IN_max_T4, IN_max_T6 = 3, 3, 2.5 # Nm
-IN_min_T3, IN_min_T4, IN_min_T6= 1.5, 1.5, 0.4 # Nm
+IN_max_T3, IN_max_T4, IN_max_T6 = 3, 1.5, 2.5 # Nm
+IN_min_T3, IN_min_T4, IN_min_T6= 1.5, 1.0, 0.4 # Nm
 filter_span = 50
 CONFIG_POS = 4
 
@@ -100,9 +100,9 @@ def main():
   if CONFIG_POS == 2:
     start_position.value = [270, 10, 10, 0, 0, 0]
   elif CONFIG_POS == 3:
-    start_position.value = [0, 340, 0, 90, 25, 0]
+    start_position.value = [0, 20, 0, 90, -25, 0]
   elif CONFIG_POS == 4:
-    start_position.value = [0, 340, 0, 90, 70, 0]
+    start_position.value = [0, 20, 0, 90, -70, 0]
   else:
     start_position.value = [270, 0, 0, 0, 0, 0]
     if CONFIG_POS != 1:
@@ -176,7 +176,7 @@ def main():
     elif CONFIG_POS == 4:
       T1_mean[-1] = offset(T1_mean[-1], 0, 0.5)
       T2_mean[-1] = offset(T2_mean[-1], -8, -4)
-      T3_mean[-1] = offset(T3_mean[-1], 2, 2.4)
+      T3_mean[-1] = offset(T3_mean[-1], -2, -2.4)
       T4_mean[-1] = offset(T4_mean[-1], -0.2, 0)
       T5_mean[-1] = offset(T5_mean[-1], 1.1, 1.3)
       T6_mean[-1] = offset(T6_mean[-1], -0.4, 0.4)     

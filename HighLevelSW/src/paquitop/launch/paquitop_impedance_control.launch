@@ -20,6 +20,8 @@
   <include file="$(find kortex_movement)/launch/joint_position.launch"/>
   
   <!-- Impedance control for the robotic arm -->
-  <include file="$(find impedance_control)/launch/torque_velocity_control.launch"/>
+  <include file="$(find paquitop)/launch/paquitop_impedance_control_odom.launch"/>
+
+  <!-- Include tf, rplidat, t265, hector_slam, ekf_localization_node, rviz-->
 
 </launch>
