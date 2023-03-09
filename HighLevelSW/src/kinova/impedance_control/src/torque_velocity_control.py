@@ -12,8 +12,8 @@ from paquitop.msg import Joint_position
 # Constant for translate input force in velocity output
 OUT_max = 0.4 # m/s
 OUT_lim = 0.1 # m/s
-IN_max_T3, IN_max_T4, IN_max_T6 = 3, 1.5, 2.5 # Nm
-IN_min_T3, IN_min_T4, IN_min_T6= 1.5, 1.0, 0.4 # Nm
+IN_max_T3, IN_max_T4, IN_max_T6 = 2.5, 1.5, 0.7 # Nmmust be double than minimum value
+IN_min_T3, IN_min_T4, IN_min_T6= 1, 0.5, 0.3 # Nm
 filter_span = 50
 CONFIG_POS = 4
 
@@ -51,7 +51,7 @@ def filter(variable,span,offset):
   
   return list(filtred)
 
-def to_velocity(IN, IN_lim = 1, IN_max = 5):
+def to_velocity(IN, IN_lim, IN_max):
   
   # IN_lim and IN_max are N or Nm 
 
@@ -67,8 +67,8 @@ def to_velocity(IN, IN_lim = 1, IN_max = 5):
   if IN <= -IN_lim:
     velocity = b1 * IN - b0
   elif IN > -IN_lim and IN <= 0:
-    IN = -IN
-    velocity = -(a5*(IN**5) + a4*(IN**4) + a3*(IN**3))
+    # IN = -IN
+    velocity = (a5*(IN**5) - a4*(IN**4) + a3*(IN**3))
   elif IN > 0 and IN <= IN_lim:
     velocity = a5*(IN**5) + a4*(IN**4) + a3*(IN**3)
   elif IN > IN_lim:
@@ -89,7 +89,6 @@ def main():
   plot_fb = rospy.Publisher('/torque',Joint_position,queue_size=10)
   vel_msg = Twist()
   start_position = Joint_position()
-  rest_position_cmd.publish(start_position)
   rospy.sleep(1)
   
   T1_ofs, T2_ofs, T3_ofs, T4_ofs, T5_ofs, T6_ofs = 0, 0, 0, 0, 0, 0
@@ -109,7 +108,7 @@ def main():
       rospy.loginfo("Position number not in range 1 - 4. Using position 1")
 
   #SCARTATE:[90, -30, -60, 10, -60, -90] #[40, 330, 300, 40, 295, 300]
-  for i in range(3):
+  for i in range(5):
     rest_position_cmd.publish(start_position)
   rospy.sleep(10)
   
@@ -174,12 +173,12 @@ def main():
       wz.append(to_velocity(T1_mean[-1],IN_lim=IN_min_T4,IN_max=IN_max_T4))
 
     elif CONFIG_POS == 4:
-      T1_mean[-1] = offset(T1_mean[-1], 0, 0.5)
-      T2_mean[-1] = offset(T2_mean[-1], -8, -4)
-      T3_mean[-1] = offset(T3_mean[-1], -2, -2.4)
-      T4_mean[-1] = offset(T4_mean[-1], -0.2, 0)
-      T5_mean[-1] = offset(T5_mean[-1], 1.1, 1.3)
-      T6_mean[-1] = offset(T6_mean[-1], -0.4, 0.4)     
+      T1_mean[-1] = offset(T1_mean[-1], -1.2, 1.5) #-0.5 <- 0
+      T2_mean[-1] = offset(T2_mean[-1],  4.0, 8.0)
+      T3_mean[-1] = offset(T3_mean[-1], -4.0,-1.5) #-3 <- -2.4
+      T4_mean[-1] = offset(T4_mean[-1], -0.5, 0.75)
+      T5_mean[-1] = offset(T5_mean[-1], -1.1,-0.75)
+      T6_mean[-1] = offset(T6_mean[-1], -0.3, 0.3)     
       
       vx.append(to_velocity(T3_mean[-1],IN_lim=IN_min_T3,IN_max=IN_max_T3))
       vy.append(to_velocity(T6_mean[-1],IN_lim=IN_min_T6,IN_max=IN_max_T6))
@@ -191,7 +190,7 @@ def main():
     
 
     # controll to disacopiate vx and vy
-    if abs(vy[-1])<0.02: #abs(vx[-1])> abs(vy[-1]) or abs(wz[-1])> abs(vy[-1]):
+    if abs(vy[-1])<0.05: #abs(vx[-1])> abs(vy[-1]) or abs(wz[-1])> abs(vy[-1]):
       vel_msg.linear.x = vx[-1]
       vel_msg.linear.y = 0
       vel_msg.linear.z = 0

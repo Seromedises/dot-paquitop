@@ -69,10 +69,6 @@ SBUS joystick(Serial1);
 unsigned long t, t_old, t0, t01, t02, t03, dt, dt1, dt2, dt3;                             //time variables (us)
 unsigned long tHidle, tHidle_max = 1e6;                                                   //if zero inputs are sent for t = tHidle, the motors are temporarly disabled (us)
 
-const float Arad = pi/2;
-const float T = 5.0;
-const float f = 1/T;
-
 float vx, vy, gammad;                                                                     //linear velocities (m/s) and angular velocity (rad/s) of the platform in body rf {b}
 float v_max = 1.0, w_max = pi/2;                                                          //maximum linear and angular velocity of the platform
 int   wConf = 1, wConf_old = 1;                                                           //1: omnidirectional motion, 2: differential drive, 3: bicycle 2 steering wheels
@@ -80,11 +76,11 @@ float vxArm = 0.0, vyArm = 0.0, vzArm = 0.0, wxArm = 0.0, wyArm = 0.0, wzArm = 0
 float vArm_max = 0.15, wArm_max = pi/6;                                                   //maximum linear and angular velocity of the EE
 float tau = 0.3;                                                                          //transmission ratio delta_st/delta_m = z_m/z_st = 18/60;
 int   uStep = 2;                                                                          //uStepping ratio (MS1 = 1; MS2 = 0)
-int   Nstep = 200*uStep/tau;                                                            //number of steps/rev of the steering joint
+int   Nstep = 200*uStep/tau;                                                              //number of steps/rev of the steering joint
 
 // Gain controllo PID:
-float kp = 20.0*0.0056753;                                                                 //2 without load, 20 with load
-float ki = 0.0005;                                                                       //0.00005 without load, 0.0005 with load
+float kp = 20.0*0.0056753;                                                                //2 without load, 20 with load
+float ki = 0.0005;                                                                        //0.00005 without load, 0.0005 with load
 float kd = 0.0;                                                                           //0.0 without load, 0.0 with load
 float INT, DER;
 
@@ -183,8 +179,8 @@ void loop() {
   if (i1_REF >= 0){digitalWrite(MW_DIR_1, LOW); analogWrite(MW_PWM_1, mapF(abs(i1_REF),0,MW_iMax,255*0.1,255*0.9));} 
   else {digitalWrite(MW_DIR_1, HIGH); analogWrite(MW_PWM_1,mapF(abs(i1_REF),0,MW_iMax,255*0.1,255*0.9));}
 
-  if (i2_REF >= 0){digitalWrite(MW_DIR_2, HIGH); analogWrite(MW_PWM_2, mapF(abs(i2_REF),0,MW_iMax,255*0.1,255*0.9));} 
-  else {digitalWrite(MW_DIR_2, LOW); analogWrite(MW_PWM_2, mapF(abs(i2_REF),0,MW_iMax,255*0.1,255*0.9));}
+  if (i2_REF >= 0){digitalWrite(MW_DIR_2, HIGH); analogWrite(MW_PWM_2, mapF(abs(i2_REF),0,MW_iMax,255*0.11,255*0.89));} 
+  else {digitalWrite(MW_DIR_2, LOW); analogWrite(MW_PWM_2, mapF(abs(i2_REF),0,MW_iMax,255*0.11,255*0.89));}
   t_old = micros();
   
   thd1_OLD = thd1; 
