@@ -139,10 +139,8 @@ sudo python3 -m pip install conan
 conan config set general.revisions_enabled=1
 conan profile new default --detect > /dev/null
 conan profile update settings.compiler.libcxx=libstdc++11 default
-mkdir -p catkin_workspace/src
-cd catkin_workspace/src
-git clone https://github.com/Seromedises/dot-paquitop.git
-cd ../
+cd && git clone https://github.com/Seromedises/dot-paquitop.git
+cd dot-paquitop/HighLevelSW
 rosdep install --from-paths src --ignore-src -y
 ```
 
@@ -150,7 +148,7 @@ Then, to build and source the workspace:
 
 ```text
 catkin_make
-source devel/setup.bash
+echo "source ~/dot-paquitop/HighLevelSW/devel/setup.bash" >> ~/.bashrc
 ```
 
 You can also build against one of the ARMv8 builds of the Kortex API with Conan if you specify the CONAN_TARGET_PLATFORM CMake argument when using catkin_make. The following platforms are supported:
@@ -159,19 +157,19 @@ You can also build against one of the ARMv8 builds of the Kortex API with Conan 
 
 ```text
 catkin_make --cmake-args -DCONAN_TARGET_PLATFORM=artik710
-source devel/setup.bash
+echo "source ~/dot-paquitop/HighLevelSW/devel/setup.bash" >> ~/.bashrc
 ```
 
 - IMX6:
 
 ```text
 catkin_make --cmake-args -DCONAN_TARGET_PLATFORM=imx6
-source devel/setup.bash
+echo "source ~/dot-paquitop/HighLevelSW/devel/setup.bash" >> ~/.bashrc
 ```
 
 - NVidia Jetson:
 
 ```text
 catkin_make --cmake-args -DCONAN_TARGET_PLATFORM=jetson
-source devel/setup.bash
+echo "source ~/dot-paquitop/HighLevelSW/devel/setup.bash" >> ~/.bashrc
 ```
