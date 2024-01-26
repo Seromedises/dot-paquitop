@@ -116,6 +116,9 @@ void cmd_vel_cb(const geometry_msgs::Twist& cmdVel){
 }
 
 ros::Subscriber<geometry_msgs::Twist> sub("cmd_vel", cmd_vel_cb);
+std_msgs::String str_msg;
+ros::Publisher velArmTwist("velArmTwist",&str_msg);
+
 
 
 void setup() {

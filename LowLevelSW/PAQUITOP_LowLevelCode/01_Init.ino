@@ -40,6 +40,7 @@ void commInit(){//communications ports initialization:
   //ROS:
   nh.initNode();
   nh.subscribe(sub);
+  nh.advertise(velArmTwist);
   delay(1);
 
   //SPI1 bus:
