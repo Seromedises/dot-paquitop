@@ -106,6 +106,7 @@ bool     tabletON = false;
 
 // ROS Variables
 bool enb_ROSsub = false;
+bool enb_ArmManualMode = false;
 char str_fb_q[20] = {' '};
 
 void cmd_vel_cb(const geometry_msgs::Twist& cmdVel){
@@ -116,10 +117,8 @@ void cmd_vel_cb(const geometry_msgs::Twist& cmdVel){
 }
 
 ros::Subscriber<geometry_msgs::Twist> sub("cmd_vel", cmd_vel_cb);
-std_msgs::String str_msg;
-ros::Publisher velArmTwist("velArmTwist",&str_msg);
-
-
+geometry_msgs::Twist arm_msg;
+ros::Publisher velTwistArm("velTwistArm",&arm_msg);
 
 void setup() {
   
@@ -193,8 +192,13 @@ void loop() {
   
   if (dt2 > 1e+5){
     updateStepPos();   
-    
     t02 = micros(); 
+  } 
+  if (dt3 > 1e+5){
+    if (enb_ArmManualMode){
+      velTwistArm.publish(&arm_msg);
+    }
+    t03 = micros(); 
   } 
   nh.spinOnce();
 }

@@ -15,6 +15,7 @@ void joystickRead(){
   
     // If AUTOMATIC MODE is selected:
     if (channels[5] == 1811){
+      enb_ArmManualMode = false;
   
       //ROS Navigation:    
       if (channels[6] == 172){enb_ROSsub = true; wConf = 1;}
@@ -38,6 +39,38 @@ void joystickRead(){
     
     // If ARM MANUAL MODE is selected:
     else if (channels[5] == 992){
+      enb_ArmManualMode = true;
+      enb_ROSsub = false;
+
+      // Pure Translation:
+      if (channels[6] == 172){
+        arm_msg.linear.x = RxvArm;
+        arm_msg.linear.y = RyvArm;
+        arm_msg.linear.z = LxvArm;
+        arm_msg.angular.x = 0.0;
+        arm_msg.angular.y = 0.0;
+        arm_msg.angular.z = 0.0;
+        }
+  
+      // Pure Rotation:
+      else if (channels[6] == 992){
+        arm_msg.linear.x = 0.0;
+        arm_msg.linear.y = 0.0;
+        arm_msg.linear.z = 0.0;
+        arm_msg.angular.x = RxvArm;
+        arm_msg.angular.y = RyvArm;
+        arm_msg.angular.z = LxvArm;
+        }
+  
+      // Arm Rest Pose :
+      else if ((channels[6] == 1811)){
+        arm_msg.linear.x = 0.0;
+        arm_msg.linear.y = 0.0;
+        arm_msg.linear.z = 0.0;
+        arm_msg.angular.x = 0.0;
+        arm_msg.angular.y = 0.0;
+        arm_msg.angular.z = 0.0;
+        }      
       vx = 0.0;
       vy = 0.0;
       gammad = 0.0;
@@ -46,7 +79,8 @@ void joystickRead(){
   
     // If BASE MANUAL MODE is selected:
     else if (channels[5] == 172){ 
-        
+      
+      enb_ArmManualMode = false;
       enb_ROSsub = false;
   
       // Working Configuration II:

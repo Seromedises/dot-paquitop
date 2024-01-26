@@ -297,7 +297,6 @@ def main():
         if abs(moveArm.angular.z) < 0.06:
             moveArm.angular.z = 0.0		
 
-
         msg = TwistCommand()
         msg.twist.linear_x=  moveArm.linear.x
         msg.twist.linear_y =  moveArm.linear.y
