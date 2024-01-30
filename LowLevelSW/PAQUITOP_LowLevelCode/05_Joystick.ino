@@ -23,17 +23,30 @@ void joystickRead(){
       //Tablet Store:
       else if (channels[6] == 992){
         enb_ROSsub = false;
+        tabletON = false;
         vx = 0.0;
         vy = 0.0;
         gammad = 0.0;
+        extractTablet_msg.data = false;
+        if (!retrainTablet_msg.data){
+          retrainTablet_msg.data = true;
+          retrain_tablet.publish(&retrainTablet_msg);
+        }
       }
       
       //Tablet Deliver:
       else if (channels[6] == 1811){
         enb_ROSsub = false;
+        tabletON = true;
         vx = 0.0;
         vy = 0.0;
         gammad = 0.0;
+        retrainTablet_msg.data = false;
+        if (!extractTablet_msg.data){
+          extractTablet_msg.data = true;
+          extract_tablet.publish(&extractTablet_msg);
+        }
+        
       }
     }
     
@@ -41,15 +54,23 @@ void joystickRead(){
     else if (channels[5] == 992){
       enb_ArmManualMode = true;
       enb_ROSsub = false;
+      
 
       // Pure Translation:
       if (channels[6] == 172){
-        arm_msg.linear.x = RxvArm;
-        arm_msg.linear.y = RyvArm;
+        arm_msg.linear.x = RyvArm;
+        arm_msg.linear.y = -RxvArm;
         arm_msg.linear.z = LxvArm;
         arm_msg.angular.x = 0.0;
         arm_msg.angular.y = 0.0;
         arm_msg.angular.z = 0.0;
+        moveGripper_msg.data = mapF(channels[0],172,1811,0.0,1.0);
+        
+        velTwistArm.publish(&arm_msg);
+        if (!tabletON){
+          moveGripper.publish(&moveGripper_msg);}
+
+        arm_rest_pose_msg.data = false;
         }
   
       // Pure Rotation:
@@ -60,6 +81,12 @@ void joystickRead(){
         arm_msg.angular.x = RxvArm;
         arm_msg.angular.y = RyvArm;
         arm_msg.angular.z = LxvArm;
+        moveGripper_msg.data = mapF(channels[0],172,1811,0.0,1.0);
+
+        velTwistArm.publish(&arm_msg);
+        if (!tabletON){
+          moveGripper.publish(&moveGripper_msg);}
+        arm_rest_pose_msg.data = false;
         }
   
       // Arm Rest Pose :
@@ -70,7 +97,14 @@ void joystickRead(){
         arm_msg.angular.x = 0.0;
         arm_msg.angular.y = 0.0;
         arm_msg.angular.z = 0.0;
-        }      
+
+        if (!tabletON){
+          if (!arm_rest_pose_msg.data){
+            arm_rest_pose_msg.data = true;
+            arm_rest_pose.publish(&arm_rest_pose_msg);
+          }
+        }
+      }      
       vx = 0.0;
       vy = 0.0;
       gammad = 0.0;

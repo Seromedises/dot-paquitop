@@ -41,6 +41,10 @@ void commInit(){//communications ports initialization:
   nh.initNode();
   nh.subscribe(sub);
   nh.advertise(velTwistArm);
+  nh.advertise(extract_tablet);
+  nh.advertise(retrain_tablet);
+  nh.advertise(moveGripper);
+  nh.advertise(arm_rest_pose);
   delay(1);
 
   //SPI1 bus:

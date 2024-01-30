@@ -10,7 +10,8 @@
 
 #include <ros.h>
 #include <std_msgs/String.h>
-#include <std_msgs/Empty.h>
+#include <std_msgs/Float32.h>
+#include <std_msgs/Bool.h>
 #include <geometry_msgs/Twist.h>
 
 ros::NodeHandle  nh;
@@ -119,6 +120,15 @@ void cmd_vel_cb(const geometry_msgs::Twist& cmdVel){
 ros::Subscriber<geometry_msgs::Twist> sub("cmd_vel", cmd_vel_cb);
 geometry_msgs::Twist arm_msg;
 ros::Publisher velTwistArm("velTwistArm",&arm_msg);
+std_msgs::Bool extractTablet_msg; 
+ros::Publisher extract_tablet("extract_tablet",&extractTablet_msg);
+std_msgs::Bool retrainTablet_msg; 
+ros::Publisher retrain_tablet("retrain_tablet",&retrainTablet_msg);
+std_msgs::Float32 moveGripper_msg;
+ros::Publisher moveGripper("moveGripper",&moveGripper_msg);
+std_msgs::Bool arm_rest_pose_msg; 
+ros::Publisher arm_rest_pose("arm_rest_pose",&arm_rest_pose_msg);
+
 
 void setup() {
   
@@ -130,6 +140,10 @@ void setup() {
 
   motorsENB();
 
+  extractTablet_msg.data = false;
+  retrainTablet_msg.data = true;
+  arm_rest_pose_msg.data = false;
+  
   t0    = micros();
   t_old = micros();
   t01   = micros();
@@ -195,9 +209,7 @@ void loop() {
     t02 = micros(); 
   } 
   if (dt3 > 1e+5){
-    if (enb_ArmManualMode){
-      velTwistArm.publish(&arm_msg);
-    }
+   
     t03 = micros(); 
   } 
   nh.spinOnce();
